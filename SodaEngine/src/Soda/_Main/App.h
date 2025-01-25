@@ -50,7 +50,7 @@ namespace Soda
 
 		ImGuiLayer* m_imguiLayer; // the ImGui Layer
 
-		LayerStack m_LayerStack; // this is where are layers will be stored.
+		LayerStack m_LayerStack; // this is where our engine layers will be stored.
 
 
 		bool OnWindowClose(WindowCloseEvent& _WindowCloseEvent);

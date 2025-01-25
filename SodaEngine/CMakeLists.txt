@@ -70,3 +70,5 @@ include_directories(submodules/spdlog/include)
 include_directories(submodules/glm)
 include_directories(submodules/stb_image)
 include_directories(submodules/entt)
+
+include_directories(../SodaCan)

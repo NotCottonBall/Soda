@@ -27,5 +27,8 @@ namespace Soda
     protected:
         std::vector<Layer*> m_Layers;
         unsigned int m_LayerIndex = 0;
+
+        // we will add overlays to the back of the m_Layers
+        // instead of creating a seperate list for overlays and calling overlays seperatly
     };
 }
