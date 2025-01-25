@@ -1,6 +1,5 @@
 #DIRs
 .vs/
-.vscode/
 .cache/
 bin/
 bin-objs/

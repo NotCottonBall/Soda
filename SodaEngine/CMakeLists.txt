@@ -32,6 +32,10 @@ add_library(imgui STATIC
     submodules/imgui/imstb_textedit.h
     submodules/imgui/imstb_truetype.h
     submodules/imgui/imgui_demo.cpp
+    submodules/imgui/imgui_tables.cpp
+
+    submodules/imgui/backends/imgui_impl_opengl3.cpp
+    submodules/imgui/backends/imgui_impl_glfw.cpp
 )
 # adding the include dirs
 target_include_directories(imgui PUBLIC submodules/imgui)
@@ -51,7 +55,12 @@ target_compile_definitions(SodaEngine PUBLIC $<$<CONFIG:Debug>:SD_DEBUG>)
 target_compile_definitions(SodaEngine PUBLIC $<$<CONFIG:RELEASE>:SD_RELEASE>)
 target_compile_definitions(SodaEngine PUBLIC $<$<CONFIG:Dist>:SD_DIST>)
 # some other defines
-target_compile_definitions(SodaEngine PUBLIC GLFW_INCLUDE_NONE _CRT_SECURE_NO_WARNINGS)
+target_compile_definitions(SodaEngine PUBLIC
+    _CRT_SECURE_NO_WARNINGS
+    
+    GLFW_INCLUDE_NONE
+    IMGUI_IMPL_OPENGL_LOADER_CUSTOM
+)
 
 
 # pre compiled header
@@ -70,5 +79,3 @@ include_directories(submodules/spdlog/include)
 include_directories(submodules/glm)
 include_directories(submodules/stb_image)
 include_directories(submodules/entt)
-
-include_directories(../SodaCan)

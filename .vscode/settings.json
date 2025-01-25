@@ -1,0 +1,12 @@
+{
+    "C_Cpp.default.compileCommands": "${workspaceRoot}/build",
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceRoot}/build"
+    ],
+    "files.associations": {
+        "memory": "cpp",
+        "xiosbase": "cpp"
+    },
+
+    "terminal.integrated.defaultProfile.windows": "Git Bash"
+}

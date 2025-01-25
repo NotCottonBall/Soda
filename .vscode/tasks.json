@@ -1,0 +1,172 @@
+{
+    "tasks": [
+        // BASIC TASKS //
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "rm build bin",
+            "args": [
+                "-rf"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+
+
+        // BUILD MODES //
+        {
+            "label": "DEBUG MODE",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-G Ninja",
+                "-B build",
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DCMAKE_C_COMPILER=clang",
+                "-DCMAKE_CXX_COMPILER=clang++"
+                // "-DCMAKE_C_COMPILER=gcc",
+                // "-DCMAKE_CXX_COMPILER=g++",
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "RELEASE MODE",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-G Ninja",
+                "-B build",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_C_COMPILER=clang",
+                "-DCMAKE_CXX_COMPILER=clang++"
+                // "-DCMAKE_C_COMPILER=gcc",
+                // "-DCMAKE_CXX_COMPILER=g++",
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "EXPORT MODE",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-G Ninja",
+                "-B build",
+                "-DCMAKE_BUILD_TYPE=Export",
+                "-DCMAKE_C_COMPILER=clang",
+                "-DCMAKE_CXX_COMPILER=clang++"
+                // "-DCMAKE_C_COMPILER=gcc",
+                // "-DCMAKE_CXX_COMPILER=g++",
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}",
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+        },
+
+        // MAKE AND BUILD //
+        {
+            "label": "Make And Build (DEBUG)",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "DEBUG MODE",
+                "Build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Make And Build (RELEASE)",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "RELEASE MODE",
+                "Build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Make And Build (EXPORT)",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "EXPORT MODE",
+                "Build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+
+
+        // CLEAN RE-BUILD //
+        {
+            "label": "Clean ReBuild (DEBUG)",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Clean",
+                "Make And Build (DEBUG)"
+            ],
+            "group": "none",
+        },
+        {
+            "label": "Clean ReBuild (RELEASE)",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Clean",
+                "Make And Build (RELEASE)"
+            ],
+            "group": "none"
+        },
+        {
+            "label": "Clean ReBuild (EXPORT)",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Clean",
+                "Make And Build (EXPORT)"
+            ],
+            "group": "none",
+        },
+    ],
+}
