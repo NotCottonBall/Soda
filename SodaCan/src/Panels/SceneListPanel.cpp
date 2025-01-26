@@ -174,11 +174,15 @@ namespace Soda
                 if(ImGui::ColorEdit4("color", glm::value_ptr(sprite.Color)))
                     obj.GetComponent<SpriteComponent>().Color = sprite.Color;
 
-                // ImGui::Text("Texture");
-                // if(ImGui::ImageButton((void*)sprite.Texture->GetTextureID(), ImVec2(50.0f, 50.0f), ImVec2(0, 1), ImVec2(1, 0), 1))
-                // {
-                //     // open a file browser to select a texture
-                // }
+
+                ImGui::Text("Texture");
+                if(ImGui::ImageButton(
+                    sprite.Texture ? (void*)sprite.Texture->GetTextureID() : nullptr,
+                    ImVec2(50.0f, 50.0f), ImVec2(0, 1), ImVec2(1, 0), 1)
+                )
+                {
+                    // @TODO: we need a dialog to select a texture
+                }
                 ImGui::TreePop();
             }
 

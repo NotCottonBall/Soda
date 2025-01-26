@@ -23,7 +23,7 @@ namespace Soda
         void OnResize(uint32_t width, uint32_t height) override;
 
     private:
-        OrthoCameraController m_CameraController;
+        OrthoCameraController m_EditorCameraController;
         Ref<Framebuffer> m_Framebuffer;
     private:
         // @TODO: change the name m_Scene to m_CurentSystem or m_System

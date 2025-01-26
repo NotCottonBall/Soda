@@ -12,7 +12,7 @@
 namespace Soda
 {
     SodaCan::SodaCan()
-        : Layer("SodaCan"), m_CameraController(1280.0f / 720.0f, false)
+        : Layer("SodaCan"), m_EditorCameraController(1280.0f / 720.0f, false)
     {}
 
     void SodaCan::OnAttach()
@@ -103,13 +103,13 @@ namespace Soda
            (fInfo.width != m_ViewportSize.x || fInfo.height != m_ViewportSize.y))
         {
             m_Framebuffer->Redo((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-            m_CameraController.WhenResized(m_ViewportSize.x, m_ViewportSize.y);
+            m_EditorCameraController.WhenResized(m_ViewportSize.x, m_ViewportSize.y);
 
             m_Scene->OnResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
         }
 
         if(m_IsPanelHovered)
-            m_CameraController.OnUpdate(dt);
+            m_EditorCameraController.OnUpdate(dt);
 
         m_Framebuffer->Bind();
         RenderCommand::ClearScreen({ 0.1f, 0.1f, 0.1f, 1.0f });
@@ -120,7 +120,7 @@ namespace Soda
             m_Scene->DestroyObject(m_Square2);
             
         // Render Loop
-        Renderer2D::StartScene(m_CameraController.GetCamera());
+        Renderer2D::StartScene(m_EditorCameraController.GetCamera());
         {
             m_Scene->OnUpdate(dt);
 
@@ -138,7 +138,7 @@ namespace Soda
 
     void SodaCan::OnEvent(Event& event)
     {
-        m_CameraController.OnEvent(event);
+        m_EditorCameraController.OnEvent(event);
     }
 
 
