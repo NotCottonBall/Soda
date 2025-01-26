@@ -6,9 +6,31 @@
 
 #include "CameraSystem.h"
 
+#include "../_Main/App.h"
+
 
 namespace Soda
 {
+    // i dont know if its a good idea to store the previous values of
+    // the cam in a seperate struct which is only for one use
+    // but who the fuck cares, it works so fuck it.
+    struct CommonCameraData
+    {
+        float AspectRatio;
+    };
+
+    inline CommonCameraData& GetCommonCamData()
+    {
+        static CommonCameraData commonCamData;
+        return commonCamData;
+    }
+
+
+    CameraSystem::CameraSystem()
+    {
+        SetViewport();
+    }
+
     void CameraSystem::SetOrthoCamera(float size, float nearPlane, float farPlane)
     {
         m_OrthoCamSize = size;
@@ -28,7 +50,16 @@ namespace Soda
 
     void CameraSystem::SetViewport(uint32_t width, uint32_t height)
     {
-        m_AspectRatio = (float)width / (float)height;
+        SD_ENGINE_ASSERT((width > 0 && height > 0),
+            "0 Width And Height Gives 0 Aspect Ratio"
+        );
+        GetCommonCamData().AspectRatio = (float)width / (float)height;
+        m_AspectRatio = GetCommonCamData().AspectRatio;
+        RecalculateMatrix();
+    }
+    void CameraSystem::SetViewport()
+    {
+        m_AspectRatio = GetCommonCamData().AspectRatio;
         RecalculateMatrix();
     }
 

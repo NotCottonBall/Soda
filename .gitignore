@@ -27,3 +27,4 @@ CMakeDoxyfile.in
 CMakeDoxygenDefaults.cmake
 
 imgui.ini
+*.my.todo

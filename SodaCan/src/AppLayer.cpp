@@ -43,9 +43,6 @@ namespace Soda
         m_EditorCamera = m_Scene->CreateObject("EditorCamera");
         m_EditorCamera.AddComponent<CameraComponent>();
 
-        m_SecondCam = m_Scene->CreateObject("Second Cam");
-        m_SecondCam.AddComponent<CameraComponent>().PrimaryCamera = false;
-
 
         m_Square.GetComponent<TransformComponent>().Scale = glm::vec3(10.0f, 10.0f, 10.0f);
         m_Square2.GetComponent<TransformComponent>().Scale = glm::vec3(2.0f, 2.0f, 2.0f);
@@ -99,17 +96,18 @@ namespace Soda
     {
         // resizing
         // @TODO: maybe this could be in a better place?
+        // i dont rwemember why the fuck i added this TODO.
+        // more words should have been said
         if(FramebufferInfo fInfo = m_Framebuffer->GetFramebufferInfo();
            m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
            (fInfo.width != m_ViewportSize.x || fInfo.height != m_ViewportSize.y))
         {
             m_Framebuffer->Redo((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-            m_CameraController.WhenResized(m_ViewportSize.x, m_ViewportSize.y); // Do we need to do this here, i think i do it already in the camera class
+            m_CameraController.WhenResized(m_ViewportSize.x, m_ViewportSize.y);
 
             m_Scene->OnResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
         }
 
-        // @TODO: The zoom still works when not focused
         if(m_IsPanelHovered)
             m_CameraController.OnUpdate(dt);
 
@@ -117,6 +115,7 @@ namespace Soda
         RenderCommand::ClearScreen({ 0.1f, 0.1f, 0.1f, 1.0f });
         Renderer2D::ResetRendererStats();
 
+        // @FIXME: why does it crash when you do this?
         if(Soda::Input::IsKeyPressed(SD_KEY_END))
             m_Scene->DestroyObject(m_Square2);
             
@@ -144,8 +143,7 @@ namespace Soda
 
 
     void SodaCan::OnResize(uint32_t width, uint32_t height)
-    {
-    }
+    {}
 
 
     void SodaCan::OnImGuiUpdate()
@@ -250,19 +248,17 @@ namespace Soda
             ImGui::Begin("Scene");
             {
                 // Checks is the panel is Focused
-                // @TODO: The Inputs should be consumed by the ImGui Panel and not the mani window.
+                // @FIXME: The Inputs should be consumed by the ImGui Panel and not the mani window.
                 m_IsPanelFocused = ImGui::IsWindowFocused();
                 m_IsPanelHovered = ImGui::IsWindowHovered();
 
                 App::Get().GetImGuiLayer()->ShouldConsumeEvents(!m_IsPanelHovered);
 
-                // put this inside a OnWindowResize Callback somehow
+                // @TODO: put this inside a OnWindowResize Callback somehow
                 // because we dont wanna check the scene/viewport each frame,
                 // we only wanna do it when we resize.
                 ImVec2 sceneSize = ImGui::GetContentRegionAvail();
                 m_ViewportSize = {sceneSize.x, sceneSize.y};
-
-                // till here...
                 ImGui::Image((void*)m_Framebuffer->GetFrameTextureID(), ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2(0, 1), ImVec2(1, 0));
             }
             ImGui::End();

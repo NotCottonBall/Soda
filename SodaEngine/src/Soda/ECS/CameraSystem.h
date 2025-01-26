@@ -15,13 +15,13 @@ namespace Soda
             Perspective = 1
         };
     public:
-        CameraSystem()
-        {  }
+        CameraSystem();
         virtual ~CameraSystem() = default;
 
         void SetOrthoCamera(float size, float nearPlane, float farPlane);
         void SetPersCamera(float FOV, float nearPlane, float farPlane);
         void SetViewport(uint32_t width, uint32_t height);
+        void SetViewport();
 
         // sets and gets for cam info
         const CameraType& GetCameraType() const
@@ -61,8 +61,10 @@ namespace Soda
         { return m_PersFarPlane; }
         void SetPerspectiveFarPlane(float farPlane)
         { m_PersFarPlane = farPlane; RecalculateMatrix(); }
-    private:
+
+private:
         void RecalculateMatrix();
+
 
     private:
         CameraType m_CameraType = CameraType::Orthographic;

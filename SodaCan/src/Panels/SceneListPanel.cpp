@@ -84,11 +84,16 @@ namespace Soda
 
 
         if(obj.HasComponent<CameraComponent>())
-        {        
+        {
+            // @LEARN: why the fuck do we do what we did in this if condition?
             if(ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Camera"))
             {
                 auto& camera = obj.GetComponent<CameraComponent>();
 
+                if(ImGui::Button("Recalculate Camera"))
+                {
+                    obj.GetComponent<CameraComponent>().Camera.SetViewport();
+                }
                 ImGui::Checkbox("Primary", &camera.PrimaryCamera);
                 ImGui::Checkbox("Fixed Aspect Ratio", &camera.FixedAspectRatio);
 

@@ -4,9 +4,6 @@
 // this is where the Engine starts from
 
 
-// for Windows systems
-#ifdef SD_PLATFORM_WINDOWS
-
 extern Soda::App* Soda::CreateApp();
 
 int main(int argc, char** argv)
@@ -29,5 +26,3 @@ int main(int argc, char** argv)
 	delete app;
 	SD_STOP_PROFILER();
 }
-
-#endif

@@ -27,11 +27,13 @@ namespace Soda
         Ref<Framebuffer> m_Framebuffer;
     private:
         // @TODO: change the name m_Scene to m_CurentSystem or m_System
+        // or the opposite
         Ref<Systems> m_Scene;
         
         Object m_Square;
         Object m_Square2;
         Object m_Square3;
+
         Object m_EditorCamera;
         Object m_SecondCam;
 
