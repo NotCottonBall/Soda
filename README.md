@@ -64,6 +64,7 @@ git submodule update
 ./scripts/Run.sh
 ```
 ## Running the exec
+#### NOTE: Please use Nvidia's GPUs as AMD's GPUs have this weird glitch effect. This will be solved later when the engine uses bindless textures.
 if everything went well then the exec should be in bin/system-build_type-arch/SodaCan.* (by * i mean whatever the exec file is called in your system .exe .out etc...)<br>
 i suggest not runnig the file yet. <br>
 - first, you should copy the SodaCan.* to a new folder

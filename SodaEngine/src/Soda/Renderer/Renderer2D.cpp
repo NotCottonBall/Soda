@@ -14,6 +14,11 @@
 #include "glm/gtx/dual_quaternion.hpp"
 
 
+// @FIXME: with AMD GPUs the rendering doesnt work well
+// that is because texture arrays need to be uniform something something
+// using a UBO (Uniform Buffer Object) or bindless
+// should work i think, so do that later
+// NOTE: if that don't work, then fuck openGL, use Vulkan or DirectX
 namespace Soda
 {
     struct QuadVertex

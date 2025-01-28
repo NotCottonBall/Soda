@@ -16,10 +16,10 @@ namespace Soda
 		spdlog::set_pattern("%^[%T] %n: %v%$");
 
 		// What spdlog should call The Engine And User Logging options and the default option... "TRACE"
-		s_EngineLogger = spdlog::stdout_color_mt("ENGINE");
+		s_EngineLogger = spdlog::stdout_color_mt("ENGINE LOG");
 		s_EngineLogger->set_level(spdlog::level::trace);
 
-		s_UserLogger = spdlog::stdout_color_mt("USER");
+		s_UserLogger = spdlog::stdout_color_mt("LOG");
 		s_UserLogger->set_level(spdlog::level::trace);
 	}
 }

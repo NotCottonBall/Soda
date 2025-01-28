@@ -10,9 +10,6 @@ int main(int argc, char** argv)
 {
 	Soda::Log::Init();
 	
-	SD_ENGINE_LOG("CORE LOG");
-	SD_LOG("USER LOG");
-	
 	// creating an app and executing it
 	SD_START_PROFILER("App_Start", "AppStart_Profiler.json");
 	auto app = Soda::CreateApp();

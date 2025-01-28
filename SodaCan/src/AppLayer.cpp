@@ -72,7 +72,7 @@ namespace Soda
             {
                 if(Soda::Input::IsKeyPressed(SD_KEY_W))
                 {
-                    SD_LOG("...");
+                    
                 }
             }
 
@@ -119,11 +119,11 @@ namespace Soda
         if(Soda::Input::IsKeyPressed(SD_KEY_END))
             m_Scene->DestroyObject(m_Square2);
             
+        
         // Render Loop
         Renderer2D::StartScene(m_EditorCameraController.GetCamera());
         {
             m_Scene->OnUpdate(dt);
-
             // Renderer2D::DrawQuad(m_BoxPosition, m_BoxScale, m_miniDirt, m_BoxColor);
 
             // Renderer2D::DrawQuad(m_BoxPosition, m_BoxScale, m_BoxTexture, m_BoxColor);
