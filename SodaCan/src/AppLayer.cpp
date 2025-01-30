@@ -4,9 +4,7 @@
 #include <imgui.h>
 
 #include "Panels/Panels.h"
-#include "Soda/Input/Input.h"
-#include "Soda/Input/KeyboardCodes.h"
-#include "Soda/Tools/Logger.h"
+#include "SodaInput.h"
 
 namespace Soda
 {

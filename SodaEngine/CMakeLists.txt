@@ -38,7 +38,7 @@ add_library(imgui STATIC
     submodules/imgui/backends/imgui_impl_glfw.cpp
 )
 # adding the include dirs
-target_include_directories(imgui PUBLIC submodules/imgui)
+target_include_directories(imgui PUBLIC submodules/imgui submodules/glfw/include)
 
 
 # glad library
@@ -71,11 +71,14 @@ target_precompile_headers(SodaEngine PRIVATE ${PCH_HEADER})
 
 
 # specifying the include directories
-include_directories(src)
-include_directories(submodules/glfw/include)
-include_directories(submodules/glad/include)
-include_directories(submodules/imgui)
-include_directories(submodules/spdlog/include)
-include_directories(submodules/glm)
-include_directories(submodules/stb_image)
-include_directories(submodules/entt)
+target_include_directories(SodaEngine PUBLIC
+    submodules/glfw/include
+    submodules/glad/include
+    submodules/imgui
+    submodules/spdlog/include
+    submodules/glm
+    submodules/stb_image
+    submodules/entt
+
+    src
+)

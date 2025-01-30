@@ -2,7 +2,6 @@
 
 #include "Panels/Panels.h"
 #include "Soda.h"
-#include "Soda/ECS/Object.h"
 
 namespace Soda
 {

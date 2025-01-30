@@ -1,7 +1,5 @@
 #include "Panels.h"
 
-#include "Soda/ECS/Components.h"
-#include "Soda/ECS/Object.h"
 #include "imgui.h"
 
 #include "../GUI/SodaGui.h"

@@ -27,7 +27,7 @@ target_link_libraries(SodaCan PRIVATE SodaEngine)
 
 # include directories that includes the SodaEngine
 include_directories(../SodaEngine/submodules/spdlog/include)
-include_directories(../SodaEngine/src)
+include_directories(../SodaEngine/include)
 include_directories(../SodaEngine/submodules/glm)
 include_directories(../SodaEngine/submodules/imgui)
 include_directories(../SodaEngine/submodules/entt)

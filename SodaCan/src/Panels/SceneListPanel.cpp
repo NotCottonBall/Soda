@@ -1,14 +1,9 @@
 #include "SceneListPanel.h"
 
-#include "Soda/Tools/Logger.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/trigonometric.hpp"
 #
 #include "imgui.h"
-
-#include "Soda/ECS/Components.h"
-#include "Soda/ECS/SceneCamera.h"
-
 
 #include "../GUI/SodaGui.h"
 

@@ -1,8 +1,5 @@
 {
     "C_Cpp.default.compileCommands": "${workspaceRoot}/build",
-    "clangd.arguments": [
-        "--compile-commands-dir=${workspaceRoot}/build"
-    ],
     "terminal.integrated.defaultProfile.windows": "Git Bash",
     "[glsl]": {
         "editor.formatOnSave": false
