@@ -26,9 +26,7 @@ private:
   Ref<Framebuffer> m_Framebuffer;
 
 private:
-  // @TODO: change the name m_Scene to m_CurentSystem or m_System
-  // or the opposite
-  Ref<Systems> m_Scene;
+  Ref<Scene> m_Scene;
 
   Object m_Square;
   Object m_Square2;

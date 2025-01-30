@@ -30,7 +30,7 @@ void SodaCan::OnAttach()
   m_FramebufferInfo.height = 720;
   m_Framebuffer = Framebuffer::Create(m_FramebufferInfo);
 
-  m_Scene = CreateRef<Systems>();
+  m_Scene = CreateRef<Scene>();
 
   m_Square = m_Scene->CreateObject("Square");
   m_Square.AddComponent<SpriteComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -90,7 +90,7 @@ void SodaCan::OnAttach()
 
   m_EditorCamera.AddComponent<ScriptComponent>().Bind<CameraController>();
 
-  m_Panels.SetSystem(m_Scene);
+  m_Panels.SetScene(m_Scene);
 }
 
 void SodaCan::OnUpdate(Timestep dt)

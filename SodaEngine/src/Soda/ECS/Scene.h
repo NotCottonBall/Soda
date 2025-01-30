@@ -9,11 +9,11 @@ namespace Soda
 {
 class Object;
 
-class Systems
+class Scene
 {
 public:
-  Systems() = default;
-  ~Systems() = default;
+  Scene() = default;
+  ~Scene() = default;
 
   // Object specific code
   Object CreateObject(const std::string &name =

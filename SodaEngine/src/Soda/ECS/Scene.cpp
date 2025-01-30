@@ -1,4 +1,4 @@
-#include "Systems.h"
+#include "Scene.h"
 
 #include "Soda/ECS/ScriptEntity.h"
 #include "Soda/Renderer/CameraComponent.h"
@@ -14,7 +14,7 @@
 
 namespace Soda
 {
-Object Systems::CreateObject(const std::string &name)
+Object Scene::CreateObject(const std::string &name)
 {
   Object obj = {m_Registry.create(), this};
   obj.AddComponent<NameComponent>(name);
@@ -22,10 +22,10 @@ Object Systems::CreateObject(const std::string &name)
 
   return obj;
 }
-void Systems::DestroyObject(Object obj) { m_Registry.destroy(obj); }
+void Scene::DestroyObject(Object obj) { m_Registry.destroy(obj); }
 
-// systems
-void Systems::OnUpdate(Timestep dt)
+// Scene Functions
+void Scene::OnUpdate(Timestep dt)
 {
   // Script Components
   m_Registry.view<ScriptComponent>().each([=](auto entity, auto &script) {
@@ -81,7 +81,7 @@ void Systems::OnUpdate(Timestep dt)
   }
 }
 
-void Systems::OnResize(uint32_t width, uint32_t height)
+void Scene::OnResize(uint32_t width, uint32_t height)
 {
   auto cameras = m_Registry.view<CameraComponent>();
   for(auto camera : cameras)

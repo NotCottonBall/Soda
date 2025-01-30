@@ -15,7 +15,7 @@ public:
   void DrawObjectProperties(Object obj);
 
 private:
-  Ref<Systems> m_CurrentSystem;
+  Ref<Scene> m_CurrentScene;
   Object m_SelectedObj;
 
   friend class Panels;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object.h"
-#include "Soda/ECS/Systems.h"
+#include "Soda/ECS/Scene.h"
 
 #include "Soda/_Main/Timestep.h"
 
@@ -21,6 +21,6 @@ protected:
 
 private:
   Object m_Script;
-  friend class Systems;
+  friend class Scene;
 };
 } // namespace Soda

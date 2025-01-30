@@ -43,7 +43,7 @@ void SceneListPanel::DrawListObject(Object obj, const std::string &name)
 
   if(m_DeleteQueued)
   {
-    m_CurrentSystem->DestroyObject(obj);
+    m_CurrentScene->DestroyObject(obj);
     m_SelectedObj = {};
   }
 }

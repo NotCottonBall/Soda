@@ -13,7 +13,7 @@ class Panels
 public:
   Panels() = default;
 
-  void SetSystem(const Ref<Systems> &system);
+  void SetScene(const Ref<Scene> &Scene);
   void OnImGuiRender();
 
 private:
