@@ -19,8 +19,6 @@ struct InstrumentProfile
 
 // visual profiler that will write everything ot a file specified
 // the file can be loaded by chrome://tracing
-// @TODO: The file should be able to load on edge's and firefox's trcing
-// software
 class VisualProfiler
 {
 public:

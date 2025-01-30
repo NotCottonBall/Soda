@@ -23,9 +23,6 @@ constexpr Ref<T> CreateRef(Args &&...args)
 }
 } // namespace Soda
 
-// @FIX ME: when i use camke, the compiler cant figure out where the assets
-// folder is so we spesify it here as ASSETS_FOLDER we dont wanna do that though
-
 // We use this BIT operation to make checking easier on the compiler without
 // bools to check if an IsEventHappning is true or not
 #define BIT(x) (1 << x)
@@ -53,7 +50,8 @@ constexpr Ref<T> CreateRef(Args &&...args)
       SD_ERROR("ASSERT ERRORRR... {0}", __VA_ARGS__);                          \
       __debugbreak();                                                          \
     }                                                                          \
-  } this is
+  }                                                                            \
+  this is
   // for the Engine
 #define SD_ENGINE_ASSERT(x, ...)                                               \
   {                                                                            \

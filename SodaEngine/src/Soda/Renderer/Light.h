@@ -175,7 +175,7 @@ private:
 };
 
 //*** Point Light ***//
-// TODO: add a range to the point light
+// @TODO: add a range to the point light
 class PointLight : public Light
 {
 public:

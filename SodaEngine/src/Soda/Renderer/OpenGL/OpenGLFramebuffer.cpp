@@ -19,7 +19,7 @@ OpenGLFramebuffer::~OpenGLFramebuffer()
   glDeleteTextures(1, &m_DepthBufferID);
 }
 
-void OpenGLFramebuffer::Redo(uint32_t width, uint32_t height)
+void OpenGLFramebuffer::Refresh(uint32_t width, uint32_t height)
 {
   glDeleteFramebuffers(1, &m_FramebufferID);
   glDeleteTextures(1, &m_FrameTextureID);

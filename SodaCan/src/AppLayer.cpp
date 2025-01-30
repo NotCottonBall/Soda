@@ -103,7 +103,8 @@ void SodaCan::OnUpdate(Timestep dt)
      m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
      (fInfo.width != m_ViewportSize.x || fInfo.height != m_ViewportSize.y))
   {
-    m_Framebuffer->Redo((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+    m_Framebuffer->Refresh((uint32_t)m_ViewportSize.x,
+                           (uint32_t)m_ViewportSize.y);
     m_EditorCameraController.WhenResized(m_ViewportSize.x, m_ViewportSize.y);
 
     m_Scene->OnResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
@@ -179,7 +180,7 @@ void SodaCan::OnImGuiUpdate()
   // being visible.
   if(!opt_padding)
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-  ImGui::Begin("DockSpace Demo", &dockspaceEnable, window_flags);
+  ImGui::Begin("DockSpace", &dockspaceEnable, window_flags);
   if(!opt_padding)
     ImGui::PopStyleVar();
 

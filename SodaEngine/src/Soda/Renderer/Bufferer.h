@@ -12,13 +12,15 @@ enum class ShaderDataType
   Float,
 
   IVec2,
-  Vec2,
-  Mat2,
   IVec3,
-  Vec3,
-  Mat3,
   IVec4,
+
+  Vec2,
+  Vec3,
   Vec4,
+
+  Mat2,
+  Mat3,
   Mat4,
 };
 static uint32_t GetSDTSize(ShaderDataType sdt)

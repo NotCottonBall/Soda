@@ -4,7 +4,7 @@
         "--compile-commands-dir=${workspaceRoot}/build"
     ],
     "terminal.integrated.defaultProfile.windows": "Git Bash",
-    "files.associations": {
-        "chrono": "cpp"
+    "[glsl]": {
+        "editor.formatOnSave": false
     }
 }

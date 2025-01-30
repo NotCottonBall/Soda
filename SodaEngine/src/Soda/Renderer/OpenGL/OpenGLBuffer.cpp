@@ -49,7 +49,6 @@ GLIndexBuffer::GLIndexBuffer(uint32_t *indices, uint32_t count)
   glCreateBuffers(1, &m_bufferID);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferID);
 
-  // @QUESTION: will this work better with a GL_DYNAMIC_DRAW or GL_STATIC_DRAW?
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices,
                GL_STATIC_DRAW);
 }

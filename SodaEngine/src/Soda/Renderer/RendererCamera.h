@@ -2,10 +2,6 @@
 
 #include "glm/glm.hpp"
 
-// @NOTE: this is the default camera, the camera base class
-// i cant name it just camera because i want to name the variable in the ECS
-// Camera (with a capital C) also i want to name all my classes with Capital
-// alphabet at the start
 namespace Soda
 {
 class RendererCamera

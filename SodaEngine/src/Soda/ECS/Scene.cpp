@@ -6,12 +6,10 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/glm.hpp"
 
-
 #include "Soda/Renderer/Renderer2D.h"
 
 #include "Soda/ECS/Components.h"
 #include "Soda/ECS/Object.h"
-#include <memoryapi.h>
 
 namespace Soda
 {

@@ -14,7 +14,7 @@ public:
   virtual void Unbind() const override;
 
   void Refresh();
-  virtual void Redo(uint32_t width, uint32_t height) override;
+  virtual void Refresh(uint32_t width, uint32_t height) override;
 
   virtual uint32_t GetFrameTextureID() const override
   {
