@@ -6,8 +6,9 @@
 #
 #include "imgui.h"
 
-#include "Soda/ECS/CameraSystem.h"
 #include "Soda/ECS/Components.h"
+#include "Soda/ECS/SceneCamera.h"
+
 
 #include "../GUI/SodaGui.h"
 
@@ -109,15 +110,14 @@ void SceneListPanel::DrawObjectProperties(Object obj)
           if(ImGui::Selectable(cameraTypes[i]))
           {
             cameraTypeToString = cameraTypes[i];
-            camera.Camera.SetCameraType((CameraSystem::CameraType)i);
+            camera.Camera.SetCameraType((SceneCamera::CameraType)i);
           }
         }
 
         ImGui::EndCombo();
       }
 
-      if(camera.Camera.GetCameraType() ==
-         CameraSystem::CameraType::Orthographic)
+      if(camera.Camera.GetCameraType() == SceneCamera::CameraType::Orthographic)
       {
         float orthoCamSize = camera.Camera.GetOrthoCameraSize();
         if(ImGui::DragFloat("View Size", &orthoCamSize))

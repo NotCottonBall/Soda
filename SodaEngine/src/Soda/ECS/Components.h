@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Soda/ECS/CameraSystem.h"
+#include "Soda/ECS/SceneCamera.h"
 #include "Soda/ECS/ScriptEntity.h"
 
 #include "Soda/Renderer/Texture.h"
 #include "Soda/Tools/SpriteSheet.h"
 
-#include "Soda/Renderer/CameraComponent.h"
+#include "Soda/Renderer/RendererCamera.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/fwd.hpp"
 #include "glm/trigonometric.hpp"
@@ -75,7 +75,7 @@ struct SpriteComponent
 // Other Components
 struct CameraComponent
 {
-  CameraSystem Camera;
+  SceneCamera Camera;
   bool PrimaryCamera = true;
   bool FixedAspectRatio = false;
 

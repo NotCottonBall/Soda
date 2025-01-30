@@ -4,7 +4,7 @@
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "CameraSystem.h"
+#include "SceneCamera.h"
 
 #include "../_Main/App.h"
 
@@ -24,9 +24,9 @@ inline CommonCameraData &GetCommonCamData()
   return commonCamData;
 }
 
-CameraSystem::CameraSystem() { SetViewport(); }
+SceneCamera::SceneCamera() { SetViewport(); }
 
-void CameraSystem::SetOrthoCamera(float size, float nearPlane, float farPlane)
+void SceneCamera::SetOrthoCamera(float size, float nearPlane, float farPlane)
 {
   m_OrthoCamSize = size;
   m_OrthoNearPlane = nearPlane;
@@ -34,7 +34,7 @@ void CameraSystem::SetOrthoCamera(float size, float nearPlane, float farPlane)
 
   RecalculateMatrix();
 }
-void CameraSystem::SetPersCamera(float FOV, float nearPlane, float farPlane)
+void SceneCamera::SetPersCamera(float FOV, float nearPlane, float farPlane)
 {
   m_PerspectiveFOV = FOV;
   m_PersNearPlane = nearPlane;
@@ -43,7 +43,7 @@ void CameraSystem::SetPersCamera(float FOV, float nearPlane, float farPlane)
   RecalculateMatrix();
 }
 
-void CameraSystem::SetViewport(uint32_t width, uint32_t height)
+void SceneCamera::SetViewport(uint32_t width, uint32_t height)
 {
   SD_ENGINE_ASSERT((width > 0 && height > 0),
                    "0 Width And Height Gives 0 Aspect Ratio");
@@ -51,13 +51,13 @@ void CameraSystem::SetViewport(uint32_t width, uint32_t height)
   m_AspectRatio = GetCommonCamData().AspectRatio;
   RecalculateMatrix();
 }
-void CameraSystem::SetViewport()
+void SceneCamera::SetViewport()
 {
   m_AspectRatio = GetCommonCamData().AspectRatio;
   RecalculateMatrix();
 }
 
-void CameraSystem::RecalculateMatrix()
+void SceneCamera::RecalculateMatrix()
 {
   if(m_CameraType == CameraType::Orthographic)
   {

@@ -1,10 +1,11 @@
 #include "Scene.h"
 
 #include "Soda/ECS/ScriptEntity.h"
-#include "Soda/Renderer/CameraComponent.h"
 #include "Soda/Renderer/Render.h"
+#include "Soda/Renderer/RendererCamera.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/glm.hpp"
+
 
 #include "Soda/Renderer/Renderer2D.h"
 
@@ -41,7 +42,7 @@ void Scene::OnUpdate(Timestep dt)
   });
 
   // Camera Stuff
-  TheCamera *SceneCamera = nullptr;
+  RendererCamera *SceneCamera = nullptr;
   glm::mat4 CameraTransform(1.0f);
 
   auto viewGroup = m_Registry.view<TransformComponent, CameraComponent>();

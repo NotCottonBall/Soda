@@ -5,6 +5,8 @@
 
 namespace Soda
 {
+
+// 2D CAMERA //
 class OrthoCamera
 {
 public:
@@ -46,6 +48,7 @@ private:
   float m_rotation = 0.0f;
 };
 
+// 3D Camera //
 class PerspectiveCamera
 {
 public:

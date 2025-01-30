@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Soda/Renderer/Camera.h"
-#include "Soda/Renderer/CameraComponent.h"
+#include "Soda/Renderer/RendererCamera.h"
 #include "Soda/Renderer/Texture.h"
 
 #include "Soda/Tools/SpriteSheet.h"
@@ -38,7 +38,8 @@ public:
 
   // These command handle the batch rendering stuff and default shader uniform
   // stuff
-  static void StartScene(const TheCamera &camera, const glm::mat4 &transform);
+  static void StartScene(const RendererCamera &camera,
+                         const glm::mat4 &transform);
   static void StartScene(const OrthoCamera &camera);
   static void StopScene();
 

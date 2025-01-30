@@ -8,12 +8,12 @@
 // alphabet at the start
 namespace Soda
 {
-class TheCamera
+class RendererCamera
 {
 public:
-  TheCamera() = default;
-  TheCamera(const glm::mat4 &projection) : m_Projection(projection) {}
-  virtual ~TheCamera() = default;
+  RendererCamera() = default;
+  RendererCamera(const glm::mat4 &projection) : m_Projection(projection) {}
+  virtual ~RendererCamera() = default;
 
   const glm::mat4 &GetProjection() const { return m_Projection; }
 

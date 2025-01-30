@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Soda/Renderer/CameraComponent.h"
+#include "Soda/Renderer/RendererCamera.h"
 #include "glm/trigonometric.hpp"
 
 namespace Soda
 {
-class CameraSystem : public TheCamera
+class SceneCamera : public RendererCamera
 {
 public:
   enum class CameraType
@@ -15,8 +15,8 @@ public:
   };
 
 public:
-  CameraSystem();
-  virtual ~CameraSystem() = default;
+  SceneCamera();
+  virtual ~SceneCamera() = default;
 
   void SetOrthoCamera(float size, float nearPlane, float farPlane);
   void SetPersCamera(float FOV, float nearPlane, float farPlane);

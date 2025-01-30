@@ -133,7 +133,8 @@ void Renderer2D::StartScene(const OrthoCamera &camera)
 
   Setup();
 }
-void Renderer2D::StartScene(const TheCamera &camera, const glm::mat4 &transform)
+void Renderer2D::StartScene(const RendererCamera &camera,
+                            const glm::mat4 &transform)
 {
   glm::mat4 m_ViewProjectionMat =
       camera.GetProjection() * glm::inverse(transform);
