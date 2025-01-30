@@ -124,10 +124,6 @@ namespace Soda
         Renderer2D::StartScene(m_EditorCameraController.GetCamera());
         {
             m_Scene->OnUpdate(dt);
-            // Renderer2D::DrawQuad(m_BoxPosition, m_BoxScale, m_miniDirt, m_BoxColor);
-
-            // Renderer2D::DrawQuad(m_BoxPosition, m_BoxScale, m_BoxTexture, m_BoxColor);
-            // Renderer2D::DrawQuad(m_BoxPosition + glm::vec3(1.0f, 0.0f, 0.0f), m_BoxScale, m_MiniTileSheet, m_BoxColor);
         }
         Renderer2D::StopScene();
 

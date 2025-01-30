@@ -69,6 +69,9 @@ namespace Soda
         static void DrawRotatedQuad(const glm::vec3& position, const float& rotation, const glm::vec2& scale, const glm::vec4& color);
         static void DrawRotatedQuad(const glm::vec3& position, const float& rotation, const glm::vec2& scale, const Ref<Texture2D>& texture, const glm::vec4& color, float texScale = 1.0f);
         static void DrawRotatedQuad(const glm::vec3& position, const float& rotation, const glm::vec2& scale, const Ref<SpriteSheetTexture>& spriteSheetTexture, const glm::vec4& color, float texScale = 1.0f);
+
+    private:
+        void ResetBlendState();
     };
 }
 

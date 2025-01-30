@@ -52,10 +52,7 @@ namespace Soda
     };
 
     static QuadInfo m_QuadInfo;
-
     Renderer2D::RendererStats m_RendererStats;
-
-
 
     void Renderer2D::Init()
     {
@@ -169,7 +166,6 @@ namespace Soda
         m_RendererStats.noOfDrawCalls++;
     }
 
-
     // draw the quads with matrices
     void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
     {
@@ -211,6 +207,7 @@ namespace Soda
 
         float textureIndex = 0.0f;
 
+        // check if texture exists
         for(uint32_t i = 1; i < m_QuadInfo.m_TextureIndex; i++)
         {
             if(*m_QuadInfo.m_TextureSlots[i].get() == *texture.get())
@@ -220,6 +217,7 @@ namespace Soda
             }
         }
 
+        // add it if it doesn't
         if(textureIndex == 0.0f)
         {
             textureIndex = (float)m_QuadInfo.m_TextureIndex;
@@ -350,4 +348,8 @@ namespace Soda
     const Renderer2D::RendererStats& Renderer2D::GetRendererStats()
     { return m_RendererStats; }
 
+    void Renderer2D::ResetBlendState()
+    {
+        
+    }
 }

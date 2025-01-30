@@ -36,7 +36,7 @@ namespace Soda
 	void GLVertexBuffer::SetData(const void* data, uint32_t dataSize, uint32_t offset)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_bufferID);
-		glBufferSubData(GL_ARRAY_BUFFER, offset, dataSize, data);
+		glBufferSubData(GL_ARRAY_BUFFER, offset, dataSize, data); 
 	}
 	
 	void GLVertexBuffer::Bind() const
