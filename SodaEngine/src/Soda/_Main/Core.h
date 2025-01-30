@@ -37,10 +37,6 @@ constexpr Ref<T> CreateRef(Args &&...args)
 #elif SD_RELEASE
 #define SD_ENABLE_PROFILING
 #endif
-
-#ifdef SD_PLATFORM_WINDOWS
-  // we dont include logger.h in this file cuz these are just defines that will
-  // be writen as-is in the ones you use them in
 #ifdef SD_ENABLE_ASSERTS // This sets if you want ASSERT functions in the
                          // project this is for the user
 #define SD_ASSERT(x, ...)                                                      \
@@ -48,7 +44,7 @@ constexpr Ref<T> CreateRef(Args &&...args)
     if(!(x))                                                                   \
     {                                                                          \
       SD_ERROR("ASSERT ERRORRR... {0}", __VA_ARGS__);                          \
-      __debugbreak();                                                          \
+      throw std::runtime_error("");                                            \
     }                                                                          \
   }                                                                            \
   this is
@@ -58,16 +54,12 @@ constexpr Ref<T> CreateRef(Args &&...args)
     if(!(x))                                                                   \
     {                                                                          \
       SD_ENGINE_ERROR("ASSERT ERRORRR... {0}", __VA_ARGS__);                   \
-      __debugbreak();                                                          \
+      throw std::runtime_error("");                                            \
     }                                                                          \
   }
 #else
   // well if you dont want ASSERTS (prob dont in Release or Dist) then this is
   // your part
-#define SD_ASSERT(x, ...)
-#define SD_ENGINE_ASSERT(x, ...)
-#endif
-#else
 #define SD_ASSERT(x, ...)
 #define SD_ENGINE_ASSERT(x, ...)
 #endif

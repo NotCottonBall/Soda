@@ -6,5 +6,8 @@
     "terminal.integrated.defaultProfile.windows": "Git Bash",
     "[glsl]": {
         "editor.formatOnSave": false
+    },
+    "files.associations": {
+        "exception": "cpp"
     }
 }

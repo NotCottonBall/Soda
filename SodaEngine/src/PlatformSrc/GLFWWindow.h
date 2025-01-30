@@ -1,8 +1,5 @@
 #pragma once
 
-// This is our Platform Specific Window Class
-// For Windows
-
 #include "Soda/_Main/Window.h"
 
 #include "Soda/Renderer/RenderContext.h"
@@ -13,13 +10,13 @@ namespace Soda
 {
 // this is our window window class which inherits the SodaWindow (Default
 // properties of a window)
-class WindowsWindow : public SodaWindow
+class GLFWWindow : public SodaWindow
 {
 public:
   // this constructor will take Info of a window (defaults to WindowInfo default
   // values if Info is not provided)
-  WindowsWindow(const WindowInfo &windowInfo);
-  virtual ~WindowsWindow();
+  GLFWWindow(const WindowInfo &windowInfo);
+  virtual ~GLFWWindow();
 
   // each platform has it's own Update functions which has a specific set of
   // instructions

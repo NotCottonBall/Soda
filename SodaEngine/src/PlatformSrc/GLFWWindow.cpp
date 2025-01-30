@@ -23,17 +23,14 @@ void GLFW_ErrorCallback(int errorCode, const char *description)
 // the Create function returns the PlatformWindow class
 SodaWindow *SodaWindow::Create(const WindowInfo &windowInfo)
 {
-  return new WindowsWindow(windowInfo);
+  return new GLFWWindow(windowInfo);
 }
 
 // and the PlatformWindow class calls the Init() func with the given info
-WindowsWindow::WindowsWindow(const WindowInfo &windowInfo)
-{
-  InitWindow(windowInfo);
-}
-WindowsWindow::~WindowsWindow() { CloseWindow(); }
+GLFWWindow::GLFWWindow(const WindowInfo &windowInfo) { InitWindow(windowInfo); }
+GLFWWindow::~GLFWWindow() { CloseWindow(); }
 
-void WindowsWindow::InitWindow(const WindowInfo &windowInfo)
+void GLFWWindow::InitWindow(const WindowInfo &windowInfo)
 {
   // assigning the given data to our Window Data
   m_WindowData.Name = windowInfo.Name;
@@ -162,15 +159,15 @@ void WindowsWindow::InitWindow(const WindowInfo &windowInfo)
   });
 }
 
-void WindowsWindow::CloseWindow() { glfwDestroyWindow(m_Window); }
+void GLFWWindow::CloseWindow() { glfwDestroyWindow(m_Window); }
 
-void WindowsWindow::OnUpdate()
+void GLFWWindow::OnUpdate()
 {
   glfwPollEvents();
   glfwSwapBuffers(m_Window);
 }
 
-void WindowsWindow::SetVSync(bool status)
+void GLFWWindow::SetVSync(bool status)
 {
   if(status)
     // this function waits the given amount of frames to swap buffersa
@@ -182,9 +179,9 @@ void WindowsWindow::SetVSync(bool status)
   m_WindowData.VSync = status;
 }
 
-bool WindowsWindow::GetVSyncStatus() const { return m_WindowData.VSync; }
+bool GLFWWindow::GetVSyncStatus() const { return m_WindowData.VSync; }
 
-void WindowsWindow::ShowCursor(bool status)
+void GLFWWindow::ShowCursor(bool status)
 {
   if(status)
     glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
