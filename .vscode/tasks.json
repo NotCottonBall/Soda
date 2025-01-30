@@ -1,13 +1,10 @@
 {
     "tasks": [
-        // BASIC TASKS //
         {
             "label": "Clean",
             "type": "shell",
-            "command": "rm build bin",
-            "args": [
-                "-rf"
-            ],
+            "command": "rm -rf build bin",
+            "args": [],
             "options": {
                 "cwd": "${workspaceFolder}"
             }
@@ -28,7 +25,6 @@
                 "isDefault": false
             }
         },
-        // BUILD MODES //
         {
             "label": "DEBUG MODE",
             "type": "shell",
@@ -39,8 +35,6 @@
                 "-DCMAKE_BUILD_TYPE=Debug",
                 "-DCMAKE_C_COMPILER=clang",
                 "-DCMAKE_CXX_COMPILER=clang++"
-                // "-DCMAKE_C_COMPILER=gcc",
-                // "-DCMAKE_CXX_COMPILER=g++",
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -60,8 +54,6 @@
                 "-DCMAKE_BUILD_TYPE=Release",
                 "-DCMAKE_C_COMPILER=clang",
                 "-DCMAKE_CXX_COMPILER=clang++"
-                // "-DCMAKE_C_COMPILER=gcc",
-                // "-DCMAKE_CXX_COMPILER=g++",
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -81,18 +73,15 @@
                 "-DCMAKE_BUILD_TYPE=Export",
                 "-DCMAKE_C_COMPILER=clang",
                 "-DCMAKE_CXX_COMPILER=clang++"
-                // "-DCMAKE_C_COMPILER=gcc",
-                // "-DCMAKE_CXX_COMPILER=g++",
             ],
             "options": {
-                "cwd": "${workspaceFolder}",
+                "cwd": "${workspaceFolder}"
             },
             "group": {
                 "kind": "build",
                 "isDefault": false
-            },
+            }
         },
-        // MAKE AND BUILD //
         {
             "label": "Make And Build (DEBUG)",
             "type": "shell",
@@ -132,7 +121,6 @@
                 "isDefault": false
             }
         },
-        // CLEAN RE-BUILD //
         {
             "label": "Clean ReBuild (DEBUG)",
             "type": "shell",
@@ -142,6 +130,7 @@
                 "Make And Build (DEBUG)"
             ],
             "group": "none",
+            "problemMatcher": []
         },
         {
             "label": "Clean ReBuild (RELEASE)",
@@ -161,7 +150,7 @@
                 "Clean",
                 "Make And Build (EXPORT)"
             ],
-            "group": "none",
-        },
+            "group": "none"
+        }
     ],
 }

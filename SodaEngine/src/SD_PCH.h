@@ -2,7 +2,6 @@
 
 // the precompiled header file
 
-#include "Soda/Tools/Debug/Profiler.h"
 #include "Soda/Tools/Logger.h"
 #include "Soda/_Main/Core.h"
 

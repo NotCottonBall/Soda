@@ -1,4 +1,5 @@
 #pragma once
+#include "Soda/Tools/Debug/Profiler.h"
 
 // this is the main function in the project
 // this is where the Engine starts from

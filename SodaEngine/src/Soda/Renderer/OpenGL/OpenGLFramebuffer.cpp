@@ -69,8 +69,9 @@ void OpenGLFramebuffer::Refresh()
 
   // @FIX: this gets called when the scene viewport is < 0 pixels in width or
   // height
-  SD_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE,
-            "The framebuffer was not created properly");
+  SD_ENGINE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) ==
+                       GL_FRAMEBUFFER_COMPLETE,
+                   "The framebuffer was not created properly");
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 } // namespace Soda
