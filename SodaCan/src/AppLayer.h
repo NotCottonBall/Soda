@@ -1,82 +1,85 @@
 #pragma once
 
-#include "Soda.h"
 #include "Panels/Panels.h"
+#include "Soda.h"
 #include "Soda/ECS/Object.h"
-
 
 namespace Soda
 {
-    class SodaCan : public Layer
-    {
-    public:
-        SodaCan();
-        virtual ~SodaCan() = default;
+class SodaCan : public Layer
+{
+public:
+  SodaCan();
+  virtual ~SodaCan() = default;
 
-        void OnAttach() override;
-        void OnDetach() override;
+  void OnAttach() override;
+  void OnDetach() override;
 
-        void OnUpdate(Timestep dt) override;
-        void OnEvent(Event& event) override;
-        void OnImGuiUpdate() override;
+  void OnUpdate(Timestep dt) override;
+  void OnEvent(Event &event) override;
+  void OnImGuiUpdate() override;
 
-        void OnResize(uint32_t width, uint32_t height) override;
+  void OnResize(uint32_t width, uint32_t height) override;
 
-    private:
-        OrthoCameraController m_EditorCameraController;
-        Ref<Framebuffer> m_Framebuffer;
-    private:
-        // @TODO: change the name m_Scene to m_CurentSystem or m_System
-        // or the opposite
-        Ref<Systems> m_Scene;
-        
-        Object m_Square;
-        Object m_Square2;
-        Object m_Square3;
+private:
+  OrthoCameraController m_EditorCameraController;
+  Ref<Framebuffer> m_Framebuffer;
 
-        Object m_EditorCamera;
-        Object m_SecondCam;
+private:
+  // @TODO: change the name m_Scene to m_CurentSystem or m_System
+  // or the opposite
+  Ref<Systems> m_Scene;
 
-        bool m_PrimaryCam = true;
+  Object m_Square;
+  Object m_Square2;
+  Object m_Square3;
 
-        Ref<Texture2D> m_GridTex;
-        Ref<Texture2D> m_GingerCat;
-        Ref<Texture2D> m_BoxTexture;
+  Object m_EditorCamera;
+  Object m_SecondCam;
 
-        Ref<SpriteSheetTexture> m_miniDirt;
-        Ref<SpriteSheetTexture> m_miniDirtWithGrass;
+  bool m_PrimaryCam = true;
 
-        // could make a Object2D class to store all of this data
-        Ref<VertexArray> m_BoxVA;
-        Ref<Shader> m_Shader2D;
+  Ref<Texture2D> m_GridTex;
+  Ref<Texture2D> m_GingerCat;
+  Ref<Texture2D> m_BoxTexture;
 
-        glm::vec3 m_BoxPosition = { 0.0f, 0.0f, 0.1f };
-        glm::vec2 m_BoxScale = { 1.0f, 1.0f };
-        float m_BoxRotation = 0.0f;
-        glm::vec4 m_BoxColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+  Ref<SpriteSheetTexture> m_miniDirt;
+  Ref<SpriteSheetTexture> m_miniDirtWithGrass;
 
-        float m_GradFactor = 5.0f;
-        float m_MulFactor = 1.0f;
+  // could make a Object2D class to store all of this data
+  Ref<VertexArray> m_BoxVA;
+  Ref<Shader> m_Shader2D;
 
-    private:
-        glm::vec2 m_ViewportSize = glm::vec2(0.0f);
+  glm::vec3 m_BoxPosition = {0.0f, 0.0f, 0.1f};
+  glm::vec2 m_BoxScale = {1.0f, 1.0f};
+  float m_BoxRotation = 0.0f;
+  glm::vec4 m_BoxColor = {1.0f, 1.0f, 1.0f, 1.0f};
 
-    // Panels
-    private:
-        Panels m_Panels;
-    private:
-        bool m_IsPanelFocused = false;
-        bool m_IsPanelHovered = false;
+  float m_GradFactor = 5.0f;
+  float m_MulFactor = 1.0f;
 
-        enum Settings : char
-        {
-            None = 0,
-            EnableRendererStats = BIT(0),
-            ADD_SOMETHING_HERE  = BIT(1) // for future settings
-        };
-        Settings m_DefaultSettings = Settings::None;
+private:
+  glm::vec2 m_ViewportSize = glm::vec2(0.0f);
 
-        void toggoleSetting(Settings& defaultSetting, Settings settingToToggle)
-        { defaultSetting = static_cast<Settings>(defaultSetting ^ settingToToggle); }
-    };
-}
+  // Panels
+private:
+  Panels m_Panels;
+
+private:
+  bool m_IsPanelFocused = false;
+  bool m_IsPanelHovered = false;
+
+  enum Settings : char
+  {
+    None = 0,
+    EnableRendererStats = BIT(0),
+    ADD_SOMETHING_HERE = BIT(1) // for future settings
+  };
+  Settings m_DefaultSettings = Settings::None;
+
+  void toggoleSetting(Settings &defaultSetting, Settings settingToToggle)
+  {
+    defaultSetting = static_cast<Settings>(defaultSetting ^ settingToToggle);
+  }
+};
+} // namespace Soda

@@ -2,83 +2,78 @@
 
 #include "OpenGLTexture.h"
 
-#include "stb_image.h"
 #include "glad/glad.h"
-
+#include "stb_image.h"
 
 namespace Soda
 {
-	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
-		: m_Path(path), m_Width(0), m_Height(0), m_TextureID(0)
-	{
-		stbi_set_flip_vertically_on_load(1);
-		
-		int width, height, channels;
-		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-		SD_ENGINE_ASSERT(data, "Failed to load image!");
+OpenGLTexture2D::OpenGLTexture2D(const std::string &path)
+    : m_Path(path), m_Width(0), m_Height(0), m_TextureID(0)
+{
+  stbi_set_flip_vertically_on_load(1);
 
-		m_Width = width;
-		m_Height = height;
+  int width, height, channels;
+  stbi_uc *data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+  SD_ENGINE_ASSERT(data, "Failed to load image!");
 
-		int internalFormat = 0, externalFormat = 0;
+  m_Width = width;
+  m_Height = height;
 
-		if (channels == 4)
-		{
-			internalFormat = GL_RGBA8;
-			externalFormat = GL_RGBA;
-		}
-		else if (channels == 3)
-		{
-			internalFormat = GL_RGB8;
-			externalFormat = GL_RGB;
-		}
+  int internalFormat = 0, externalFormat = 0;
 
-		m_InternalFormat = internalFormat;
-		m_DataFormat = externalFormat;
+  if(channels == 4)
+  {
+    internalFormat = GL_RGBA8;
+    externalFormat = GL_RGBA;
+  }
+  else if(channels == 3)
+  {
+    internalFormat = GL_RGB8;
+    externalFormat = GL_RGB;
+  }
 
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_TextureID);
-		glTextureStorage2D(m_TextureID, 1, GL_RGBA8, m_Width, m_Height);
+  m_InternalFormat = internalFormat;
+  m_DataFormat = externalFormat;
 
-		glTextureParameteri(m_TextureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(m_TextureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glCreateTextures(GL_TEXTURE_2D, 1, &m_TextureID);
+  glTextureStorage2D(m_TextureID, 1, GL_RGBA8, m_Width, m_Height);
 
-		glTextureSubImage2D(m_TextureID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+  glTextureParameteri(m_TextureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTextureParameteri(m_TextureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		stbi_image_free(data);
-	}
-	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
-		: m_Width(width), m_Height(height)
-	{
-		m_DataFormat = GL_RGBA;
-		m_InternalFormat = GL_RGBA8;
+  glTextureSubImage2D(m_TextureID, 0, 0, 0, m_Width, m_Height, GL_RGBA,
+                      GL_UNSIGNED_BYTE, data);
 
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_TextureID);
-		glTextureStorage2D(m_TextureID, 1, GL_RGBA8, m_Width, m_Height);
-
-		glTextureParameteri(m_TextureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(m_TextureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	}
-
-	void OpenGLTexture2D::SetData(void* data, uint32_t size)
-	{
-		uint32_t bytesPerPixel = m_DataFormat == GL_RGBA ? 4 : 3;
-		SD_ENGINE_ASSERT(size == m_Width * m_Height * bytesPerPixel, "Data must be entire texture!");
-		glTextureSubImage2D(m_TextureID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
-	}
-
-	OpenGLTexture2D::~OpenGLTexture2D()
-	{
-		glDeleteTextures(1, &m_TextureID);
-	}
-
-
-	void OpenGLTexture2D::Bind(uint32_t slot)
-	{
-		glBindTextureUnit(slot, m_TextureID);
-	}
-
-	void OpenGLTexture2D::Unbind(uint32_t slot)
-	{
-		glBindTextureUnit(slot, 0);
-	}
+  stbi_image_free(data);
 }
+OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
+    : m_Width(width), m_Height(height)
+{
+  m_DataFormat = GL_RGBA;
+  m_InternalFormat = GL_RGBA8;
+
+  glCreateTextures(GL_TEXTURE_2D, 1, &m_TextureID);
+  glTextureStorage2D(m_TextureID, 1, GL_RGBA8, m_Width, m_Height);
+
+  glTextureParameteri(m_TextureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTextureParameteri(m_TextureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
+void OpenGLTexture2D::SetData(void *data, uint32_t size)
+{
+  uint32_t bytesPerPixel = m_DataFormat == GL_RGBA ? 4 : 3;
+  SD_ENGINE_ASSERT(size == m_Width * m_Height * bytesPerPixel,
+                   "Data must be entire texture!");
+  glTextureSubImage2D(m_TextureID, 0, 0, 0, m_Width, m_Height, m_DataFormat,
+                      GL_UNSIGNED_BYTE, data);
+}
+
+OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &m_TextureID); }
+
+void OpenGLTexture2D::Bind(uint32_t slot)
+{
+  glBindTextureUnit(slot, m_TextureID);
+}
+
+void OpenGLTexture2D::Unbind(uint32_t slot) { glBindTextureUnit(slot, 0); }
+} // namespace Soda

@@ -4,8 +4,7 @@
 
 #include "OpenGL/OpenGLRenderer.h"
 
-
 namespace Soda
 {
-	RenderAPI* RenderCommand::m_renderAPI = new OpenGLRenderer();
+RenderAPI *RenderCommand::m_renderAPI = new OpenGLRenderer();
 }

@@ -4,33 +4,27 @@
             "name": "Launch Debug",
             "request": "launch",
             "type": "cppvsdbg",
-
             "cwd": "${workspaceFolder}",
             "program": "bin/Windows-Debug-AMD64/SodaCan.exe",
             "console": "newExternalWindow",
-
             "preLaunchTask": "Build",
         },
         {
             "name": "Launch Release",
             "request": "launch",
             "type": "cppvsdbg",
-
             "cwd": "${workspaceFolder}",
             "program": "bin/Windows-Release-AMD64/SodaCan.exe",
             "console": "newExternalWindow",
-
             "preLaunchTask": "Build",
         },
         {
             "name": "Launch Export",
             "request": "launch",
             "type": "cppvsdbg",
-
             "cwd": "${workspaceFolder}",
             "program": "bin/Windows-Export-AMD64/SodaCan.exe",
             "console": "newExternalWindow",
-
             "preLaunchTask": "Build",
         }
     ]

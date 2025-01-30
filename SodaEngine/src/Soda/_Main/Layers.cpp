@@ -4,10 +4,7 @@
 
 namespace Soda
 {
-    Layer::Layer(const std::string LayerName)
-        : m_LayerName(LayerName)
-    {}
+Layer::Layer(const std::string LayerName) : m_LayerName(LayerName) {}
 
-    Layer::~Layer()
-    {}
-}
+Layer::~Layer() {}
+} // namespace Soda

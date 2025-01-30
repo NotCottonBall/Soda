@@ -4,19 +4,17 @@
 
 #include "Soda/_Main/Core.h"
 
-
 namespace Soda
 {
-	class Input
-	{
-	public:
-		// keyboard stuff
-		static bool IsKeyPressed(int keycode);
+class Input
+{
+public:
+  // keyboard stuff
+  static bool IsKeyPressed(int keycode);
 
+  // mouse stuff
+  static bool IsMouseClicked(int button);
 
-		// mouse stuff
-		static bool IsMouseClicked(int button);
-
-		static std::pair<float, float> GetMousePos();
-	};
-}
+  static std::pair<float, float> GetMousePos();
+};
+} // namespace Soda

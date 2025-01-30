@@ -3,10 +3,5 @@
     "clangd.arguments": [
         "--compile-commands-dir=${workspaceRoot}/build"
     ],
-    "files.associations": {
-        "memory": "cpp",
-        "xiosbase": "cpp"
-    },
-
     "terminal.integrated.defaultProfile.windows": "Git Bash"
 }

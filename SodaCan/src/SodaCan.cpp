@@ -8,24 +8,15 @@
 
 #include "AppLayer.h"
 
-
 namespace Soda
 {
-	class Playground : public App
-	{
-	public:
-		Playground()
-			: App("SodaCan")
-		{
-			PushLayer(new SodaCan());
-		}
-		
-		~Playground()
-		{}
-	};
+class Playground : public App
+{
+public:
+  Playground() : App("SodaCan") { PushLayer(new SodaCan()); }
 
-	App* CreateApp()
-	{
-		return new Playground();
-	}
-}
+  ~Playground() {}
+};
+
+App *CreateApp() { return new Playground(); }
+} // namespace Soda

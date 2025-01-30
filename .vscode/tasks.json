@@ -28,8 +28,6 @@
                 "isDefault": false
             }
         },
-
-
         // BUILD MODES //
         {
             "label": "DEBUG MODE",
@@ -94,7 +92,6 @@
                 "isDefault": false
             },
         },
-
         // MAKE AND BUILD //
         {
             "label": "Make And Build (DEBUG)",
@@ -135,8 +132,6 @@
                 "isDefault": false
             }
         },
-
-
         // CLEAN RE-BUILD //
         {
             "label": "Clean ReBuild (DEBUG)",

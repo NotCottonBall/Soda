@@ -12,87 +12,83 @@
 #include "Soda/ECS/Object.h"
 #include <memoryapi.h>
 
-
 namespace Soda
 {
-    Object Systems::CreateObject(const std::string& name)
-    {
-        Object obj = { m_Registry.create(), this };
-        obj.AddComponent<NameComponent>(name);
-        obj.AddComponent<TransformComponent>();
+Object Systems::CreateObject(const std::string &name)
+{
+  Object obj = {m_Registry.create(), this};
+  obj.AddComponent<NameComponent>(name);
+  obj.AddComponent<TransformComponent>();
 
-        return obj;
-    }
-    void Systems::DestroyObject(Object obj)
-    { m_Registry.destroy(obj); }
-
-
-    // systems
-    void Systems::OnUpdate(Timestep dt)
-    {
-        // Script Components
-        m_Registry.view<ScriptComponent>().each([=](auto entity, auto& script)
-        {
-            if(!script.Script)
-            {
-                script.Script = script.InitScript();
-                script.Script->m_Script = Object{entity, this};
-
-                script.Script->OnStart();
-            }
-
-
-            script.Script->OnUpdate(dt);
-        });
-
-
-        // Camera Stuff
-        TheCamera* SceneCamera = nullptr;
-        glm::mat4 CameraTransform(1.0f);
-
-        auto viewGroup = m_Registry.view<TransformComponent, CameraComponent>();
-        for(auto cameras : viewGroup)
-        {
-            const auto& [Transform, Camera] = viewGroup.get<TransformComponent, CameraComponent>(cameras);
-
-            if(Camera.PrimaryCamera)
-            {
-                SceneCamera = &Camera.Camera;
-                CameraTransform = Transform.GetTransform();
-                break;
-            }
-        }
-
-
-        // Rendering Scene
-        if(SceneCamera)
-        {
-            Renderer2D::StartScene(*SceneCamera, CameraTransform);
-            {
-                auto group = m_Registry.group<TransformComponent>(entt::get<SpriteComponent>);
-                for(auto entity : group)
-                {
-                    const auto& [Transform, Sprite] = group.get<TransformComponent, SpriteComponent>(entity);
-
-                    if(Sprite.Texture)
-                        Renderer2D::DrawQuad(Transform.GetTransform(), Sprite.Texture, Sprite.Color, Sprite.TextureScale);
-                    else
-                        Renderer2D::DrawQuad(Transform.GetTransform(), Sprite.Color);
-                }
-            }
-            Renderer2D::StopScene();
-        }
-    }
-
-    
-    void Systems::OnResize(uint32_t width, uint32_t height)
-    {
-        auto cameras = m_Registry.view<CameraComponent>();
-        for(auto camera : cameras)
-        {
-            auto& cameraComponent = cameras.get<CameraComponent>(camera);
-            if(!cameraComponent.FixedAspectRatio)
-                cameraComponent.Camera.SetViewport(width, height);
-        }
-    }
+  return obj;
 }
+void Systems::DestroyObject(Object obj) { m_Registry.destroy(obj); }
+
+// systems
+void Systems::OnUpdate(Timestep dt)
+{
+  // Script Components
+  m_Registry.view<ScriptComponent>().each([=](auto entity, auto &script) {
+    if(!script.Script)
+    {
+      script.Script = script.InitScript();
+      script.Script->m_Script = Object{entity, this};
+
+      script.Script->OnStart();
+    }
+
+    script.Script->OnUpdate(dt);
+  });
+
+  // Camera Stuff
+  TheCamera *SceneCamera = nullptr;
+  glm::mat4 CameraTransform(1.0f);
+
+  auto viewGroup = m_Registry.view<TransformComponent, CameraComponent>();
+  for(auto cameras : viewGroup)
+  {
+    const auto &[Transform, Camera] =
+        viewGroup.get<TransformComponent, CameraComponent>(cameras);
+
+    if(Camera.PrimaryCamera)
+    {
+      SceneCamera = &Camera.Camera;
+      CameraTransform = Transform.GetTransform();
+      break;
+    }
+  }
+
+  // Rendering Scene
+  if(SceneCamera)
+  {
+    Renderer2D::StartScene(*SceneCamera, CameraTransform);
+    {
+      auto group =
+          m_Registry.group<TransformComponent>(entt::get<SpriteComponent>);
+      for(auto entity : group)
+      {
+        const auto &[Transform, Sprite] =
+            group.get<TransformComponent, SpriteComponent>(entity);
+
+        if(Sprite.Texture)
+          Renderer2D::DrawQuad(Transform.GetTransform(), Sprite.Texture,
+                               Sprite.Color, Sprite.TextureScale);
+        else
+          Renderer2D::DrawQuad(Transform.GetTransform(), Sprite.Color);
+      }
+    }
+    Renderer2D::StopScene();
+  }
+}
+
+void Systems::OnResize(uint32_t width, uint32_t height)
+{
+  auto cameras = m_Registry.view<CameraComponent>();
+  for(auto camera : cameras)
+  {
+    auto &cameraComponent = cameras.get<CameraComponent>(camera);
+    if(!cameraComponent.FixedAspectRatio)
+      cameraComponent.Camera.SetViewport(width, height);
+  }
+}
+} // namespace Soda
