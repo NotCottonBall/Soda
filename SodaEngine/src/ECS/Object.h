@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <utility>
 
-
 // the reason why its called an Object is because
 // i like to call it as an Object and not an Entity
 namespace Soda
@@ -18,6 +17,8 @@ public:
   {
   }
 
+  // @TODO: instead of asserting give an error if the Component doesnt exist.
+  // for Delete, Get, etc... All Component Functions
   template <typename T, typename... Args> T &AddComponent(Args &&...args)
   {
     SD_ENGINE_ASSERT(!HasComponent<T>(), "The Component Already Exists")
@@ -37,7 +38,7 @@ public:
     return m_Scene->m_Registry.get<T>(m_Object);
   }
 
-  template <typename T> bool HasComponent()
+  template <typename T> bool HasComponent() const
   {
     return m_Scene->m_Registry.all_of<T>(m_Object);
   }
@@ -57,7 +58,7 @@ public:
   {
     return m_Object == obj.m_Object && m_Scene == obj.m_Scene;
   }
-  bool operator!=(Object obj) const { return !(*this != obj); }
+  bool operator!=(Object obj) const { return !(*this == obj); }
 
 public:
   const entt::entity GetObjectID() { return m_Object; }

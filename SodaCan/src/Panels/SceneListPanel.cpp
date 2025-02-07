@@ -156,16 +156,6 @@ void SceneListPanel::DrawObjectProperties(Object obj)
     if(ImGui::Button("-"))
       removeComponent = true;
 
-    ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
-    if(ImGui::Button("+"))
-    {
-      if(ImGui::BeginMenu("ItemOptions"))
-      {
-        if(ImGui::MenuItem("Remove Component"))
-          removeComponent = true;
-      }
-    }
-
     if(isOpen)
     {
       auto &sprite = obj.GetComponent<SpriteComponent>();
@@ -179,6 +169,9 @@ void SceneListPanel::DrawObjectProperties(Object obj)
              ImVec2(50.0f, 50.0f), ImVec2(0, 1), ImVec2(1, 0), 1))
       {
         // @TODO: we need a dialog to select a texture
+        Ref<Texture2D> m_tex =
+            Texture2D::Create("SodaCan/assets/textures/TheSodaCan.png");
+        obj.GetComponent<SpriteComponent>().Texture = m_tex;
       }
       ImGui::TreePop();
     }

@@ -115,10 +115,6 @@ void SodaCan::OnUpdate(Timestep dt)
   RenderCommand::ClearScreen({0.1f, 0.1f, 0.1f, 1.0f});
   Renderer2D::ResetRendererStats();
 
-  // @FIXME: why does it crash when you do this?
-  if(Soda::Input::IsKeyPressed(SD_KEY_END))
-    m_Scene->DestroyObject(m_Square2);
-
   // Render Loop
   Renderer2D::StartScene(m_EditorCameraController.GetCamera());
   {
@@ -129,8 +125,15 @@ void SodaCan::OnUpdate(Timestep dt)
   m_Framebuffer->Unbind();
 }
 
-void SodaCan::OnEvent(Event &event) { m_EditorCameraController.OnEvent(event); }
+void SodaCan::OnEvent(Event &event)
+{
+  m_EditorCameraController.OnEvent(event);
 
+  // if(Soda::Input::IsKeyPressed(SD_KEY_END))
+  //   m_Scene->DestroyObject(m_Square2);
+  if(Soda::Input::IsKeyPressed(SD_KEY_END))
+    m_Square.DeleteComponent<SpriteComponent>();
+}
 void SodaCan::OnResize(uint32_t width, uint32_t height) {}
 
 void SodaCan::OnImGuiUpdate()

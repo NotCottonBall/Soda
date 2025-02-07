@@ -1,10 +1,11 @@
 {
-    "C_Cpp.default.compileCommands": "${workspaceRoot}/build",
+    "C_Cpp.default.compileCommands": "${workspaceRoot}/build/compile_commands.json",
     "terminal.integrated.defaultProfile.windows": "Git Bash",
     "[glsl]": {
         "editor.formatOnSave": false
     },
     "files.associations": {
-        "exception": "cpp"
+        "exception": "cpp",
+        "type_traits": "cpp"
     }
 }
