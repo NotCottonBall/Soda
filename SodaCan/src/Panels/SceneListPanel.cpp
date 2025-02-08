@@ -156,6 +156,21 @@ void SceneListPanel::DrawObjectProperties(Object obj)
     if(ImGui::Button("-"))
       removeComponent = true;
 
+    ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
+    if(ImGui::Button("+"))
+    {
+      ImGui::OpenPopup("ComponentOptions");
+    }
+
+    if(ImGui::BeginPopup("ComponentOptions"))
+    {
+      if(ImGui::MenuItem("Remove Component"))
+      {
+        removeComponent = true;
+      }
+      ImGui::EndPopup();
+    }
+
     if(isOpen)
     {
       auto &sprite = obj.GetComponent<SpriteComponent>();
