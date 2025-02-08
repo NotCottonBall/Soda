@@ -17,6 +17,7 @@ Object Scene::CreateObject(const std::string &name)
 {
   Object obj = {m_Registry.create(), this};
   obj.AddComponent<NameComponent>(name);
+  obj.AddComponent<TagComponent>("NotTagged");
   obj.AddComponent<TransformComponent>();
 
   return obj;

@@ -23,13 +23,13 @@ struct NameComponent
   NameComponent(const std::string &name) : Name(name) {}
 };
 
-struct LableComponent
+struct TagComponent
 {
-  std::string Lable = "NULL";
+  std::string Tag = "NULL";
 
-  LableComponent() = default;
-  LableComponent(const LableComponent &) = default;
-  LableComponent(const std::string &lable) : Lable(lable) {}
+  TagComponent() = default;
+  TagComponent(const TagComponent &) = default;
+  TagComponent(const std::string &tag) : Tag(tag) {}
 };
 
 struct TransformComponent

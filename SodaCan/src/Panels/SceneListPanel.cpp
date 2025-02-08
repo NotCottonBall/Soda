@@ -66,7 +66,7 @@ static void DrawComponent(const std::string &name, Object obj, UI ui)
     ImGui::PopStyleVar();
 
     ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
-    if(ImGui::Button(":", ImVec2(lineHeight, lineHeight)))
+    if(ImGui::Button("+", ImVec2(lineHeight, lineHeight)))
       ImGui::OpenPopup("ComponentOptions");
 
     if(ImGui::BeginPopup("ComponentOptions"))
@@ -106,6 +106,17 @@ void SceneListPanel::DrawObjectProperties(Object obj)
       name = std::string(buffer);
 
     ImGui::Spacing();
+  }
+  if(obj.HasComponent<TagComponent>())
+  {
+    auto &tag = obj.GetComponent<TagComponent>().Tag;
+
+    char buffer[512];
+    memset(buffer, 0, sizeof(buffer));
+    strcpy_s(buffer, sizeof(buffer), tag.c_str());
+
+    if(ImGui::InputText("Tag", buffer, sizeof(buffer)))
+      tag = std::string(buffer);
   }
 
   DrawComponent<TransformComponent>("Transform", obj, [](auto &transform) {
