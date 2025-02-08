@@ -9,6 +9,9 @@ namespace Soda
 void SodaGui::DrawVec3Gui(const std::string &lable, glm::vec3 &vector,
                           float resetValue, float colWidth)
 {
+  ImGuiIO &io = ImGui::GetIO();
+  auto boldFont = io.Fonts->Fonts[1];
+
   ImGui::PushID(lable.c_str());
 
   ImGui::Columns(2);
@@ -29,8 +32,10 @@ void SodaGui::DrawVec3Gui(const std::string &lable, glm::vec3 &vector,
   ImGui::PushStyleColor(ImGuiCol_ButtonHovered,
                         ImVec4(0.95f, 0.1f, 0.1f, 1.0f));
   ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.1f, 1.0f));
+  ImGui::PushFont(boldFont);
   if(ImGui::Button("X", buttonSize))
     vector.x = resetValue;
+  ImGui::PopFont();
   ImGui::SameLine();
   ImGui::DragFloat("##X", &vector.x, 0.1f);
   ImGui::PopItemWidth();
@@ -42,8 +47,10 @@ void SodaGui::DrawVec3Gui(const std::string &lable, glm::vec3 &vector,
   ImGui::PushStyleColor(ImGuiCol_ButtonHovered,
                         ImVec4(0.1f, 0.85f, 0.2f, 1.0f));
   ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.75f, 0.1f, 1.0f));
+  ImGui::PushFont(boldFont);
   if(ImGui::Button("Y", buttonSize))
     vector.y = resetValue;
+  ImGui::PopFont();
   ImGui::SameLine();
   ImGui::DragFloat("##Y", &vector.y, 0.1f);
   ImGui::PopItemWidth();
@@ -55,8 +62,10 @@ void SodaGui::DrawVec3Gui(const std::string &lable, glm::vec3 &vector,
   ImGui::PushStyleColor(ImGuiCol_ButtonHovered,
                         ImVec4(0.1f, 0.1f, 0.95f, 1.0f));
   ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.8f, 1.0f));
+  ImGui::PushFont(boldFont);
   if(ImGui::Button("Z", buttonSize))
     vector.z = resetValue;
+  ImGui::PopFont();
   ImGui::SameLine();
   ImGui::DragFloat("##Z", &vector.z, 0.1f);
   ImGui::PopItemWidth();

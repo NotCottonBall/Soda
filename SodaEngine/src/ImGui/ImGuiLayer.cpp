@@ -35,6 +35,17 @@ void ImGuiLayer::OnAttach()
   // io.ConfigViewportsNoAutoMerge = true;
   // io.ConfigViewportsNoTaskBarIcon = true;
 
+  // setting the font
+  // @TODO: Settings should include font size and file and not this code
+  io.FontDefault = io.Fonts->AddFontFromFileTTF(
+      "SodaCan/assets/fonts/Roboto/static/Roboto-Regular.ttf", 15.0f);
+  io.Fonts->AddFontFromFileTTF(
+      "SodaCan/assets/fonts/Roboto/static/Roboto-Bold.ttf", 15.0f);
+  io.Fonts->AddFontFromFileTTF(
+      "SodaCan/assets/fonts/Roboto/static/Roboto-Italic.ttf", 15.0f);
+  io.Fonts->AddFontFromFileTTF(
+      "SodaCan/assets/fonts/Roboto/static/Roboto-BoldItalic.ttf", 15.0f);
+
   // Setup Dear ImGui style
   ImGui::StyleColorsClassic();
 
