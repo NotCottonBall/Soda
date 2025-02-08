@@ -64,6 +64,7 @@ void Scene::OnUpdate(Timestep dt)
     {
       auto group =
           m_Registry.group<TransformComponent>(entt::get<SpriteComponent>);
+
       for(auto entity : group)
       {
         const auto &[Transform, Sprite] =

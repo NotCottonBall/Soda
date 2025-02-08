@@ -30,14 +30,14 @@ void SodaCan::OnAttach()
 
   m_Scene = CreateRef<Scene>();
 
-  m_Square = m_Scene->CreateObject("Square");
-  m_Square.AddComponent<SpriteComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+  m_Square3 = m_Scene->CreateObject("S3");
+  m_Square3.AddComponent<SpriteComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
   m_Square2 = m_Scene->CreateObject("S2");
   m_Square2.AddComponent<SpriteComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
-  m_Square3 = m_Scene->CreateObject("S3");
-  m_Square3.AddComponent<SpriteComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+  m_Square = m_Scene->CreateObject("Square");
+  m_Square.AddComponent<SpriteComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
   m_EditorCamera = m_Scene->CreateObject("EditorCamera");
   m_EditorCamera.AddComponent<CameraComponent>();
