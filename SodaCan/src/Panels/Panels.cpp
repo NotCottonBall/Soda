@@ -78,13 +78,19 @@ void Panels::OnImGuiRender()
 
       if(ImGui::BeginPopup("AddComponent"))
       {
-        if(ImGui::MenuItem("Camera Component"))
+        if(ImGui::MenuItem("Transform"))
+        {
+          m_SceneListsPanel.m_SelectedObj.AddComponent<TransformComponent>();
+          ImGui::CloseCurrentPopup();
+        }
+
+        if(ImGui::MenuItem("Camera"))
         {
           m_SceneListsPanel.m_SelectedObj.AddComponent<CameraComponent>();
           ImGui::CloseCurrentPopup();
         }
 
-        if(ImGui::MenuItem("Sprite Component"))
+        if(ImGui::MenuItem("Sprite"))
         {
           m_SceneListsPanel.m_SelectedObj.AddComponent<SpriteComponent>(
               glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
