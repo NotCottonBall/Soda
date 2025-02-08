@@ -13,7 +13,7 @@ void SceneListPanel::DrawListObject(Object obj, const std::string &name)
 {
   ImGuiTreeNodeFlags flags =
       ((m_SelectedObj == obj) ? ImGuiTreeNodeFlags_Selected : 0) |
-      ImGuiTreeNodeFlags_OpenOnArrow;
+      ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
   bool opened =
       ImGui::TreeNodeEx((void *)(uint64_t)(uint32_t)obj, flags, name.c_str());
@@ -44,6 +44,54 @@ void SceneListPanel::DrawListObject(Object obj, const std::string &name)
   }
 }
 
+// Drawing Components //
+template <typename T, typename UI>
+static void DrawComponent(const std::string &name, Object obj, UI ui)
+{
+  ImGuiTreeNodeFlags flags =
+      ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth |
+      ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_FramePadding |
+      ImGuiTreeNodeFlags_AllowOverlap;
+  if(obj.HasComponent<T>())
+  {
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 5));
+    ImGui::Separator();
+    float lineHeight =
+        GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+    ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
+
+    bool removeComponent = false;
+    bool isOpen =
+        ImGui::TreeNodeEx((void *)typeid(T).hash_code(), flags, name.c_str());
+    ImGui::PopStyleVar();
+
+    ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
+    if(ImGui::Button(":", ImVec2(lineHeight, lineHeight)))
+      ImGui::OpenPopup("ComponentOptions");
+
+    if(ImGui::BeginPopup("ComponentOptions"))
+    {
+      if(ImGui::MenuItem("Remove Component"))
+        removeComponent = true;
+
+      ImGui::EndPopup();
+    }
+
+    if(isOpen)
+    {
+      auto &component = obj.GetComponent<T>();
+      ui(component);
+      ImGui::TreePop();
+    }
+
+    if(removeComponent)
+    {
+      obj.DeleteComponent<T>();
+      removeComponent = false;
+    }
+  }
+}
+
 void SceneListPanel::DrawObjectProperties(Object obj)
 {
   if(obj.HasComponent<NameComponent>())
@@ -60,142 +108,83 @@ void SceneListPanel::DrawObjectProperties(Object obj)
     ImGui::Spacing();
   }
 
-  if(obj.HasComponent<TransformComponent>())
-  {
-    if(ImGui::TreeNodeEx((void *)typeid(TransformComponent).hash_code(),
-                         ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
+  DrawComponent<TransformComponent>("Transform", obj, [](auto &transform) {
+    glm::vec3 rotation = glm::degrees(transform.Rotation);
+
+    SodaGui::DrawVec3Gui("Position", transform.Position, 0.0f);
+    SodaGui::DrawVec3Gui("Rotation", rotation, 0.0f);
+    SodaGui::DrawVec3Gui("Scale", transform.Scale, 1.0f);
+
+    transform.Rotation = glm::radians(rotation);
+  });
+
+  DrawComponent<CameraComponent>("Camera", obj, [](auto &camera) {
+    if(ImGui::Button("Recalculate Camera"))
+      camera.Camera.SetViewport();
+    ImGui::Checkbox("Primary", &camera.PrimaryCamera);
+    ImGui::Checkbox("Fixed Aspect Ratio", &camera.FixedAspectRatio);
+
+    const char *cameraTypes[] = {"Orthographic", "Perspective"};
+    const char *cameraTypeToString =
+        cameraTypes[(int)camera.Camera.GetCameraType()];
+
+    if(ImGui::BeginCombo("Type", cameraTypeToString))
     {
-      auto &transform = obj.GetComponent<TransformComponent>();
-
-      glm::vec3 rotation = glm::degrees(transform.Rotation);
-
-      SodaGui::DrawVec3Gui("Position", transform.Position, 0.0f);
-      SodaGui::DrawVec3Gui("Rotation", rotation, 0.0f);
-      SodaGui::DrawVec3Gui("Scale", transform.Scale, 1.0f);
-
-      transform.Rotation = glm::radians(rotation);
-
-      ImGui::TreePop();
-    }
-  }
-
-  if(obj.HasComponent<CameraComponent>())
-  {
-    // @LEARN: why the fuck do we do what we did in this if condition?
-    if(ImGui::TreeNodeEx((void *)typeid(CameraComponent).hash_code(),
-                         ImGuiTreeNodeFlags_DefaultOpen, "Camera"))
-    {
-      auto &camera = obj.GetComponent<CameraComponent>();
-
-      if(ImGui::Button("Recalculate Camera"))
+      for(int i = 0; i < 2; i++)
       {
-        obj.GetComponent<CameraComponent>().Camera.SetViewport();
-      }
-      ImGui::Checkbox("Primary", &camera.PrimaryCamera);
-      ImGui::Checkbox("Fixed Aspect Ratio", &camera.FixedAspectRatio);
-
-      const char *cameraTypes[] = {"Orthographic", "Perspective"};
-      const char *cameraTypeToString =
-          cameraTypes[(int)camera.Camera.GetCameraType()];
-
-      if(ImGui::BeginCombo("Type", cameraTypeToString))
-      {
-        for(int i = 0; i < 2; i++)
+        if(ImGui::Selectable(cameraTypes[i]))
         {
-          if(ImGui::Selectable(cameraTypes[i]))
-          {
-            cameraTypeToString = cameraTypes[i];
-            camera.Camera.SetCameraType((SceneCamera::CameraType)i);
-          }
+          cameraTypeToString = cameraTypes[i];
+          camera.Camera.SetCameraType((SceneCamera::CameraType)i);
         }
-
-        ImGui::EndCombo();
       }
 
-      if(camera.Camera.GetCameraType() == SceneCamera::CameraType::Orthographic)
-      {
-        float orthoCamSize = camera.Camera.GetOrthoCameraSize();
-        if(ImGui::DragFloat("View Size", &orthoCamSize))
-          camera.Camera.SetOrthoCameraSize(orthoCamSize);
-
-        float orthoNearPlane = camera.Camera.GetOrthoNearPlane();
-        if(ImGui::DragFloat("Near Plane", &orthoNearPlane))
-          camera.Camera.SetOrthoNearPlane(orthoNearPlane);
-
-        float orthoFarPlane = camera.Camera.GetOrthoFarPlane();
-        if(ImGui::DragFloat("Far Plane", &orthoFarPlane))
-          camera.Camera.SetOrthoFarPlane(orthoFarPlane);
-      }
-      else
-      {
-        float perspFov = glm::degrees(camera.Camera.GetPerspectiveFov());
-        if(ImGui::DragFloat("Fov", &perspFov))
-          camera.Camera.SetPerspectiveFov(perspFov);
-
-        float perspNearPlane = camera.Camera.GetPerspectiveNearPlane();
-        if(ImGui::DragFloat("Near Plane", &perspNearPlane))
-          camera.Camera.SetPerspectiveNearPlane(perspNearPlane);
-
-        float perspFarPlane = camera.Camera.GetPerspectiveFarPlane();
-        if(ImGui::DragFloat("Far Plane", &perspFarPlane))
-          camera.Camera.SetPerspectiveFarPlane(perspFarPlane);
-      }
-
-      ImGui::TreePop();
+      ImGui::EndCombo();
     }
-  }
 
-  if(obj.HasComponent<SpriteComponent>())
-  {
-    bool removeComponent = false;
-
-    bool isOpen = ImGui::TreeNodeEx((void *)typeid(SpriteComponent).hash_code(),
-                                    ImGuiTreeNodeFlags_DefaultOpen, "Sprite");
-
-    ImGui::SameLine(ImGui::GetWindowWidth() - 45.0f);
-    if(ImGui::Button("-"))
-      removeComponent = true;
-
-    ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
-    if(ImGui::Button("+"))
+    if(camera.Camera.GetCameraType() == SceneCamera::CameraType::Orthographic)
     {
-      ImGui::OpenPopup("ComponentOptions");
-    }
+      float orthoCamSize = camera.Camera.GetOrthoCameraSize();
+      if(ImGui::DragFloat("View Size", &orthoCamSize))
+        camera.Camera.SetOrthoCameraSize(orthoCamSize);
 
-    if(ImGui::BeginPopup("ComponentOptions"))
+      float orthoNearPlane = camera.Camera.GetOrthoNearPlane();
+      if(ImGui::DragFloat("Near Plane", &orthoNearPlane))
+        camera.Camera.SetOrthoNearPlane(orthoNearPlane);
+
+      float orthoFarPlane = camera.Camera.GetOrthoFarPlane();
+      if(ImGui::DragFloat("Far Plane", &orthoFarPlane))
+        camera.Camera.SetOrthoFarPlane(orthoFarPlane);
+    }
+    else
     {
-      if(ImGui::MenuItem("Remove Component"))
-      {
-        removeComponent = true;
-      }
-      ImGui::EndPopup();
-    }
+      float perspFov = glm::degrees(camera.Camera.GetPerspectiveFov());
+      if(ImGui::DragFloat("Fov", &perspFov))
+        camera.Camera.SetPerspectiveFov(perspFov);
 
-    if(isOpen)
+      float perspNearPlane = camera.Camera.GetPerspectiveNearPlane();
+      if(ImGui::DragFloat("Near Plane", &perspNearPlane))
+        camera.Camera.SetPerspectiveNearPlane(perspNearPlane);
+
+      float perspFarPlane = camera.Camera.GetPerspectiveFarPlane();
+      if(ImGui::DragFloat("Far Plane", &perspFarPlane))
+        camera.Camera.SetPerspectiveFarPlane(perspFarPlane);
+    }
+  });
+
+  DrawComponent<SpriteComponent>("Sprite", obj, [](auto &sprite) {
+    ImGui::ColorEdit4("color", glm::value_ptr(sprite.Color));
+
+    ImGui::Text("Texture");
+    if(ImGui::ImageButton(
+           sprite.Texture ? (void *)sprite.Texture->GetTextureID() : nullptr,
+           ImVec2(50.0f, 50.0f), ImVec2(0, 1), ImVec2(1, 0), 1))
     {
-      auto &sprite = obj.GetComponent<SpriteComponent>();
-
-      if(ImGui::ColorEdit4("color", glm::value_ptr(sprite.Color)))
-        obj.GetComponent<SpriteComponent>().Color = sprite.Color;
-
-      ImGui::Text("Texture");
-      if(ImGui::ImageButton(
-             sprite.Texture ? (void *)sprite.Texture->GetTextureID() : nullptr,
-             ImVec2(50.0f, 50.0f), ImVec2(0, 1), ImVec2(1, 0), 1))
-      {
-        // @TODO: we need a dialog to select a texture
-        Ref<Texture2D> m_tex =
-            Texture2D::Create("SodaCan/assets/textures/TheSodaCan.png");
-        obj.GetComponent<SpriteComponent>().Texture = m_tex;
-      }
-      ImGui::TreePop();
+      // @TODO: we need a dialog to select a texture
+      Ref<Texture2D> m_tex =
+          Texture2D::Create("SodaCan/assets/textures/TheSodaCan.png");
+      sprite.Texture = m_tex;
     }
-
-    if(removeComponent)
-    {
-      obj.DeleteComponent<SpriteComponent>();
-      removeComponent = false;
-    }
-  }
+  });
 }
 } // namespace Soda
