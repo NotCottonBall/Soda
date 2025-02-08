@@ -8,6 +8,12 @@
 // all the panels so that i can just create a panels object in the EditorClass
 namespace Soda
 {
+enum EditWindowsEnum : char
+{
+  EditWindowsEnum_None = 0,
+  EditWindowsEnum_ShowEditorSettings = BIT(1)
+};
+
 class Panels
 {
 public:
@@ -16,7 +22,11 @@ public:
   void SetScene(const Ref<Scene> &Scene);
   void OnImGuiRender();
 
+  void ToggleEditWindows(EditWindowsEnum option);
+
 private:
   SceneListPanel m_SceneListsPanel;
+  EditWindowsEnum m_DefaultEditWindowOption =
+      EditWindowsEnum::EditWindowsEnum_None;
 };
 } // namespace Soda

@@ -23,6 +23,7 @@ public:
   void End();
 
   void ShouldConsumeEvents(bool value) { m_ConsumeEvents = value; }
+  void SetEditorThemeDark();
 
 private:
   float m_time = 0.0f;

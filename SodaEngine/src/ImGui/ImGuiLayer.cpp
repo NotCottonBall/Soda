@@ -59,6 +59,8 @@ void ImGuiLayer::OnAttach()
     style.Colors[ImGuiCol_WindowBg].w = 1.0f;
   }
 
+  SetEditorThemeDark();
+
   App &app = App::Get();
   GLFWwindow *imWindow =
       static_cast<GLFWwindow *>(app.GetWindow().GetTheWindow());
@@ -120,5 +122,57 @@ void ImGuiLayer::OnImGuiUpdate()
 {
   // 	static bool show = true;
   // 	ImGui::ShowDemoWindow(&show);
+}
+
+// Other FUnctions //
+void ImGuiLayer::SetEditorThemeDark()
+{
+  auto &colors = ImGui::GetStyle().Colors;
+
+  ImVec4 backGroundColor(0.05f, 0.05f, 0.05f, 1.0f);
+
+  ImVec4 primaryColor(0.10f, 0.10f, 0.10f, 1.0f);
+  ImVec4 primaryHoveredColor(0.12f, 0.12f, 0.14f, 1.0f);
+  ImVec4 primarySelectColor(0.10f, 0.10f, 0.15f, 1.0f);
+
+  ImVec4 tabPrimaryColor(0.15f, 0.15f, 0.15f, 1.0f);
+  ImVec4 tabHoveredColor(0.18f, 0.18f, 0.2f, 1.0f);
+
+  // BASE //
+  colors[ImGuiCol_WindowBg] = backGroundColor;
+  colors[ImGuiCol_MenuBarBg] = backGroundColor;
+  colors[ImGuiCol_PopupBg] = backGroundColor;
+
+  // HEADERS //
+  colors[ImGuiCol_Header] = primaryColor;
+  colors[ImGuiCol_HeaderHovered] = primaryHoveredColor;
+  colors[ImGuiCol_HeaderActive] = primarySelectColor;
+
+  // BUTTONS //
+  colors[ImGuiCol_Button] = primaryColor;
+  colors[ImGuiCol_ButtonHovered] = primaryHoveredColor;
+  colors[ImGuiCol_ButtonActive] = primarySelectColor;
+
+  // TITLE FRAMES //
+  colors[ImGuiCol_FrameBg] = primaryColor;
+  colors[ImGuiCol_FrameBgHovered] = primaryHoveredColor;
+  colors[ImGuiCol_FrameBgActive] = primarySelectColor;
+
+  // TABS //
+  colors[ImGuiCol_Tab] = tabPrimaryColor;
+  colors[ImGuiCol_TabHovered] = tabHoveredColor;
+  colors[ImGuiCol_TabActive] = backGroundColor;
+  colors[ImGuiCol_TabUnfocused] = tabPrimaryColor;
+  colors[ImGuiCol_TabUnfocusedActive] = tabHoveredColor;
+  // TAB BARS //
+  colors[ImGuiCol_TitleBg] = tabPrimaryColor;
+  colors[ImGuiCol_TitleBgActive] = tabPrimaryColor;
+  colors[ImGuiCol_TitleBgCollapsed] = primaryColor;
+
+  // SCROLLBARS //
+  colors[ImGuiCol_ScrollbarBg] = backGroundColor;
+  colors[ImGuiCol_ScrollbarGrab] = primaryColor;
+  colors[ImGuiCol_ScrollbarGrabHovered] = primaryHoveredColor;
+  colors[ImGuiCol_ScrollbarGrabActive] = primarySelectColor;
 }
 } // namespace Soda

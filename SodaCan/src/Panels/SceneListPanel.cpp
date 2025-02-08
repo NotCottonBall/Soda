@@ -55,7 +55,9 @@ static void DrawComponent(const std::string &name, Object obj, UI ui)
   if(obj.HasComponent<T>())
   {
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 5));
+    ImGui::Spacing();
     ImGui::Separator();
+    ImGui::Spacing();
     float lineHeight =
         GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
     ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
@@ -66,7 +68,7 @@ static void DrawComponent(const std::string &name, Object obj, UI ui)
     ImGui::PopStyleVar();
 
     ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
-    if(ImGui::Button("+", ImVec2(lineHeight, lineHeight)))
+    if(ImGui::Button(":", ImVec2(lineHeight, lineHeight)))
       ImGui::OpenPopup("ComponentOptions");
 
     if(ImGui::BeginPopup("ComponentOptions"))
@@ -94,6 +96,7 @@ static void DrawComponent(const std::string &name, Object obj, UI ui)
 
 void SceneListPanel::DrawObjectProperties(Object obj)
 {
+  // base components //
   if(obj.HasComponent<NameComponent>())
   {
     auto &name = obj.GetComponent<NameComponent>().Name;
@@ -119,6 +122,7 @@ void SceneListPanel::DrawObjectProperties(Object obj)
       tag = std::string(buffer);
   }
 
+  // our components //
   DrawComponent<TransformComponent>("Transform", obj, [](auto &transform) {
     glm::vec3 rotation = glm::degrees(transform.Rotation);
 

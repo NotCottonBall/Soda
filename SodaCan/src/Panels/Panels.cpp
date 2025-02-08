@@ -64,8 +64,17 @@ void Panels::OnImGuiRender()
     {
       m_SceneListsPanel.DrawObjectProperties(m_SceneListsPanel.m_SelectedObj);
 
-      if(ImGui::Button("Add Component"))
+      ImGui::Spacing();
+      ImGui::Spacing();
+      ImGui::Separator();
+      ImVec2 regionSpace = ImGui::GetContentRegionAvail();
+      ImGui::SetCursorPosX(regionSpace.x * 0.25f);
+      // we basicly set the button to draw from the 1/4th of the panel region
+      // and we draw our button as 2/4 of the screen region
+
+      if(ImGui::Button("Add Component", ImVec2(regionSpace.x * 0.5f, 25.0f)))
         ImGui::OpenPopup("AddComponent");
+      // ImGui::SetCursorPosX(0);
 
       if(ImGui::BeginPopup("AddComponent"))
       {
@@ -88,6 +97,20 @@ void Panels::OnImGuiRender()
   }
   ImGui::End();
 
-  // ImGui::ShowDemoWindow();
+  // other windows //
+  if(m_DefaultEditWindowOption &
+     EditWindowsEnum::EditWindowsEnum_ShowEditorSettings)
+  {
+    ImGui::Begin("Editor Settings");
+    ImGui::Text("This is where all the editor settings will reside");
+    ImGui::End();
+  }
+}
+
+// other functions //
+void Panels::ToggleEditWindows(EditWindowsEnum option)
+{
+  m_DefaultEditWindowOption =
+      static_cast<EditWindowsEnum>(m_DefaultEditWindowOption ^ option);
 }
 } // namespace Soda

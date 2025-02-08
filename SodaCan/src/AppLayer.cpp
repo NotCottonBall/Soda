@@ -204,6 +204,15 @@ void SodaCan::OnImGuiUpdate()
         App::Get().CloseApp();
       ImGui::EndMenu();
     }
+    if(ImGui::BeginMenu("Edit"))
+    {
+      if(ImGui::MenuItem("Editor Settings"))
+      {
+        m_Panels.ToggleEditWindows(
+            EditWindowsEnum::EditWindowsEnum_ShowEditorSettings);
+      }
+      ImGui::EndMenu();
+    }
     if(ImGui::BeginMenu("View"))
     {
       if(ImGui::MenuItem("Statistics"))
