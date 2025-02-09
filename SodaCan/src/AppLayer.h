@@ -65,18 +65,5 @@ private:
 private:
   bool m_IsPanelFocused = false;
   bool m_IsPanelHovered = false;
-
-  enum Settings : char
-  {
-    None = 0,
-    EnableRendererStats = BIT(0),
-    ADD_SOMETHING_HERE = BIT(1) // for future settings
-  };
-  Settings m_DefaultSettings = Settings::None;
-
-  void toggoleSetting(Settings &defaultSetting, Settings settingToToggle)
-  {
-    defaultSetting = static_cast<Settings>(defaultSetting ^ settingToToggle);
-  }
 };
 } // namespace Soda

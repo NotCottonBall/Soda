@@ -11,7 +11,13 @@ namespace Soda
 enum EditWindowsEnum : char
 {
   EditWindowsEnum_None = 0,
-  EditWindowsEnum_ShowEditorSettings = BIT(1)
+  ShowEditorSettings = BIT(0)
+};
+enum ViewWindowsEnum : char
+{
+  ViewWindowsEnum_None = 0,
+  ShowRenderStatsWindow = BIT(0),
+  ShowProfilerWindow = BIT(1) // for future settings
 };
 
 class Panels
@@ -23,10 +29,13 @@ public:
   void OnImGuiRender();
 
   void ToggleEditWindows(EditWindowsEnum option);
+  void ToggleViewWindows(ViewWindowsEnum option);
 
 private:
   SceneListPanel m_SceneListsPanel;
   EditWindowsEnum m_DefaultEditWindowOption =
       EditWindowsEnum::EditWindowsEnum_None;
+  ViewWindowsEnum m_DefaultViewWindowOption =
+      ViewWindowsEnum::ViewWindowsEnum_None;
 };
 } // namespace Soda

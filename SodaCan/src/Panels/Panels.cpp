@@ -104,12 +104,43 @@ void Panels::OnImGuiRender()
   ImGui::End();
 
   // other windows //
-  if(m_DefaultEditWindowOption &
-     EditWindowsEnum::EditWindowsEnum_ShowEditorSettings)
+  if(m_DefaultEditWindowOption & EditWindowsEnum::ShowEditorSettings)
   {
-    ImGui::Begin("Editor Settings");
+    bool isWindowOpen = true;
+
+    ImGui::Begin("Editor Settings", &isWindowOpen);
     ImGui::Text("This is where all the editor settings will reside");
     ImGui::End();
+
+    if(!isWindowOpen)
+      ToggleEditWindows(EditWindowsEnum::ShowEditorSettings);
+  }
+  if(m_DefaultViewWindowOption & ViewWindowsEnum::ShowRenderStatsWindow)
+  {
+    bool isWindowOpen = true;
+
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::Begin("Renderer Stats", &isWindowOpen);
+    {
+      ImGui::Text("%.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
+      ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+      ImGui::Text("");
+      // renderer2D stats
+      Renderer2D::RendererStats stats = Renderer2D::GetRendererStats();
+
+      ImGui::Text("Draw Calls: %d", stats.noOfDrawCalls);
+      ImGui::Text("Textures: %d", stats.noIfTextures);
+      ImGui::Text("Quads: %d", stats.noOfQuads);
+      ImGui::Spacing();
+      ImGui::Text("Triangles: %d", stats.QueryNoOfTriangles());
+      ImGui::Text("Vertices: %d", stats.QueryNoOfVertices());
+      ImGui::Text("Indices: %d", stats.QueryNoOfIndices());
+    }
+    ImGui::End();
+    ImGui::PopStyleColor();
+
+    if(!isWindowOpen)
+      ToggleViewWindows(ViewWindowsEnum::ShowRenderStatsWindow);
   }
 }
 
@@ -118,5 +149,10 @@ void Panels::ToggleEditWindows(EditWindowsEnum option)
 {
   m_DefaultEditWindowOption =
       static_cast<EditWindowsEnum>(m_DefaultEditWindowOption ^ option);
+}
+void Panels::ToggleViewWindows(ViewWindowsEnum option)
+{
+  m_DefaultViewWindowOption =
+      static_cast<ViewWindowsEnum>(m_DefaultViewWindowOption ^ option);
 }
 } // namespace Soda

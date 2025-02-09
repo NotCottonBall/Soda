@@ -131,12 +131,12 @@ void ImGuiLayer::SetEditorThemeDark()
 
   ImVec4 backGroundColor(0.05f, 0.05f, 0.05f, 1.0f);
 
-  ImVec4 primaryColor(0.10f, 0.10f, 0.10f, 1.0f);
+  ImVec4 primaryColor(0.15f, 0.15f, 0.15f, 1.0f);
   ImVec4 primaryHoveredColor(0.12f, 0.12f, 0.14f, 1.0f);
-  ImVec4 primarySelectColor(0.10f, 0.10f, 0.15f, 1.0f);
+  ImVec4 primarySelectColor(0.10f, 0.10f, 0.11f, 1.0f);
 
-  ImVec4 tabPrimaryColor(0.15f, 0.15f, 0.15f, 1.0f);
-  ImVec4 tabHoveredColor(0.18f, 0.18f, 0.2f, 1.0f);
+  ImVec4 tabPrimaryColor(0.18f, 0.18f, 0.18f, 1.0f);
+  ImVec4 tabHoveredColor(0.26f, 0.26f, 0.28f, 1.0f);
 
   // BASE //
   colors[ImGuiCol_WindowBg] = backGroundColor;
@@ -152,8 +152,7 @@ void ImGuiLayer::SetEditorThemeDark()
   colors[ImGuiCol_Button] = primaryColor;
   colors[ImGuiCol_ButtonHovered] = primaryHoveredColor;
   colors[ImGuiCol_ButtonActive] = primarySelectColor;
-
-  // TITLE FRAMES //
+  // FRAMES //
   colors[ImGuiCol_FrameBg] = primaryColor;
   colors[ImGuiCol_FrameBgHovered] = primaryHoveredColor;
   colors[ImGuiCol_FrameBgActive] = primarySelectColor;

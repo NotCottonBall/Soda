@@ -208,44 +208,19 @@ void SodaCan::OnImGuiUpdate()
     {
       if(ImGui::MenuItem("Editor Settings"))
       {
-        m_Panels.ToggleEditWindows(
-            EditWindowsEnum::EditWindowsEnum_ShowEditorSettings);
+        m_Panels.ToggleEditWindows(EditWindowsEnum::ShowEditorSettings);
       }
       ImGui::EndMenu();
     }
     if(ImGui::BeginMenu("View"))
     {
       if(ImGui::MenuItem("Statistics"))
-        toggoleSetting(m_DefaultSettings, Settings::EnableRendererStats);
+        m_Panels.ToggleViewWindows(ViewWindowsEnum::ShowRenderStatsWindow);
       if(ImGui::MenuItem("Profiler"))
-        toggoleSetting(m_DefaultSettings, Settings::ADD_SOMETHING_HERE);
+        m_Panels.ToggleViewWindows(ViewWindowsEnum::ShowProfilerWindow);
       ImGui::EndMenu();
     }
     ImGui::EndMenuBar();
-
-    if(m_DefaultSettings & Settings::EnableRendererStats)
-    {
-      ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
-      ImGui::Begin("Renderer Stats", nullptr);
-      {
-        ImGui::Text("%.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
-        ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
-        ImGui::Text("");
-        // renderer2D stats
-        Renderer2D::RendererStats stats = Renderer2D::GetRendererStats();
-
-        ImGui::Text("Draw Calls: %d", stats.noOfDrawCalls);
-        ImGui::Text("Textures: %d", stats.noIfTextures);
-        ImGui::Text("Quads: %d", stats.noOfQuads);
-        ImGui::Spacing();
-        ImGui::Text("Triangles: %d", stats.QueryNoOfTriangles());
-        ImGui::Text("Vertices: %d", stats.QueryNoOfVertices());
-        ImGui::Text("Indices: %d", stats.QueryNoOfIndices());
-      }
-      ImGui::End();
-      ImGui::PopStyleColor();
-    }
-    // if(m_DefaultSettings & Settings::)
 
     m_Panels.OnImGuiRender();
 
