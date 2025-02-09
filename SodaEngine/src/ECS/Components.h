@@ -25,7 +25,7 @@ struct NameComponent
 
 struct TagComponent
 {
-  std::string Tag = "NULL";
+  std::string Tag = "None";
 
   TagComponent() = default;
   TagComponent(const TagComponent &) = default;
@@ -53,6 +53,13 @@ struct TransformComponent
     return glm::mat4(glm::translate(glm::mat4(1.0f), Position) * rotation *
                      glm::scale(glm::mat4(1.0f), Scale));
   }
+
+  void Reset()
+  {
+    Position = {0.0f, 0.0f, 0.0f};
+    Rotation = {0.0f, 0.0f, 0.0f};
+    Scale = {1.0f, 1.0f, 1.0f};
+  }
 };
 
 // 2D Components
@@ -70,6 +77,14 @@ struct SpriteComponent
       : Color(color), Texture(texture)
   {
   }
+
+  void Reset()
+  {
+    Color = {1.0f, 1.0f, 1.0f, 1.0f};
+    TextureScale = 1.0f;
+    Texture = nullptr;
+    SpriteSheetTexture = nullptr;
+  }
 };
 
 // Other Components
@@ -81,6 +96,12 @@ struct CameraComponent
 
   CameraComponent() = default;
   CameraComponent(const CameraComponent &) = default;
+
+  void Reset()
+  {
+    PrimaryCamera = true;
+    FixedAspectRatio = false;
+  }
 };
 
 struct ScriptComponent
@@ -99,5 +120,7 @@ struct ScriptComponent
       script->Script = nullptr;
     };
   }
+
+  void Reset() { Script = nullptr; }
 };
 } // namespace Soda

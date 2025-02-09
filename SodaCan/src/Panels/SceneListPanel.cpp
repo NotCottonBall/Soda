@@ -75,6 +75,10 @@ static void DrawComponent(const std::string &name, Object obj, UI ui)
     {
       if(ImGui::MenuItem("Remove Component"))
         removeComponent = true;
+      if(ImGui::MenuItem("Reset Component"))
+      {
+        obj.GetComponent<T>().Reset();
+      }
 
       ImGui::EndPopup();
     }
