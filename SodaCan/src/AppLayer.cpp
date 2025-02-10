@@ -8,21 +8,12 @@
 
 namespace Soda
 {
-SodaCan::SodaCan()
-    : Layer("SodaCan"), m_EditorCameraController(1280.0f / 720.0f, false)
+SodaCan::SodaCan() : Layer("SodaCan"), m_EditorCamera(1280.0f / 720.0f, false)
 {
 }
 
 void SodaCan::OnAttach()
 {
-  m_GridTex = Texture2D::Create("SodaCan/assets/textures/Grid.png");
-  m_GingerCat = Texture2D::Create("SodaCan/assets/textures/GingerCat.png");
-  m_BoxTexture =
-      Texture2D::Create("SodaCan/assets/textures/WoodenContainer_diff.png");
-
-  m_miniDirt =
-      SpriteSheetTexture::TextureFromSheet(m_GingerCat, {0, 0}, {16, 16});
-
   FramebufferInfo m_FramebufferInfo;
   m_FramebufferInfo.width = 1280;
   m_FramebufferInfo.height = 720;
@@ -30,93 +21,49 @@ void SodaCan::OnAttach()
 
   m_Scene = CreateRef<Scene>();
 
-  m_Square3 = m_Scene->CreateObject("S3");
-  m_Square3.AddComponent<SpriteComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
-  m_Square2 = m_Scene->CreateObject("S2");
-  m_Square2.AddComponent<SpriteComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
   m_Square = m_Scene->CreateObject("Square");
   m_Square.AddComponent<SpriteComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+  m_GameCamera = m_Scene->CreateObject("EditorCamera");
+  m_GameCamera.AddComponent<CameraComponent>();
 
-  m_EditorCamera = m_Scene->CreateObject("EditorCamera");
-  m_EditorCamera.AddComponent<CameraComponent>();
-
-  m_Square.GetComponent<TransformComponent>().Scale =
-      glm::vec3(10.0f, 10.0f, 10.0f);
-  m_Square2.GetComponent<TransformComponent>().Scale =
-      glm::vec3(2.0f, 2.0f, 2.0f);
-  m_Square3.GetComponent<TransformComponent>().Scale =
-      glm::vec3(2.0f, 2.0f, 2.0f);
-
-  m_Square3.GetComponent<TransformComponent>().Position =
-      glm::vec3(7.0f, 6.2f, 0.0f);
-  m_Square3.GetComponent<TransformComponent>().Rotation =
-      glm::vec3(0.0f, 0.0f, glm::radians(130.0f));
-
-  m_Square3.GetComponent<SpriteComponent>().Texture = m_GingerCat;
-  m_Square2.GetComponent<SpriteComponent>().Texture = m_BoxTexture;
-  m_Square.GetComponent<SpriteComponent>().Texture = m_GridTex;
-
-  m_EditorCamera.GetComponent<CameraComponent>().Camera.SetOrthoCameraSize(
-      15.0f);
+  m_GameCamera.GetComponent<CameraComponent>().Camera.SetOrthoCameraSize(15.0f);
 
   // scripts
   class CameraController : public ScriptEntity
   {
-    void OnStart()
-    {
-      // m_GridTex = Texture2D::Create("SodaCan/assets/textures/Grid.png");
-      // m_BoxTex =
-      // Texture2D::Create("SodaCan/assets/textures/WoodenContainer_diff.png");
-    }
+    void OnStart() {}
 
-    void OnUpdate(Timestep dt)
-    {
-      if(Soda::Input::IsKeyPressed(SD_KEY_W))
-      {
-      }
-    }
+    void OnUpdate(Timestep dt) {}
 
     void OnDestroy() {}
-
-    // Ref<Texture2D> m_GridTex;
-    // Ref<Texture2D> m_BoxTex;
-
-    Object m_BoxObj;
   };
-
-  m_EditorCamera.AddComponent<ScriptComponent>().Bind<CameraController>();
+  m_GameCamera.AddComponent<ScriptComponent>().Bind<CameraController>();
 
   m_Panels.SetScene(m_Scene);
 }
 
 void SodaCan::OnUpdate(Timestep dt)
 {
-  // resizing
-  // @TODO: maybe this could be in a better place?
-  // i dont rwemember why the fuck i added this TODO.
-  // more words should have been said
   if(FramebufferInfo fInfo = m_Framebuffer->GetFramebufferInfo();
      m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
      (fInfo.width != m_ViewportSize.x || fInfo.height != m_ViewportSize.y))
   {
     m_Framebuffer->Refresh((uint32_t)m_ViewportSize.x,
                            (uint32_t)m_ViewportSize.y);
-    m_EditorCameraController.WhenResized(m_ViewportSize.x, m_ViewportSize.y);
+    m_EditorCamera.WhenResized(m_ViewportSize.x, m_ViewportSize.y);
 
     m_Scene->OnResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
   }
 
   if(m_IsPanelHovered)
-    m_EditorCameraController.OnUpdate(dt);
+    m_EditorCamera.OnUpdate(dt);
 
   m_Framebuffer->Bind();
   RenderCommand::ClearScreen({0.1f, 0.1f, 0.1f, 1.0f});
   Renderer2D::ResetRendererStats();
 
   // Render Loop
-  Renderer2D::StartScene(m_EditorCameraController.GetCamera());
+  Renderer2D::StartScene(m_EditorCamera.GetCamera());
   {
     m_Scene->OnUpdate(dt);
   }
@@ -127,7 +74,7 @@ void SodaCan::OnUpdate(Timestep dt)
 
 void SodaCan::OnEvent(Event &event)
 {
-  m_EditorCameraController.OnEvent(event);
+  m_EditorCamera.OnEvent(event);
 
   // if(Soda::Input::IsKeyPressed(SD_KEY_END))
   //   m_Scene->DestroyObject(m_Square2);
