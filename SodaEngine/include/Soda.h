@@ -24,7 +24,7 @@
 #include "ECS/Scene.h"
 #include "ECS/ScriptEntity.h"
 
-#include "Editor/OrthoCameraController.h"
+#include "Editor/EditorCamera.h"
 #include "Renderer/Light.h"
 
 #include "ImGui/ImGuiLayer.h"

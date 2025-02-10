@@ -8,7 +8,6 @@
 #include "Renderer/Render.h"
 #include "Renderer2D.h"
 
-
 #include "Renderer/Shaderer.h"
 #include "Renderer/Texture.h"
 #include "Renderer/VertexArray.h"
@@ -125,6 +124,15 @@ void Renderer2D::Setup()
 
   m_QuadInfo.m_IndicesCount = 0;
   m_QuadInfo.m_TextureIndex = 1;
+}
+
+void Renderer2D::StartScene(const EditorCamera &camera)
+{
+  m_QuadInfo.m_Shader->Bind();
+  m_QuadInfo.m_Shader->SetUniformMat4(
+      "u_PVMat", camera.GetCamera().GetProjectionViewMat());
+
+  Setup();
 }
 
 void Renderer2D::StartScene(const OrthoCamera &camera)

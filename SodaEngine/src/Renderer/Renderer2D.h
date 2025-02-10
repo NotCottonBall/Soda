@@ -1,10 +1,11 @@
 #pragma once
 
+#include "Editor/EditorCamera.h"
 #include "Renderer/Camera.h"
 #include "Renderer/RendererCamera.h"
-#include "Renderer/Texture.h"
 
 #include "Core/Core.h"
+#include "Renderer/Texture.h"
 #include "Tools/SpriteSheet.h"
 
 namespace Soda
@@ -40,6 +41,7 @@ public:
   // stuff
   static void StartScene(const RendererCamera &camera,
                          const glm::mat4 &transform);
+  static void StartScene(const EditorCamera &camera);
   static void StartScene(const OrthoCamera &camera);
   static void StopScene();
 

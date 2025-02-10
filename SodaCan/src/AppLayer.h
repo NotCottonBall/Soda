@@ -21,8 +21,9 @@ public:
   void OnResize(uint32_t width, uint32_t height) override;
 
 private:
-  OrthoCameraController m_EditorCamera;
-  Ref<Framebuffer> m_Framebuffer;
+  EditorCamera m_EditorCamera;
+  Ref<Framebuffer> m_GameFramebuffer;
+  Ref<Framebuffer> m_EditorFramebuffer;
   Ref<Scene> m_Scene;
 
   Object m_Square;
@@ -30,11 +31,16 @@ private:
   Object m_GameCamera;
   Object m_SecondCam;
 
-  glm::vec2 m_ViewportSize = glm::vec2(0.0f);
+  glm::vec2 m_GameViewportSize = glm::vec2(0.0f);
+  glm::vec2 m_EditorViewportSize = glm::vec2(0.0f);
   Panels m_Panels;
 
 private:
-  bool m_IsPanelFocused = false;
-  bool m_IsPanelHovered = false;
+  // game viewport
+  bool m_IsGamePanelFocused = false;
+  bool m_IsGamePanelHovered = false;
+  // Scene Viewport
+  bool m_IsScenePanelFocused = false;
+  bool m_IsScenePanelHovered = false;
 };
 } // namespace Soda

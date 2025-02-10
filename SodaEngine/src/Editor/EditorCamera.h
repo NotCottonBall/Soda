@@ -20,7 +20,7 @@ public:
   void OnUpdate(float dt);
   void OnEvent(Event &event);
 
-  void WhenResized(float width, float height);
+  void OnResize(float width, float height);
 
   OrthoCamera &GetCamera() { return m_Camera; }
   const OrthoCamera &GetCamera() const { return m_Camera; }

@@ -66,13 +66,12 @@ bool EditorCamera::OnMouseScrolled(MouseScrollEvent &msEvent)
 
 bool EditorCamera::OnWindowResized(WindowResizeEvent &wrEvent)
 {
-  WhenResized((float)wrEvent.GetWindowWidth(),
-              (float)wrEvent.GetWindowHeight());
+  OnResize((float)wrEvent.GetWindowWidth(), (float)wrEvent.GetWindowHeight());
 
   return false;
 }
 
-void EditorCamera::WhenResized(float width, float height)
+void EditorCamera::OnResize(float width, float height)
 {
   m_AspectRatio = width / height;
   m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel,

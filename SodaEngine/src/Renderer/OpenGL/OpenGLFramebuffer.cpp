@@ -41,7 +41,7 @@ void OpenGLFramebuffer::Unbind() const { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
 void OpenGLFramebuffer::Refresh()
 {
-  // this is the texture that gets     into our framebuffer and on the screen
+  // this is the texture that gets into our framebuffer and on the screen
   glCreateFramebuffers(1, &m_FramebufferID);
   glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferID);
 

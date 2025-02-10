@@ -4,6 +4,7 @@
 #include "glm/glm.hpp"
 
 #include "Core/Timestep.h"
+#include "Editor/EditorCamera.h"
 
 namespace Soda
 {
@@ -22,8 +23,10 @@ public:
   void DestroyObject(Object obj);
 
   // entity functions
-  void OnUpdate(Timestep dt);
-  void OnResize(uint32_t width, uint32_t height);
+  void OnEditorUpdate(Timestep dt, EditorCamera &editorCam);
+  void OnEditorResize(uint32_t width, uint32_t height, EditorCamera &editorcam);
+  void OnGameUpdate(Timestep dt);
+  void OnGameResize(uint32_t width, uint32_t height);
 
 private:
   entt::registry m_Registry;

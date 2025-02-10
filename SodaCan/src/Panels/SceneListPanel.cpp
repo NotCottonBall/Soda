@@ -201,7 +201,7 @@ void SceneListPanel::DrawObjectProperties(Object obj)
     {
       // @TODO: we need a dialog to select a texture
       Ref<Texture2D> m_tex =
-          Texture2D::Create("SodaCan/assets/textures/TheSodaCan.png");
+          Texture2D::Create("SodaCan/assets/textures/GingerCat.png");
       sprite.Texture = m_tex;
     }
   });

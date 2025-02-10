@@ -17,7 +17,8 @@ void SodaCan::OnAttach()
   FramebufferInfo m_FramebufferInfo;
   m_FramebufferInfo.width = 1280;
   m_FramebufferInfo.height = 720;
-  m_Framebuffer = Framebuffer::Create(m_FramebufferInfo);
+  m_EditorFramebuffer = Framebuffer::Create(m_FramebufferInfo);
+  m_GameFramebuffer = Framebuffer::Create(m_FramebufferInfo);
 
   m_Scene = CreateRef<Scene>();
 
@@ -44,32 +45,44 @@ void SodaCan::OnAttach()
 
 void SodaCan::OnUpdate(Timestep dt)
 {
-  if(FramebufferInfo fInfo = m_Framebuffer->GetFramebufferInfo();
-     m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
-     (fInfo.width != m_ViewportSize.x || fInfo.height != m_ViewportSize.y))
+  if(FramebufferInfo fInfo = m_GameFramebuffer->GetFramebufferInfo();
+     m_GameViewportSize.x > 0.0f && m_GameViewportSize.y > 0.0f &&
+     (fInfo.width != m_GameViewportSize.x ||
+      fInfo.height != m_GameViewportSize.y))
   {
-    m_Framebuffer->Refresh((uint32_t)m_ViewportSize.x,
-                           (uint32_t)m_ViewportSize.y);
-    m_EditorCamera.WhenResized(m_ViewportSize.x, m_ViewportSize.y);
-
-    m_Scene->OnResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+    m_GameFramebuffer->Refresh((uint32_t)m_GameViewportSize.x,
+                               (uint32_t)m_GameViewportSize.y);
+    m_Scene->OnGameResize((uint32_t)m_GameViewportSize.x,
+                          (uint32_t)m_GameViewportSize.y);
+  }
+  if(FramebufferInfo fInfo = m_EditorFramebuffer->GetFramebufferInfo();
+     m_EditorViewportSize.x > 0.0f && m_EditorViewportSize.y > 0.0f &&
+     (fInfo.width != m_EditorViewportSize.x ||
+      fInfo.height != m_EditorViewportSize.y))
+  {
+    m_EditorFramebuffer->Refresh((uint32_t)m_EditorViewportSize.x,
+                                 (uint32_t)m_EditorViewportSize.y);
+    m_EditorCamera.OnResize(m_EditorViewportSize.x, m_EditorViewportSize.y);
+    m_Scene->OnEditorResize((uint32_t)m_EditorViewportSize.x,
+                            (uint32_t)m_EditorViewportSize.y, m_EditorCamera);
   }
 
-  if(m_IsPanelHovered)
+  if(m_IsScenePanelHovered)
     m_EditorCamera.OnUpdate(dt);
 
-  m_Framebuffer->Bind();
+  m_GameFramebuffer->Bind();
   RenderCommand::ClearScreen({0.1f, 0.1f, 0.1f, 1.0f});
   Renderer2D::ResetRendererStats();
+  // Game Render Loop
+  m_Scene->OnGameUpdate(dt);
+  m_GameFramebuffer->Unbind();
 
-  // Render Loop
-  Renderer2D::StartScene(m_EditorCamera.GetCamera());
-  {
-    m_Scene->OnUpdate(dt);
-  }
-  Renderer2D::StopScene();
-
-  m_Framebuffer->Unbind();
+  m_EditorFramebuffer->Bind();
+  RenderCommand::ClearScreen({0.1f, 0.1f, 0.1f, 1.0f});
+  Renderer2D::ResetRendererStats();
+  // Editor Render Loop
+  m_Scene->OnEditorUpdate(dt, m_EditorCamera);
+  m_EditorFramebuffer->Unbind();
 }
 
 void SodaCan::OnEvent(Event &event)
@@ -172,24 +185,36 @@ void SodaCan::OnImGuiUpdate()
     m_Panels.OnImGuiRender();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+    // @FIXME: WTF is wrong with scrolling and consuming events?
+    // i dont even know if i set it up right
+    // i just know that scrolling works when the mouse isnt hovered in other
+    // imgui windows.
     ImGui::Begin("Scene");
     {
-      // Checks is the panel is Focused
-      // @FIXME: The Inputs should be consumed by the ImGui Panel and not the
-      // mani window.
-      m_IsPanelFocused = ImGui::IsWindowFocused();
-      m_IsPanelHovered = ImGui::IsWindowHovered();
+      m_IsScenePanelFocused = ImGui::IsWindowFocused();
+      m_IsScenePanelHovered = ImGui::IsWindowHovered();
 
-      App::Get().GetImGuiLayer()->ShouldConsumeEvents(!m_IsPanelHovered);
+      App::Get().GetImGuiLayer()->ShouldConsumeEvents(m_IsScenePanelHovered);
 
-      // @TODO: put this inside a OnWindowResize Callback somehow
-      // because we dont wanna check the scene/viewport each frame,
-      // we only wanna do it when we resize.
-      ImVec2 sceneSize = ImGui::GetContentRegionAvail();
-      m_ViewportSize = {sceneSize.x, sceneSize.y};
-      ImGui::Image((void *)m_Framebuffer->GetFrameTextureID(),
-                   ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2(0, 1),
-                   ImVec2(1, 0));
+      ImVec2 editorSceneSize = ImGui::GetContentRegionAvail();
+      m_EditorViewportSize = {editorSceneSize.x, editorSceneSize.y};
+      ImGui::Image((void *)m_EditorFramebuffer->GetFrameTextureID(),
+                   ImVec2(m_EditorViewportSize.x, m_EditorViewportSize.y),
+                   ImVec2(0, 1), ImVec2(1, 0));
+    }
+    ImGui::End();
+    ImGui::Begin("Game");
+    {
+      m_IsGamePanelFocused = ImGui::IsWindowFocused();
+      m_IsGamePanelHovered = ImGui::IsWindowHovered();
+
+      App::Get().GetImGuiLayer()->ShouldConsumeEvents(m_IsGamePanelHovered);
+
+      ImVec2 gameSceneSize = ImGui::GetContentRegionAvail();
+      m_GameViewportSize = {gameSceneSize.x, gameSceneSize.y};
+      ImGui::Image((void *)m_GameFramebuffer->GetFrameTextureID(),
+                   ImVec2(m_GameViewportSize.x, m_GameViewportSize.y),
+                   ImVec2(0, 1), ImVec2(1, 0));
     }
     ImGui::End();
     ImGui::PopStyleVar();
