@@ -192,7 +192,7 @@ void SceneListPanel::DrawObjectProperties(Object obj)
   });
 
   DrawComponent<SpriteComponent>("Sprite", obj, [](auto &sprite) {
-    ImGui::ColorEdit4("color", glm::value_ptr(sprite.Color));
+    ImGui::ColorEdit4("Color", glm::value_ptr(sprite.Color));
 
     ImGui::Text("Texture");
     if(ImGui::ImageButton(
