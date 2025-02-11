@@ -24,6 +24,17 @@ Object Scene::CreateObject(const std::string &name)
 }
 void Scene::DestroyObject(Object obj) { m_Registry.destroy(obj); }
 
+Object Scene::GetPrimaryCamera()
+{
+  auto view = m_Registry.view<CameraComponent>();
+  for(auto obj : view)
+  {
+    auto camera = view.get<CameraComponent>(obj);
+    if(camera.PrimaryCamera)
+      return Object{obj, this};
+  }
+}
+
 // Editor Functions
 void Scene::OnEditorUpdate(Timestep dt, EditorCamera &editorCam)
 {

@@ -31,6 +31,8 @@ public:
   void ToggleEditWindows(EditWindowsEnum option);
   void ToggleViewWindows(ViewWindowsEnum option);
 
+  SceneListPanel GetSceneListPanel() const { return m_SceneListsPanel; }
+
 private:
   SceneListPanel m_SceneListsPanel;
   EditWindowsEnum m_DefaultEditWindowOption =

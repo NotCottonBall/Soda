@@ -28,6 +28,7 @@
 #include "Renderer/Light.h"
 
 #include "ImGui/ImGuiLayer.h"
+#include "ImGui/ImGuizmo.h"
 
 //*********** THE START ***********//
 // #ifndef SODA_START

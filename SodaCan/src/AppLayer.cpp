@@ -201,6 +201,39 @@ void SodaCan::OnImGuiUpdate()
       ImGui::Image((void *)m_EditorFramebuffer->GetFrameTextureID(),
                    ImVec2(m_EditorViewportSize.x, m_EditorViewportSize.y),
                    ImVec2(0, 1), ImVec2(1, 0));
+
+      Object selectedObj = m_Panels.GetSceneListPanel().GetSelectedObject();
+      if(selectedObj)
+      {
+        ImGuizmo::SetOrthographic(true);
+        ImGuizmo::SetDrawlist();
+        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y,
+                          (float)ImGui::GetWindowWidth(),
+                          (float)ImGui::GetWindowHeight());
+
+        auto &transform = selectedObj.GetComponent<TransformComponent>();
+        glm::mat4 transformComponent = transform.GetTransform();
+        glm::vec3 position, rotation, scale;
+
+        ImGuizmo::Manipulate(
+            glm::value_ptr(m_EditorCamera.GetCamera().GetViewMat()),
+            glm::value_ptr(m_EditorCamera.GetCamera().GetProjectionMat()),
+            ImGuizmo::OPERATION::UNIVERSAL, ImGuizmo::MODE::WORLD,
+            glm::value_ptr(transformComponent));
+
+        if(ImGuizmo::IsUsing())
+        {
+          ImGuizmo::DecomposeMatrixToComponents(
+              glm::value_ptr(transformComponent), glm::value_ptr(position),
+              glm::value_ptr(rotation), glm::value_ptr(scale));
+          // ImGuizmo::RecomposeMatrixFromComponents(
+          //     glm::value_ptr(position), glm::value_ptr(rotation),
+          //     glm::value_ptr(scale), glm::value_ptr(transformComponent));
+          transform.Position = position;
+          transform.Rotation = rotation;
+          transform.Scale = scale;
+        }
+      }
     }
     ImGui::End();
     ImGui::Begin("Game");

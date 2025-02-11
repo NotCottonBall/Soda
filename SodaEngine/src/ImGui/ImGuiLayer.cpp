@@ -3,6 +3,7 @@
 #include "ImGuiLayer.h"
 
 #include "Core/Events/Events.h"
+#include "ImGuizmo.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "imgui.h"
@@ -95,6 +96,7 @@ void ImGuiLayer::Begin()
   ImGui_ImplGlfw_NewFrame();
 
   ImGui::NewFrame();
+  ImGuizmo::BeginFrame();
 }
 
 void ImGuiLayer::End()

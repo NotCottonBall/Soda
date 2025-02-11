@@ -28,6 +28,8 @@ public:
   void OnGameUpdate(Timestep dt);
   void OnGameResize(uint32_t width, uint32_t height);
 
+  Object GetPrimaryCamera();
+
 private:
   entt::registry m_Registry;
 

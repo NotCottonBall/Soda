@@ -14,6 +14,8 @@ public:
   // @TEMP: move every panel to a different class
   void DrawObjectProperties(Object obj);
 
+  Object GetSelectedObject() const { return m_SelectedObj; }
+
 private:
   Ref<Scene> m_CurrentScene;
   Object m_SelectedObj;
