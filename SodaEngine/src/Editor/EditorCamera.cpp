@@ -36,19 +36,25 @@ void EditorCamera::OnUpdate(float dt)
   {
     // up and down
     if(Input::IsKeyPressed(SD_KEY_E))
-      m_cameraPosition.y -= m_cameraMoveSpeed * dt;
-    if(Input::IsKeyPressed(SD_KEY_Q))
       m_cameraPosition.y += m_cameraMoveSpeed * dt;
+    if(Input::IsKeyPressed(SD_KEY_Q))
+      m_cameraPosition.y -= m_cameraMoveSpeed * dt;
 
     // base move dirz
     if(Input::IsKeyPressed(SD_KEY_W))
-      m_cameraPosition.z -= m_cameraMoveSpeed * dt;
+      m_cameraPosition += (m_forwardVec * m_cameraMoveSpeed) * dt;
     if(Input::IsKeyPressed(SD_KEY_S))
-      m_cameraPosition.z += m_cameraMoveSpeed * dt;
+      m_cameraPosition -= (m_forwardVec * m_cameraMoveSpeed) * dt;
     if(Input::IsKeyPressed(SD_KEY_A))
-      m_cameraPosition.x -= m_cameraMoveSpeed * dt;
+      m_cameraPosition -=
+          (glm::cross(m_forwardVec, glm::vec3(0.0f, 1.0f, 0.0f)) *
+           m_cameraMoveSpeed) *
+          dt;
     if(Input::IsKeyPressed(SD_KEY_D))
-      m_cameraPosition.x += m_cameraMoveSpeed * dt;
+      m_cameraPosition +=
+          (glm::cross(m_forwardVec, glm::vec3(0.0f, 1.0f, 0.0f)) *
+           m_cameraMoveSpeed) *
+          dt;
   }
 
   RecalculateMatrices();
@@ -113,7 +119,11 @@ bool EditorCamera::OnMouseMove(MouseMoveEvent &mmEvent)
     dir.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
     dir.y = sin(glm::radians(m_pitch));
     dir.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
-    m_target = dir;
+    m_forwardVec = dir;
+  }
+  else
+  {
+    m_firstMouse = true;
   }
 
   return false;
@@ -128,7 +138,7 @@ void EditorCamera::OnResize(float width, float height)
 void EditorCamera::RecalculateMatrices()
 {
   SetProjectionMat(m_fov, m_aspectRatio, m_nearPlane, m_farPlane);
-  m_viewMat = glm::lookAt(m_cameraPosition, m_cameraPosition + m_target,
+  m_viewMat = glm::lookAt(m_cameraPosition, m_cameraPosition + m_forwardVec,
                           glm::vec3(0.0f, 1.0f, 0.0f));
   m_viewProjectionMat = m_Projection * m_viewMat;
 }

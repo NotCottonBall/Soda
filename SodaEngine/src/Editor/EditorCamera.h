@@ -26,6 +26,8 @@ public:
   // camera controls
   float GetCameraSpeed() const { return m_cameraMoveSpeed; }
   void SetCameraSpeed(const float &speed) { m_cameraMoveSpeed = speed; }
+  float GetCameraSensi() const { return m_cameraSensitivity; }
+  void SetCameraSensi(float sensi) { m_cameraSensitivity = sensi; }
   float GetZoomLevel() const { return m_zoomLevel; }
   void SetZoomLevel(const float &zoomLevel) { m_zoomLevel = zoomLevel; }
 
@@ -62,7 +64,7 @@ private:
   glm::mat4 m_viewProjectionMat;
 
   float m_cameraMoveSpeed = 5.0f;
-  float m_cameraSensitivity = 1.0f;
+  float m_cameraSensitivity = 0.5f;
 
   float m_aspectRatio;
   float m_fov = 45.0f;
@@ -70,7 +72,7 @@ private:
   float m_farPlane = 1000.0f;
 
   float m_zoomLevel = 10.0f;
-  glm::vec3 m_target = {0.0f, 0.0f, -1.0f};
+  glm::vec3 m_forwardVec = {0.0f, 0.0f, -1.0f};
   glm::vec3 m_cameraPosition = {0.0f, 0.0f, 0.0f};
 
   float m_yaw, m_pitch;
