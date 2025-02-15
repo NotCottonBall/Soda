@@ -8,9 +8,7 @@
 
 namespace Soda
 {
-SodaCan::SodaCan() : Layer("SodaCan"), m_EditorCamera(1280.0f / 720.0f, false)
-{
-}
+SodaCan::SodaCan() : Layer("SodaCan"), m_EditorCamera(1280.0f / 720.0f) {}
 
 void SodaCan::OnAttach()
 {
@@ -39,8 +37,9 @@ void SodaCan::OnAttach()
     void OnDestroy() {}
   };
   m_GameCamera.AddComponent<ScriptComponent>().Bind<CameraController>();
-
   m_Panels.SetScene(m_Scene);
+
+  ImGuizmo::SetOrthographic(false);
 }
 
 void SodaCan::OnUpdate(Timestep dt)
@@ -205,7 +204,6 @@ void SodaCan::OnImGuiUpdate()
       Object selectedObj = m_Panels.GetSceneListPanel().GetSelectedObject();
       if(selectedObj)
       {
-        ImGuizmo::SetOrthographic(true);
         ImGuizmo::SetDrawlist();
         ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y,
                           (float)ImGui::GetWindowWidth(),
@@ -215,20 +213,27 @@ void SodaCan::OnImGuiUpdate()
         glm::mat4 transformComponent = transform.GetTransform();
         glm::vec3 position, rotation, scale;
 
-        ImGuizmo::Manipulate(
-            glm::value_ptr(m_EditorCamera.GetCamera().GetViewMat()),
-            glm::value_ptr(m_EditorCamera.GetCamera().GetProjectionMat()),
-            ImGuizmo::OPERATION::UNIVERSAL, ImGuizmo::MODE::WORLD,
-            glm::value_ptr(transformComponent));
+        ImGuizmo::Manipulate(glm::value_ptr(m_EditorCamera.GetViewMat()),
+                             glm::value_ptr(m_EditorCamera.GetProjectionMat()),
+                             ImGuizmo::OPERATION::TRANSLATE,
+                             ImGuizmo::MODE::WORLD,
+                             glm::value_ptr(transformComponent));
+
+        // ImGuizmo::Manipulate(
+        //     glm::value_ptr(glm::inverse(m_Scene->GetPrimaryCamera()
+        //                                     .GetComponent<TransformComponent>()
+        //                                     .GetTransform())),
+        //     glm::value_ptr(m_Scene->GetPrimaryCamera()
+        //                        .GetComponent<CameraComponent>()
+        //                        .Camera.GetProjection()),
+        //     ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::WORLD,
+        //     glm::value_ptr(transformComponent));
 
         if(ImGuizmo::IsUsing())
         {
           ImGuizmo::DecomposeMatrixToComponents(
               glm::value_ptr(transformComponent), glm::value_ptr(position),
               glm::value_ptr(rotation), glm::value_ptr(scale));
-          // ImGuizmo::RecomposeMatrixFromComponents(
-          //     glm::value_ptr(position), glm::value_ptr(rotation),
-          //     glm::value_ptr(scale), glm::value_ptr(transformComponent));
           transform.Position = position;
           transform.Rotation = rotation;
           transform.Scale = scale;

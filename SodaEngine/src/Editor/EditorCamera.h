@@ -5,6 +5,7 @@
 #include "Core/Timestep.h"
 
 #include "Renderer/Camera.h"
+#include "Renderer/RendererCamera.h"
 
 #include "Core/Events/AppEvents.h"
 #include "Core/Events/Events.h"
@@ -12,45 +13,68 @@
 
 namespace Soda
 {
-class EditorCamera
+class EditorCamera : public RendererCamera
 {
 public:
-  EditorCamera(float aspectRatio, bool rotation = false);
+  EditorCamera(float aspectRatio);
 
   void OnUpdate(float dt);
   void OnEvent(Event &event);
-
   void OnResize(float width, float height);
 
-  OrthoCamera &GetCamera() { return m_Camera; }
-  const OrthoCamera &GetCamera() const { return m_Camera; }
+  // GET SET ERS //
+  // camera controls
+  float GetCameraSpeed() const { return m_cameraMoveSpeed; }
+  void SetCameraSpeed(const float &speed) { m_cameraMoveSpeed = speed; }
+  float GetZoomLevel() const { return m_zoomLevel; }
+  void SetZoomLevel(const float &zoomLevel) { m_zoomLevel = zoomLevel; }
 
-  float GetCameraSpeed() const { return m_CameraTranslationSpeed; }
-  void SetCameraSpeed(const float &speed) { m_CameraTranslationSpeed = speed; }
-
-  float GetCameraRotationSpeed() const { return m_CameraRotationSpeed; }
-  void SetCameraRotationSpeed(const float &speed)
+  // camera settings
+  float GetAspectRatio() const { return m_aspectRatio; }
+  void SetAspectRatio(float aspectRatio) { m_aspectRatio = aspectRatio; }
+  float GetFOV() const { return m_fov; }
+  void SetFOV(float fov) { m_fov = fov; }
+  float GetNearPlane() const { return m_nearPlane; }
+  float GetFarPlane() const { return m_farPlane; }
+  void SetNearAndFarPlane(float nearPlane, float farPlane)
   {
-    m_CameraRotationSpeed = speed;
+    m_nearPlane = nearPlane;
+    m_farPlane = farPlane;
   }
 
-  float GetZoomLevel() const { return m_ZoomLevel; }
-  void SetZoomLevel(const float &zoomLevel) { m_ZoomLevel = zoomLevel; }
+  // camera properties
+  const glm::mat4 &GetViewMat() const { return m_viewMat; }
+  const glm::mat4 &GetProjectionMat() const { return m_Projection; }
+  const glm::mat4 &GetProjectionViewMat() const { return m_viewProjectionMat; }
+  // GET SET ERS //
 
 private:
   bool OnMouseScrolled(MouseScrollEvent &msEvent);
   bool OnWindowResized(WindowResizeEvent &wrEvent);
+  bool OnMouseMove(MouseMoveEvent &mmEvent);
+
+  void SetProjectionMat(float fov, float aspectRatio, float nearPlane,
+                        float farPlane);
+  void RecalculateMatrices();
 
 private:
-  float m_AspectRatio;
-  float m_ZoomLevel = 1.0f;
-  OrthoCamera m_Camera;
+  glm::mat4 m_viewMat;
+  glm::mat4 m_viewProjectionMat;
 
-  glm::vec3 m_CameraPosition = {0.0f, 0.0f, 0.0f};
-  float m_CameraTranslationSpeed = 5.0f;
+  float m_cameraMoveSpeed = 5.0f;
+  float m_cameraSensitivity = 1.0f;
 
-  bool m_Rotation;
-  float m_CameraRotation = 0.0f;
-  float m_CameraRotationSpeed = 180.0f;
+  float m_aspectRatio;
+  float m_fov = 45.0f;
+  float m_nearPlane = 0.01f;
+  float m_farPlane = 1000.0f;
+
+  float m_zoomLevel = 10.0f;
+  glm::vec3 m_target = {0.0f, 0.0f, -1.0f};
+  glm::vec3 m_cameraPosition = {0.0f, 0.0f, 0.0f};
+
+  float m_yaw, m_pitch;
+  float m_lastX, m_lastY;
+  bool m_firstMouse;
 };
 } // namespace Soda

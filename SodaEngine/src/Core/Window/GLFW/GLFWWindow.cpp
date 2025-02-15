@@ -61,7 +61,8 @@ void GLFWWindow::InitWindow(const WindowInfo &windowInfo)
   // ever we want without declaring it global because the data is bound to the
   // m_Window, we can access the m_WindowData with the m_Window
   glfwSetWindowUserPointer(m_Window, &m_WindowData);
-  SetVSync(true);
+  // @TODO: we need this as a settings option
+  SetVSync(false);
 
   /* NOW... the EVENTS FLOOD */
   // this is where we setup events for our window

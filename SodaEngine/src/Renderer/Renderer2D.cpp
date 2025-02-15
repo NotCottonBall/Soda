@@ -129,8 +129,7 @@ void Renderer2D::Setup()
 void Renderer2D::StartScene(const EditorCamera &camera)
 {
   m_QuadInfo.m_Shader->Bind();
-  m_QuadInfo.m_Shader->SetUniformMat4(
-      "u_PVMat", camera.GetCamera().GetProjectionViewMat());
+  m_QuadInfo.m_Shader->SetUniformMat4("u_PVMat", camera.GetProjectionViewMat());
 
   Setup();
 }
