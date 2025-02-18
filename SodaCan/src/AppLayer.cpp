@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <imgui.h>
 
+#include "Editor/SceneSerializer.h"
 #include "Panels/Panels.h"
 #include "SodaInput.h"
 
@@ -25,7 +26,7 @@ void SodaCan::OnAttach()
   m_GameCamera = m_Scene->CreateObject("EditorCamera");
   m_GameCamera.AddComponent<CameraComponent>();
 
-  m_GameCamera.GetComponent<CameraComponent>().Camera.SetOrthoCameraSize(15.0f);
+  m_GameCamera.GetComponent<CameraComponent>().Camera.SetOrthoCameraZoom(15.0f);
 
   // scripts
   class CameraController : public ScriptEntity
@@ -38,8 +39,10 @@ void SodaCan::OnAttach()
   };
   m_GameCamera.AddComponent<ScriptComponent>().Bind<CameraController>();
   m_Panels.SetScene(m_Scene);
-
   ImGuizmo::SetOrthographic(false);
+
+  SceneSerializer sceneSerializer(m_Scene);
+  sceneSerializer.Serialize("SodaCan/assets/scenes/main.stscn");
 }
 
 void SodaCan::OnUpdate(Timestep dt)

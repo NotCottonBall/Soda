@@ -11,3 +11,6 @@
 [submodule "SodaEngine/submodules/glm"]
 	path = SodaEngine/submodules/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "SodaEngine/submodules/yamp_cpp"]
+	path = SodaEngine/submodules/yamp_cpp
+	url = https://github.com/jbeder/yaml-cpp.git

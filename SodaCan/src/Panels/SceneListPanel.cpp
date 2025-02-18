@@ -163,9 +163,9 @@ void SceneListPanel::DrawObjectProperties(Object obj)
 
     if(camera.Camera.GetCameraType() == SceneCamera::CameraType::Orthographic)
     {
-      float orthoCamSize = camera.Camera.GetOrthoCameraSize();
+      float orthoCamSize = camera.Camera.GetOrthoCameraZoom();
       if(ImGui::DragFloat("View Size", &orthoCamSize))
-        camera.Camera.SetOrthoCameraSize(orthoCamSize);
+        camera.Camera.SetOrthoCameraZoom(orthoCamSize);
 
       float orthoNearPlane = camera.Camera.GetOrthoNearPlane();
       if(ImGui::DragFloat("Near Plane", &orthoNearPlane))
@@ -204,6 +204,7 @@ void SceneListPanel::DrawObjectProperties(Object obj)
           Texture2D::Create("SodaCan/assets/textures/GingerCat.png");
       sprite.Texture = m_tex;
     }
+    ImGui::DragFloat("Texture Scale", &sprite.TextureScale);
   });
 }
 } // namespace Soda

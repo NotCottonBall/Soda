@@ -1,0 +1,25 @@
+Scene: UnNamed
+Objects:
+  - Object: 69
+    Name: EditorCamera
+    Tag: NotTagged
+    Transform Component:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Camera Component:
+      Primary Camera: true
+      Fized Astect Ratio: false
+      Camera Type: Orthographic
+      Zoom: 15
+      Near Plane: 1
+      Far Plane: -1
+  - Object: 69
+    Name: Square
+    Tag: NotTagged
+    Transform Component:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Sprite Component:
+      Color: [1, 1, 1, 1]

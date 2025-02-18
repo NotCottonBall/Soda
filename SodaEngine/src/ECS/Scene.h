@@ -35,5 +35,6 @@ private:
 
   friend class Object;
   friend class Panels;
+  friend class SceneSerializer;
 };
 } // namespace Soda

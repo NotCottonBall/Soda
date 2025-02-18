@@ -67,6 +67,7 @@ struct SpriteComponent
 {
   glm::vec4 Color{1.0f, 1.0f, 1.0f, 1.0f};
   Ref<Texture2D> Texture = nullptr;
+  // @TODO: sprite sheet should be a seperate component
   Ref<SpriteSheetTexture> SpriteSheetTexture = nullptr;
   float TextureScale = 1.0f;
 

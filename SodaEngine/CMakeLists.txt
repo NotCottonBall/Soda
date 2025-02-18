@@ -19,6 +19,7 @@ add_library(SodaEngine STATIC ${SODA_SOURCES} ${STBI_SOURCES} ${GLM_SOURCES})
 
 # setting up libraries
 add_subdirectory(submodules/glfw)
+add_subdirectory(submodules/yamp_cpp)
 
 # imgui library
 add_library(imgui STATIC
@@ -47,7 +48,7 @@ add_library(glad STATIC submodules/glad/src/glad.c)
 target_include_directories(glad PUBLIC submodules/glad/include)
 
 
-target_link_libraries(SodaEngine PRIVATE glad glfw imgui opengl32)
+target_link_libraries(SodaEngine PRIVATE glad glfw imgui yaml-cpp opengl32)
 
 
 # Build specific stuff
@@ -79,6 +80,7 @@ target_include_directories(SodaEngine PUBLIC
     submodules/glm
     submodules/stb_image
     submodules/entt
+    submodules/yamp_cpp/include
 
     src
 )

@@ -32,10 +32,10 @@ public:
   }
 
   // sets and gets for ortho cam values
-  const float GetOrthoCameraSize() const { return m_OrthoCamSize; }
-  void SetOrthoCameraSize(float size)
+  const float GetOrthoCameraZoom() const { return m_OrthoCamZoom; }
+  void SetOrthoCameraZoom(float size)
   {
-    m_OrthoCamSize = size;
+    m_OrthoCamZoom = size;
     RecalculateMatrix();
   }
 
@@ -84,7 +84,7 @@ private:
   float m_AspectRatio = 0.0f;
 
   // orthographic cam properties
-  float m_OrthoCamSize = 10.0f;
+  float m_OrthoCamZoom = 10.0f;
   float m_OrthoNearPlane = 1.0f, m_OrthoFarPlane = -1.0f;
 
   // perspective cam properties

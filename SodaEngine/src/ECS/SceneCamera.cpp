@@ -28,7 +28,7 @@ SceneCamera::SceneCamera() { SetViewport(); }
 
 void SceneCamera::SetOrthoCamera(float size, float nearPlane, float farPlane)
 {
-  m_OrthoCamSize = size;
+  m_OrthoCamZoom = size;
   m_OrthoNearPlane = nearPlane;
   m_OrthoFarPlane = farPlane;
 
@@ -61,10 +61,10 @@ void SceneCamera::RecalculateMatrix()
 {
   if(m_CameraType == CameraType::Orthographic)
   {
-    float leftSide = -m_OrthoCamSize * m_AspectRatio * 0.5f;
-    float rightSize = m_OrthoCamSize * m_AspectRatio * 0.5f;
-    float upSide = m_OrthoCamSize * 0.5f;
-    float bottomSide = -m_OrthoCamSize * 0.5f;
+    float leftSide = -m_OrthoCamZoom * m_AspectRatio * 0.5f;
+    float rightSize = m_OrthoCamZoom * m_AspectRatio * 0.5f;
+    float upSide = m_OrthoCamZoom * 0.5f;
+    float bottomSide = -m_OrthoCamZoom * 0.5f;
 
     m_Projection = glm::ortho(leftSide, rightSize, bottomSide, upSide,
                               m_OrthoNearPlane, m_OrthoFarPlane);

@@ -53,8 +53,7 @@ public:
     return (uint32_t)m_Object;
   }
 
-  bool operator==(Object obj) const // we need this to check for object
-                                    // "selectivity" in the scene list panel
+  bool operator==(Object obj) const
   {
     return m_Object == obj.m_Object && m_Scene == obj.m_Scene;
   }
