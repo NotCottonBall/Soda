@@ -196,7 +196,7 @@ void SceneSerializer::Deserialize(const std::string &filepath)
   YAML::Node data = YAML::LoadFile(filepath);
   SD_ENGINE_ASSERT(data, "Failed To Load: " + filepath);
 
-  if(data["Scene"])
+  if(!data["Scene"])
     SD_ENGINE_LOG("{0} Is Not A Scene File", filepath);
 
   auto objects = data["Objects"];
