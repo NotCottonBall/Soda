@@ -21,28 +21,28 @@ void SodaCan::OnAttach()
 
   m_Scene = CreateRef<Scene>();
 
-  m_Square = m_Scene->CreateObject("Square");
-  m_Square.AddComponent<SpriteComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-  m_GameCamera = m_Scene->CreateObject("EditorCamera");
-  m_GameCamera.AddComponent<CameraComponent>();
+  // m_Square = m_Scene->CreateObject("Square");
+  // m_Square.AddComponent<SpriteComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+  // m_GameCamera = m_Scene->CreateObject("GameCamera");
+  // m_GameCamera.AddComponent<CameraComponent>();
 
-  m_GameCamera.GetComponent<CameraComponent>().Camera.SetOrthoCameraZoom(15.0f);
+  // m_GameCamera.GetComponent<CameraComponent>().Camera.SetOrthoCameraZoom(15.0f);
 
-  // scripts
-  class CameraController : public ScriptEntity
-  {
-    void OnStart() {}
+  // // scripts
+  // class CameraController : public ScriptEntity
+  // {
+  //   void OnStart() {}
 
-    void OnUpdate(Timestep dt) {}
+  //   void OnUpdate(Timestep dt) {}
 
-    void OnDestroy() {}
-  };
-  m_GameCamera.AddComponent<ScriptComponent>().Bind<CameraController>();
+  //   void OnDestroy() {}
+  // };
+  // m_GameCamera.AddComponent<ScriptComponent>().Bind<CameraController>();
   m_Panels.SetScene(m_Scene);
   ImGuizmo::SetOrthographic(false);
 
   SceneSerializer sceneSerializer(m_Scene);
-  sceneSerializer.Serialize("SodaCan/assets/scenes/main.stscn");
+  sceneSerializer.Deserialize("SodaCan/assets/scenes/main.stscn");
 }
 
 void SodaCan::OnUpdate(Timestep dt)
@@ -93,8 +93,8 @@ void SodaCan::OnEvent(Event &event)
 
   // if(Soda::Input::IsKeyPressed(SD_KEY_END))
   //   m_Scene->DestroyObject(m_Square2);
-  if(Soda::Input::IsKeyPressed(SD_KEY_END))
-    m_Square.DeleteComponent<SpriteComponent>();
+  // if(Soda::Input::IsKeyPressed(SD_KEY_END))
+  //   m_Square.DeleteComponent<SpriteComponent>();
 }
 void SodaCan::OnResize(uint32_t width, uint32_t height) {}
 

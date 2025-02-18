@@ -6,6 +6,55 @@
 #include "ECS/Object.h"
 #include "SceneSerializer.h"
 
+namespace YAML
+{
+template <> struct convert<glm::vec3>
+{
+  static Node encode(const glm::vec3 &v)
+  {
+    Node node;
+    node.push_back(v.x);
+    node.push_back(v.y);
+    node.push_back(v.z);
+    return node;
+  };
+  static bool decode(const Node &node, glm::vec3 &v)
+  {
+    if(!node.IsSequence() || node.size() != 3)
+      return false;
+
+    v.x = node[0].as<float>();
+    v.y = node[1].as<float>();
+    v.z = node[2].as<float>();
+    return true;
+  }
+};
+
+template <> struct convert<glm::vec4>
+{
+  static Node encode(const glm::vec4 &v)
+  {
+    Node node;
+    node.push_back(v.x);
+    node.push_back(v.y);
+    node.push_back(v.z);
+    node.push_back(v.w);
+    return node;
+  };
+  static bool decode(const Node &node, glm::vec4 &v)
+  {
+    if(!node.IsSequence() || node.size() != 4)
+      return false;
+
+    v.x = node[0].as<float>();
+    v.y = node[1].as<float>();
+    v.z = node[2].as<float>();
+    v.z = node[3].as<float>();
+    return true;
+  }
+};
+} // namespace YAML
+
 namespace Soda
 {
 YAML::Emitter &operator<<(YAML::Emitter &out, glm::vec3 &v)
@@ -27,7 +76,7 @@ static void SerializeEntities(YAML::Emitter &out, Object obj)
 {
   out << YAML::BeginMap;
   // @TODO: id of the obj
-  out << YAML::Key << "Object" << YAML::Value << "69";
+  out << YAML::Key << "ObjectID" << YAML::Value << "69";
   {
     if(obj.HasComponent<NameComponent>())
     {
@@ -42,7 +91,7 @@ static void SerializeEntities(YAML::Emitter &out, Object obj)
     if(obj.HasComponent<TransformComponent>())
     {
       auto tran = obj.GetComponent<TransformComponent>();
-      out << YAML::Key << "Transform Component";
+      out << YAML::Key << "TransformComponent";
       out << YAML::BeginMap;
       out << YAML::Key << "Position" << YAML::Value << tran.Position;
       out << YAML::Key << "Rotation" << YAML::Value << tran.Rotation;
@@ -51,21 +100,21 @@ static void SerializeEntities(YAML::Emitter &out, Object obj)
     }
     if(obj.HasComponent<CameraComponent>())
     {
-      out << YAML::Key << "Camera Component" << YAML::BeginMap;
+      out << YAML::Key << "CameraComponent" << YAML::BeginMap;
       auto camera = obj.GetComponent<CameraComponent>();
-      out << YAML::Key << "Primary Camera" << YAML::Value
+      out << YAML::Key << "PrimaryCamera" << YAML::Value
           << camera.PrimaryCamera;
-      out << YAML::Key << "Fized Astect Ratio" << YAML::Value
+      out << YAML::Key << "FixedAspectRatio" << YAML::Value
           << camera.FixedAspectRatio;
-      out << YAML::Key << "Camera Type";
+      out << YAML::Key << "CameraType";
       if(camera.Camera.GetCameraType() == SceneCamera::CameraType::Orthographic)
       {
         out << YAML::Value << "Orthographic";
         out << YAML::Key << "Zoom" << YAML::Value
             << camera.Camera.GetOrthoCameraZoom();
-        out << YAML::Key << "Near Plane" << YAML::Value
+        out << YAML::Key << "NearPlane" << YAML::Value
             << camera.Camera.GetOrthoNearPlane();
-        out << YAML::Key << "Far Plane" << YAML::Value
+        out << YAML::Key << "FarPlane" << YAML::Value
             << camera.Camera.GetOrthoFarPlane();
       }
       else
@@ -73,23 +122,23 @@ static void SerializeEntities(YAML::Emitter &out, Object obj)
         out << YAML::Value << "Perspective";
         out << YAML::Key << "FOV" << YAML::Value
             << camera.Camera.GetPerspectiveFov();
-        out << YAML::Key << "Near Plane" << YAML::Value
+        out << YAML::Key << "NearPlane" << YAML::Value
             << camera.Camera.GetPerspectiveNearPlane();
-        out << YAML::Key << "Far Plane" << YAML::Value
+        out << YAML::Key << "FarPlane" << YAML::Value
             << camera.Camera.GetPerspectiveFarPlane();
       }
       out << YAML::EndMap;
     }
     if(obj.HasComponent<SpriteComponent>())
     {
-      out << YAML::Key << "Sprite Component" << YAML::BeginMap;
+      out << YAML::Key << "SpriteComponent" << YAML::BeginMap;
       auto sprite = obj.GetComponent<SpriteComponent>();
       out << YAML::Key << "Color" << YAML::Value << sprite.Color;
       if(sprite.Texture)
       {
-        out << YAML::Key << "Texture" << YAML::Value
+        out << YAML::Key << "TexturePath" << YAML::Value
             << sprite.Texture->GetFilePath();
-        out << YAML::Key << "Texture Scale" << YAML::Value
+        out << YAML::Key << "TextureScale" << YAML::Value
             << sprite.TextureScale;
       }
       out << YAML::EndMap;
@@ -131,6 +180,77 @@ void SceneSerializer::Serialize(const std::string &filepath)
 }
 void SceneSerializer::SerializeBinary(const std::string &filepath) {}
 
-void SceneSerializer::Deserialize(const std::string &filepath) {}
+void SceneSerializer::Deserialize(const std::string &filepath)
+{
+  std::string ext = std::filesystem::path(filepath).extension().string();
+  SD_ENGINE_ASSERT(ext == ".stscn",
+                   "You Are Trying To Load A Text Based Scene File With An "
+                   "Extension Other Than '.stscn'");
+  if(ext != ".stscn")
+  {
+    SD_ENGINE_ERROR("You Are Trying To Load A Text Based Scene File With An "
+                    "Extension Other Than '.stscn'");
+    return;
+  }
+
+  YAML::Node data = YAML::LoadFile(filepath);
+  SD_ENGINE_ASSERT(data, "Failed To Load: " + filepath);
+
+  if(data["Scene"])
+    SD_ENGINE_LOG("{0} Is Not A Scene File", filepath);
+
+  auto objects = data["Objects"];
+  for(auto obj : objects)
+  {
+    // @TODO: every object needs an ID
+    uint64_t uuid = obj["ObjectID"].as<uint64_t>();
+    std::string name = obj["Name"].as<std::string>();
+    std::string tag = obj["Tag"].as<std::string>();
+    Object createdObj = m_scene->CreateObject(name);
+    createdObj.GetComponent<TagComponent>().Tag = tag;
+    SD_ENGINE_LOG("Deserialized An Object With The ID: {0}", uuid);
+
+    if(auto tComponent = obj["TransformComponent"])
+    {
+      auto tc = createdObj.GetComponent<TransformComponent>();
+      tc.Position = tComponent["Position"].as<glm::vec3>();
+      tc.Rotation = tComponent["Rotation"].as<glm::vec3>();
+      tc.Scale = tComponent["Scale"].as<glm::vec3>();
+    }
+    if(auto camComponent = obj["CameraComponent"])
+    {
+      auto cam = createdObj.AddComponent<CameraComponent>();
+      cam.FixedAspectRatio = camComponent["PrimaryCamera"].as<bool>();
+      cam.FixedAspectRatio = camComponent["FixedAspectRatio"].as<bool>();
+      if(camComponent["CameraType"].as<std::string>() == "Orthographic")
+      {
+        cam.Camera.SetCameraType(SceneCamera::CameraType::Orthographic);
+        cam.Camera.SetOrthoCameraZoom(camComponent["Zoom"].as<float>());
+        cam.Camera.SetOrthoNearPlane(camComponent["NearPlane"].as<float>());
+        cam.Camera.SetOrthoFarPlane(camComponent["FarPlane"].as<float>());
+      }
+      else
+      {
+        cam.Camera.SetCameraType(SceneCamera::CameraType::Perspective);
+        cam.Camera.SetPerspectiveFov(camComponent["FOV"].as<float>());
+        cam.Camera.SetPerspectiveNearPlane(
+            camComponent["NearPlane"].as<float>());
+        cam.Camera.SetPerspectiveFarPlane(camComponent["FarPlane"].as<float>());
+      }
+    }
+    if(auto spComponent = obj["SpriteComponent"])
+    {
+      auto sp = createdObj.AddComponent<SpriteComponent>();
+      sp.Color = spComponent["Color"].as<glm::vec4>();
+      if(spComponent["Texture"])
+      {
+        Ref<Texture2D> tex =
+            Texture2D::Create(spComponent["TexturePath"].as<std::string>());
+        sp.Texture = tex;
+        sp.TextureScale = spComponent["TextureScale"].as<float>();
+      }
+    }
+  }
+}
 void SceneSerializer::DeserializeBinary(const std::string &filepath) {}
 } // namespace Soda

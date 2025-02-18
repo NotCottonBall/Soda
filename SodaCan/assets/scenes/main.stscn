@@ -1,25 +1,25 @@
 Scene: UnNamed
 Objects:
-  - Object: 69
-    Name: EditorCamera
-    Tag: NotTagged
-    Transform Component:
-      Position: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    Camera Component:
-      Primary Camera: true
-      Fized Astect Ratio: false
-      Camera Type: Orthographic
-      Zoom: 15
-      Near Plane: 1
-      Far Plane: -1
-  - Object: 69
+  - ObjectID: 69
     Name: Square
     Tag: NotTagged
-    Transform Component:
+    TransformComponent:
       Position: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    Sprite Component:
+    SpriteComponent:
       Color: [1, 1, 1, 1]
+  - ObjectID: 69
+    Name: GameCamera
+    Tag: NotTagged
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      PrimaryCamera: true
+      FixedAspectRatio: false
+      CameraType: Orthographic
+      Zoom: 10
+      NearPlane: 1
+      FarPlane: -1
