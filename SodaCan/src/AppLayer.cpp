@@ -1,5 +1,6 @@
 #include "AppLayer.h"
 
+#include "Tools/FileDialogs/tinyfiledialogs.h"
 #include <glm/glm.hpp>
 #include <imgui.h>
 
@@ -21,28 +22,11 @@ void SodaCan::OnAttach()
 
   m_Scene = CreateRef<Scene>();
 
-  // m_Square = m_Scene->CreateObject("Square");
-  // m_Square.AddComponent<SpriteComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-  // m_GameCamera = m_Scene->CreateObject("GameCamera");
-  // m_GameCamera.AddComponent<CameraComponent>();
-
-  // m_GameCamera.GetComponent<CameraComponent>().Camera.SetOrthoCameraZoom(15.0f);
-
-  // // scripts
-  // class CameraController : public ScriptEntity
-  // {
-  //   void OnStart() {}
-
-  //   void OnUpdate(Timestep dt) {}
-
-  //   void OnDestroy() {}
-  // };
-  // m_GameCamera.AddComponent<ScriptComponent>().Bind<CameraController>();
   m_Panels.SetScene(m_Scene);
   ImGuizmo::SetOrthographic(false);
 
-  SceneSerializer sceneSerializer(m_Scene);
-  sceneSerializer.Deserialize("SodaCan/assets/scenes/main.stscn");
+  // SceneSerializer sceneSerializer(m_Scene);
+  // sceneSerializer.Deserialize("SodaCan/assets/scenes/exampleScene.stscn");
 }
 
 void SodaCan::OnUpdate(Timestep dt)
@@ -87,15 +71,7 @@ void SodaCan::OnUpdate(Timestep dt)
   m_EditorFramebuffer->Unbind();
 }
 
-void SodaCan::OnEvent(Event &event)
-{
-  m_EditorCamera.OnEvent(event);
-
-  // if(Soda::Input::IsKeyPressed(SD_KEY_END))
-  //   m_Scene->DestroyObject(m_Square2);
-  // if(Soda::Input::IsKeyPressed(SD_KEY_END))
-  //   m_Square.DeleteComponent<SpriteComponent>();
-}
+void SodaCan::OnEvent(Event &event) { m_EditorCamera.OnEvent(event); }
 void SodaCan::OnResize(uint32_t width, uint32_t height) {}
 
 void SodaCan::OnImGuiUpdate()
@@ -162,6 +138,58 @@ void SodaCan::OnImGuiUpdate()
   {
     if(ImGui::BeginMenu("File"))
     {
+      if(ImGui::MenuItem("New", "Ctrl + N"))
+      {
+        m_Scene = CreateRef<Scene>();
+        m_Panels.SetScene(m_Scene);
+        m_Scene->OnEditorResize(m_EditorViewportSize.x, m_EditorViewportSize.y,
+                                m_EditorCamera);
+        m_Scene->OnGameResize(m_GameViewportSize.x, m_GameViewportSize.y);
+      }
+      if(ImGui::MenuItem("Save As...", "Ctrl + Shift + S"))
+      {
+        SceneSerializer sceneSerializer(m_Scene);
+
+        const char *filters[] = {"*.stscn", "*.sbscn"};
+        const char *filepath =
+            tinyfd_saveFileDialog("Save File As...", "", 2, filters, nullptr);
+
+        // @FIXME: we are getting an assert here
+        if(!filepath)
+        {
+          SD_ENGINE_ERROR("Failed To Save");
+          return;
+        }
+
+        if(std::filesystem::path(filepath).extension().string() == ".stscn")
+          sceneSerializer.Serialize(filepath);
+        else if(std::filesystem::path(filepath).extension().string() ==
+                ".sbscn")
+          sceneSerializer.SerializeBinary(filepath);
+      }
+      if(ImGui::MenuItem("Open...", "Ctrl + O"))
+      {
+        const char *filters[] = {"*.stscn", "*.sbscn"};
+        const char *filepath =
+            tinyfd_openFileDialog("Open File...", "", 2, filters, nullptr, 0);
+        if(!filepath)
+          SD_ENGINE_ERROR("Failed To Open");
+
+        m_Scene = CreateRef<Scene>();
+        m_Panels.SetScene(m_Scene);
+
+        SceneSerializer sceneSerializer(m_Scene);
+        if(std::filesystem::path(filepath).extension().string() == ".stscn")
+          sceneSerializer.Deserialize(filepath);
+        else if(std::filesystem::path(filepath).extension().string() ==
+                ".sbscn")
+          sceneSerializer.DeserializeBinary(filepath);
+
+        m_Scene->OnEditorResize(m_EditorViewportSize.x, m_EditorViewportSize.y,
+                                m_EditorCamera);
+        m_Scene->OnGameResize(m_GameViewportSize.x, m_GameViewportSize.y);
+      }
+      ImGui::Separator();
       if(ImGui::MenuItem("Close"))
         App::Get().CloseApp();
       ImGui::EndMenu();
@@ -219,18 +247,8 @@ void SodaCan::OnImGuiUpdate()
         ImGuizmo::Manipulate(glm::value_ptr(m_EditorCamera.GetViewMat()),
                              glm::value_ptr(m_EditorCamera.GetProjectionMat()),
                              ImGuizmo::OPERATION::TRANSLATE,
-                             ImGuizmo::MODE::WORLD,
+                             ImGuizmo::MODE::LOCAL,
                              glm::value_ptr(transformComponent));
-
-        // ImGuizmo::Manipulate(
-        //     glm::value_ptr(glm::inverse(m_Scene->GetPrimaryCamera()
-        //                                     .GetComponent<TransformComponent>()
-        //                                     .GetTransform())),
-        //     glm::value_ptr(m_Scene->GetPrimaryCamera()
-        //                        .GetComponent<CameraComponent>()
-        //                        .Camera.GetProjection()),
-        //     ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::WORLD,
-        //     glm::value_ptr(transformComponent));
 
         if(ImGuizmo::IsUsing())
         {

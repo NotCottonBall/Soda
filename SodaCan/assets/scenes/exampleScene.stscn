@@ -1,0 +1,37 @@
+Scene: UnNamed
+Objects:
+  - ObjectID: 69
+    Name: Camera
+    Tag: NotTagged
+    TransformComponent:
+      Position: [0, 2.8, 4.8]
+      Rotation: [-0.5864306, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      PrimaryCamera: true
+      FixedAspectRatio: false
+      CameraType: Perspective
+      Zoom: 15
+      OrthoNearPlane: 1
+      OrthoFarPlane: -1
+      FOV: 0.7853982
+      PersNearPlane: 0.01
+      PersFarPlane: 1000
+  - ObjectID: 69
+    Name: UU
+    Tag: NotTagged
+    TransformComponent:
+      Position: [1, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteComponent:
+      Color: [1, 0.42477876, 0, 1]
+  - ObjectID: 69
+    Name: Tek
+    Tag: NotTagged
+    TransformComponent:
+      Position: [-1, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteComponent:
+      Color: [0, 0.62831855, 1, 1]

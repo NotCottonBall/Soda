@@ -15,6 +15,7 @@ public:
   void DrawObjectProperties(Object obj);
 
   Object GetSelectedObject() const { return m_SelectedObj; }
+  void SetSelectedObject(const Object &obj) { m_SelectedObj = obj; }
 
 private:
   Ref<Scene> m_CurrentScene;

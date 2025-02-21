@@ -49,7 +49,7 @@ template <> struct convert<glm::vec4>
     v.x = node[0].as<float>();
     v.y = node[1].as<float>();
     v.z = node[2].as<float>();
-    v.z = node[3].as<float>();
+    v.w = node[3].as<float>();
     return true;
   }
 };
@@ -108,25 +108,21 @@ static void SerializeEntities(YAML::Emitter &out, Object obj)
           << camera.FixedAspectRatio;
       out << YAML::Key << "CameraType";
       if(camera.Camera.GetCameraType() == SceneCamera::CameraType::Orthographic)
-      {
         out << YAML::Value << "Orthographic";
-        out << YAML::Key << "Zoom" << YAML::Value
-            << camera.Camera.GetOrthoCameraZoom();
-        out << YAML::Key << "NearPlane" << YAML::Value
-            << camera.Camera.GetOrthoNearPlane();
-        out << YAML::Key << "FarPlane" << YAML::Value
-            << camera.Camera.GetOrthoFarPlane();
-      }
       else
-      {
         out << YAML::Value << "Perspective";
-        out << YAML::Key << "FOV" << YAML::Value
-            << camera.Camera.GetPerspectiveFov();
-        out << YAML::Key << "NearPlane" << YAML::Value
-            << camera.Camera.GetPerspectiveNearPlane();
-        out << YAML::Key << "FarPlane" << YAML::Value
-            << camera.Camera.GetPerspectiveFarPlane();
-      }
+      out << YAML::Key << "Zoom" << YAML::Value
+          << camera.Camera.GetOrthoCameraZoom();
+      out << YAML::Key << "OrthoNearPlane" << YAML::Value
+          << camera.Camera.GetOrthoNearPlane();
+      out << YAML::Key << "OrthoFarPlane" << YAML::Value
+          << camera.Camera.GetOrthoFarPlane();
+      out << YAML::Key << "FOV" << YAML::Value
+          << camera.Camera.GetPerspectiveFov();
+      out << YAML::Key << "PersNearPlane" << YAML::Value
+          << camera.Camera.GetPerspectiveNearPlane();
+      out << YAML::Key << "PersFarPlane" << YAML::Value
+          << camera.Camera.GetPerspectiveFarPlane();
       out << YAML::EndMap;
     }
     if(obj.HasComponent<SpriteComponent>())
@@ -208,39 +204,43 @@ void SceneSerializer::Deserialize(const std::string &filepath)
     std::string tag = obj["Tag"].as<std::string>();
     Object createdObj = m_scene->CreateObject(name);
     createdObj.GetComponent<TagComponent>().Tag = tag;
-    SD_ENGINE_LOG("Deserialized An Object With The ID: {0}", uuid);
+    SD_ENGINE_LOG("Deserialized An Object With ID: {0}", uuid);
 
-    if(auto tComponent = obj["TransformComponent"])
+    if(obj["TransformComponent"])
     {
-      auto tc = createdObj.GetComponent<TransformComponent>();
+      auto tComponent = obj["TransformComponent"];
+      auto &tc = createdObj.GetComponent<TransformComponent>();
       tc.Position = tComponent["Position"].as<glm::vec3>();
       tc.Rotation = tComponent["Rotation"].as<glm::vec3>();
       tc.Scale = tComponent["Scale"].as<glm::vec3>();
     }
-    if(auto camComponent = obj["CameraComponent"])
+    if(obj["CameraComponent"])
     {
-      auto cam = createdObj.AddComponent<CameraComponent>();
+      auto camComponent = obj["CameraComponent"];
+      createdObj.AddComponent<CameraComponent>();
+      auto &cam = createdObj.GetComponent<CameraComponent>();
       cam.FixedAspectRatio = camComponent["PrimaryCamera"].as<bool>();
       cam.FixedAspectRatio = camComponent["FixedAspectRatio"].as<bool>();
       if(camComponent["CameraType"].as<std::string>() == "Orthographic")
-      {
         cam.Camera.SetCameraType(SceneCamera::CameraType::Orthographic);
-        cam.Camera.SetOrthoCameraZoom(camComponent["Zoom"].as<float>());
-        cam.Camera.SetOrthoNearPlane(camComponent["NearPlane"].as<float>());
-        cam.Camera.SetOrthoFarPlane(camComponent["FarPlane"].as<float>());
-      }
       else
-      {
         cam.Camera.SetCameraType(SceneCamera::CameraType::Perspective);
-        cam.Camera.SetPerspectiveFov(camComponent["FOV"].as<float>());
-        cam.Camera.SetPerspectiveNearPlane(
-            camComponent["NearPlane"].as<float>());
-        cam.Camera.SetPerspectiveFarPlane(camComponent["FarPlane"].as<float>());
-      }
+      // Ortho Values
+      cam.Camera.SetOrthoCameraZoom(camComponent["Zoom"].as<float>());
+      cam.Camera.SetOrthoNearPlane(camComponent["OrthoNearPlane"].as<float>());
+      cam.Camera.SetOrthoFarPlane(camComponent["OrthoFarPlane"].as<float>());
+      // Perspective Values
+      cam.Camera.SetPerspectiveFov(camComponent["FOV"].as<float>());
+      cam.Camera.SetPerspectiveNearPlane(
+          camComponent["PersNearPlane"].as<float>());
+      cam.Camera.SetPerspectiveFarPlane(
+          camComponent["PersFarPlane"].as<float>());
     }
-    if(auto spComponent = obj["SpriteComponent"])
+    if(obj["SpriteComponent"])
     {
-      auto sp = createdObj.AddComponent<SpriteComponent>();
+      auto spComponent = obj["SpriteComponent"];
+      createdObj.AddComponent<SpriteComponent>();
+      auto &sp = createdObj.GetComponent<SpriteComponent>();
       sp.Color = spComponent["Color"].as<glm::vec4>();
       if(spComponent["Texture"])
       {

@@ -9,6 +9,7 @@ namespace Soda
 void Panels::SetScene(const Ref<Scene> &scene)
 {
   m_SceneListsPanel.m_CurrentScene = scene;
+  m_SceneListsPanel.m_SelectedObj = {};
 }
 
 void Panels::OnImGuiRender()
