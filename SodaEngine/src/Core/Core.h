@@ -47,7 +47,7 @@ constexpr Ref<T> CreateRef(Args &&...args)
       throw std::runtime_error("");                                            \
     }                                                                          \
   }                                                                            \
-  this is
+  // this is
   // for the Engine
 #define SD_ENGINE_ASSERT(x, ...)                                               \
   {                                                                            \

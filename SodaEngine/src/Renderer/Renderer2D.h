@@ -84,9 +84,6 @@ public:
                               const glm::vec2 &scale,
                               const Ref<SpriteSheetTexture> &spriteSheetTexture,
                               const glm::vec4 &color, float texScale = 1.0f);
-
-private:
-  void ResetBlendState();
 };
 } // namespace Soda
 

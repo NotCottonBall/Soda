@@ -13,11 +13,6 @@
 #include "Renderer/VertexArray.h"
 #include "glm/gtx/dual_quaternion.hpp"
 
-// @FIXME: with AMD GPUs the rendering doesnt work well
-// that is because texture arrays need to be uniform something something
-// using a UBO (Uniform Buffer Object) or bindless
-// should work i think, so do that later
-// NOTE: if that don't work, then fuck openGL, use Vulkan or DirectX
 namespace Soda
 {
 struct QuadVertex
@@ -116,13 +111,13 @@ void Renderer2D::Init()
   m_QuadInfo.m_VertexPositions[3] = {-0.5f, 0.5f, 0.0f, 1.0f};
 }
 
-void Renderer2D::Shutdown() {}
+void Renderer2D::Shutdown() { delete[] m_QuadInfo.m_QuadVertexStart; }
 
 void Renderer2D::Setup()
 {
+  m_QuadInfo.m_IndicesCount = 0;
   m_QuadInfo.m_QuadVertexPtr = m_QuadInfo.m_QuadVertexStart;
 
-  m_QuadInfo.m_IndicesCount = 0;
   m_QuadInfo.m_TextureIndex = 1;
 }
 
@@ -383,6 +378,4 @@ const Renderer2D::RendererStats &Renderer2D::GetRendererStats()
 {
   return m_RendererStats;
 }
-
-void Renderer2D::ResetBlendState() {}
 } // namespace Soda

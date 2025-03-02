@@ -26,11 +26,6 @@ private:
   Ref<Framebuffer> m_EditorFramebuffer;
   Ref<Scene> m_Scene;
 
-  // Object m_Square;
-
-  // Object m_GameCamera;
-  // Object m_SecondCam;
-
   glm::vec2 m_GameViewportSize = glm::vec2(0.0f);
   glm::vec2 m_EditorViewportSize = glm::vec2(0.0f);
   Panels m_Panels;
