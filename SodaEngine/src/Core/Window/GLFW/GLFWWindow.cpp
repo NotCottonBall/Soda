@@ -3,6 +3,7 @@
 #include "GLFWWindow.h"
 
 #include "Renderer/OpenGL/OpenGLContext.h"
+#include "Renderer/RenderAPI.h"
 
 // Events
 #include "Core/Events/AppEvents.h"
@@ -32,6 +33,10 @@ GLFWWindow::~GLFWWindow() { CloseWindow(); }
 
 void GLFWWindow::InitWindow(const WindowInfo &windowInfo)
 {
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
   // assigning the given data to our Window Data
   m_WindowData.Name = windowInfo.Name;
   m_WindowData.Width = windowInfo.Width;
@@ -45,6 +50,11 @@ void GLFWWindow::InitWindow(const WindowInfo &windowInfo)
 
     s_IsGLFWInitialized = true;
   }
+
+#ifdef SD_DEBUG
+  if(RenderAPI::GetAPI() == RenderAPI::API::OpenGL)
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+#endif
 
   // we create the glfw window by calling the func and we assign the return
   // value to the m_Window which is our Engine Window

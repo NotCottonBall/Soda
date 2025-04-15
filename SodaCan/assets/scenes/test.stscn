@@ -1,0 +1,11 @@
+Scene: UnNamed
+Objects:
+  - ObjectID: 69
+    Name: 2D Object
+    Tag: NotTagged
+    TransformComponent:
+      Position: [0.58514404, 0.91381454, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    SpriteComponent:
+      Color: [1, 1, 1, 1]
