@@ -24,7 +24,7 @@ public:
   inline static void DrawThis(const Ref<VertexArray> &VA,
                               uint32_t indicesCount = 0)
   {
-    m_renderAPI->DrawThis(VA);
+    m_renderAPI->DrawThis(VA, indicesCount);
   }
 
 private:

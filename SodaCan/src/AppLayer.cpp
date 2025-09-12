@@ -23,7 +23,7 @@ void SodaCan::OnAttach()
   m_Scene = CreateRef<Scene>();
 
   m_Panels.SetScene(m_Scene);
-  ImGuizmo::SetOrthographic(false);
+  ImGuizmo::SetOrthographic(true);
 
   // SceneSerializer sceneSerializer(m_Scene);
   // sceneSerializer.Deserialize("SodaCan/assets/scenes/exampleScene.stscn");
@@ -56,22 +56,23 @@ void SodaCan::OnUpdate(Timestep dt)
   if(m_IsScenePanelHovered)
     m_EditorCamera.OnUpdate(dt);
 
+  // Game Render Loop
   m_GameFramebuffer->Bind();
   RenderCommand::ClearScreen({0.1f, 0.1f, 0.1f, 1.0f});
   Renderer2D::ResetRendererStats();
-  // Game Render Loop
   m_Scene->OnGameUpdate(dt);
   m_GameFramebuffer->Unbind();
 
+  // Editor Render Loop
   m_EditorFramebuffer->Bind();
   RenderCommand::ClearScreen({0.1f, 0.1f, 0.1f, 1.0f});
   Renderer2D::ResetRendererStats();
-  // Editor Render Loop
   m_Scene->OnEditorUpdate(dt, m_EditorCamera);
   m_EditorFramebuffer->Unbind();
 }
 
 void SodaCan::OnEvent(Event &event) { m_EditorCamera.OnEvent(event); }
+
 void SodaCan::OnResize(uint32_t width, uint32_t height) {}
 
 void SodaCan::OnImGuiUpdate()
@@ -110,10 +111,8 @@ void SodaCan::OnImGuiUpdate()
   {
     if(!opt_padding)
       ImGui::PopStyleVar();
-
     if(opt_fullscreen)
       ImGui::PopStyleVar(2);
-
     // Submit the DockSpace
     ImGuiIO &io = ImGui::GetIO();
     if(io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
@@ -121,7 +120,6 @@ void SodaCan::OnImGuiUpdate()
       ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
       ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
-
     if(ImGui::BeginMenuBar())
     {
       if(ImGui::BeginMenu("File"))
@@ -137,18 +135,15 @@ void SodaCan::OnImGuiUpdate()
         if(ImGui::MenuItem("Save As...", "Ctrl + Shift + S"))
         {
           SceneSerializer sceneSerializer(m_Scene);
-
           const char *filters[] = {"*.stscn", "*.sbscn"};
           const char *filepath =
               tinyfd_saveFileDialog("Save File As...", "", 2, filters, nullptr);
-
           // @FIXME: we are getting an assert here
           if(!filepath)
           {
             SD_ENGINE_ERROR("Failed To Save");
             return;
           }
-
           if(std::filesystem::path(filepath).extension().string() == ".stscn")
             sceneSerializer.Serialize(filepath);
           else if(std::filesystem::path(filepath).extension().string() ==
@@ -162,17 +157,14 @@ void SodaCan::OnImGuiUpdate()
               tinyfd_openFileDialog("Open File...", "", 2, filters, nullptr, 0);
           if(!filepath)
             SD_ENGINE_ERROR("Failed To Open");
-
           m_Scene = CreateRef<Scene>();
           m_Panels.SetScene(m_Scene);
-
           SceneSerializer sceneSerializer(m_Scene);
           if(std::filesystem::path(filepath).extension().string() == ".stscn")
             sceneSerializer.Deserialize(filepath);
           else if(std::filesystem::path(filepath).extension().string() ==
                   ".sbscn")
             sceneSerializer.DeserializeBinary(filepath);
-
           m_Scene->OnEditorResize(m_EditorViewportSize.x,
                                   m_EditorViewportSize.y, m_EditorCamera);
           m_Scene->OnGameResize(m_GameViewportSize.x, m_GameViewportSize.y);
@@ -200,9 +192,7 @@ void SodaCan::OnImGuiUpdate()
       }
     }
     ImGui::EndMenuBar();
-
     m_Panels.OnImGuiRender();
-
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     // @FIXME: WTF is wrong with scrolling and consuming events?
     // i dont even know if i set it up right
@@ -212,15 +202,12 @@ void SodaCan::OnImGuiUpdate()
     {
       m_IsScenePanelFocused = ImGui::IsWindowFocused();
       m_IsScenePanelHovered = ImGui::IsWindowHovered();
-
       App::Get().GetImGuiLayer()->ShouldConsumeEvents(m_IsScenePanelHovered);
-
       ImVec2 editorSceneSize = ImGui::GetContentRegionAvail();
       m_EditorViewportSize = {editorSceneSize.x, editorSceneSize.y};
       ImGui::Image((void *)m_EditorFramebuffer->GetFrameTextureID(),
                    ImVec2(m_EditorViewportSize.x, m_EditorViewportSize.y),
                    ImVec2(0, 1), ImVec2(1, 0));
-
       Object selectedObj = m_Panels.GetSceneListPanel().GetSelectedObject();
       if(selectedObj)
       {
@@ -228,17 +215,14 @@ void SodaCan::OnImGuiUpdate()
         ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y,
                           (float)ImGui::GetWindowWidth(),
                           (float)ImGui::GetWindowHeight());
-
         auto &transform = selectedObj.GetComponent<TransformComponent>();
         glm::mat4 transformComponent = transform.GetTransform();
         glm::vec3 position, rotation, scale;
-
         ImGuizmo::Manipulate(glm::value_ptr(m_EditorCamera.GetViewMat()),
                              glm::value_ptr(m_EditorCamera.GetProjectionMat()),
                              ImGuizmo::OPERATION::TRANSLATE,
                              ImGuizmo::MODE::LOCAL,
                              glm::value_ptr(transformComponent));
-
         if(ImGuizmo::IsUsing())
         {
           ImGuizmo::DecomposeMatrixToComponents(
@@ -255,7 +239,6 @@ void SodaCan::OnImGuiUpdate()
     {
       m_IsGamePanelFocused = ImGui::IsWindowFocused();
       m_IsGamePanelHovered = ImGui::IsWindowHovered();
-
       App::Get().GetImGuiLayer()->ShouldConsumeEvents(m_IsGamePanelHovered);
 
       ImVec2 gameSceneSize = ImGui::GetContentRegionAvail();

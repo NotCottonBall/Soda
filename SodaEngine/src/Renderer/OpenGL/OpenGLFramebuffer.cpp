@@ -1,13 +1,14 @@
 #include "SD_PCH.h"
 
 #include "OpenGLFramebuffer.h"
+#include "Tools/Debug/Logger.h"
 
 #include "glad/glad.h"
 
 namespace Soda
 {
 OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferInfo &framebufferInfo)
-    : m_FramebufferInfo(framebufferInfo)
+  : m_FramebufferInfo(framebufferInfo)
 {
   Refresh();
 }
@@ -35,9 +36,14 @@ void OpenGLFramebuffer::Bind() const
 {
   glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferID);
   glViewport(0, 0, m_FramebufferInfo.width, m_FramebufferInfo.height);
+  SD_ENGINE_LOG("Bound Framebuffer: {}", m_FramebufferID);
 }
 
-void OpenGLFramebuffer::Unbind() const { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
+void OpenGLFramebuffer::Unbind() const
+{
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  SD_ENGINE_LOG("Unbound Framebuffer: {}", m_FramebufferID);
+}
 
 void OpenGLFramebuffer::Refresh()
 {
@@ -70,7 +76,7 @@ void OpenGLFramebuffer::Refresh()
   // @FIX: this gets called when the scene viewport is < 0 pixels in width or
   // height
   SD_ENGINE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) ==
-                       GL_FRAMEBUFFER_COMPLETE,
+                   GL_FRAMEBUFFER_COMPLETE,
                    "The framebuffer was not created properly");
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

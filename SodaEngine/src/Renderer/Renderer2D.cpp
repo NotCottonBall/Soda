@@ -24,6 +24,8 @@ struct QuadVertex
   float textureScale;
 };
 
+/// @TODO: the variables in this struct are not private so why the m_ prefix?
+/// remove it
 struct QuadInfo
 {
   const uint32_t m_maxQuads = 10000;

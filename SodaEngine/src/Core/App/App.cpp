@@ -89,6 +89,7 @@ void App::PushLayer(Layer *layer)
   m_LayerStack.PushLayer(layer);
   layer->OnAttach();
 }
+
 void App::PushOverlay(Layer *overlay)
 {
   m_LayerStack.PushOverlay(overlay);
