@@ -1,31 +1,42 @@
-#DIRs
+# DIRs
+## IDEs And Editors
 .vs/
+.vscode/
+.idea/
 .cache/
-bin/
-bin-objs/
-libs/
-build/
+
+## Builds And OUtputs
+**/[b/B]uild/
+**/[B/b]in/
+**/[B/b]in-[O/o]bjs/
+**/[L/l]ibs/
+CMakeFiles
+*.dir
 x64
 x32
+
+## Others
 _temp
 
-CMakeFiles
 
-*.dir
 
-#Files-Types
+# Files
+## IDEs And Editors
 *.sln
 *.vcxproj
 *.user
 *.filters
 
-*_Profiler.json
-
-Makefile
+## Builds And Outputs
 cmake_install.cmake
 CMakeCache.txt
 CMakeDoxyfile.in
 CMakeDoxygenDefaults.cmake
 
+## Engine Outputs
 imgui.ini
+*_Profiler.json
+
+## Others
+IGNORE_*
 *.my.todo

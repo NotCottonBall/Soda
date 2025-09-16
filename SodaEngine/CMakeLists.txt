@@ -1,86 +1,130 @@
 cmake_minimum_required(VERSION 3.10)
 
+project(SodaEngine)
 
-# setting the output dirs
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CMAKE_SYSTEM_NAME}-${CMAKE_BUILD_TYPE}-${CMAKE_SYSTEM_PROCESSOR}")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/bin-objs/${CMAKE_SYSTEM_NAME}-${CMAKE_BUILD_TYPE}-${CMAKE_SYSTEM_PROCESSOR}")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CMAKE_SYSTEM_NAME}-${CMAKE_BUILD_TYPE}-${CMAKE_SYSTEM_PROCESSOR}")
-
+# Setting the build type for libraries to fetch from
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "DebRelease")
+  set(LIB_BUILD_TYPE "Debug")
+else()
+  set(LIB_BUILD_TYPE "Release")
+endif()
+# Finding Libraries
+## GLFW
+find_library(GLFW_LIB
+    NAMES glfw3
+    PATHS "${CMAKE_SOURCE_DIR}/Libraries/Libs/${CMAKE_SYSTEM_NAME}-${LIB_BUILD_TYPE}-${CMAKE_CXX_COMPILER_ID}"
+    NO_DEFAULT_PATH
+)
+if(NOT GLFW_LIB)
+    message("ERROR: Required Library glfw Was Not Found! Did You Build 'Libraries' Before Building SodaEngine?")
+endif()
+## GLAD
+find_library(GLAD_LIB
+    NAMES glad
+    PATHS "${CMAKE_SOURCE_DIR}/Libraries/Libs/${CMAKE_SYSTEM_NAME}-${LIB_BUILD_TYPE}-${CMAKE_CXX_COMPILER_ID}"
+    NO_DEFAULT_PATH
+)
+if(NOT GLAD_LIB)
+    message("ERROR: Required Library glad Was Not Found! Did You Build 'Libraries' Before Building SodaEngine?")
+endif()
+## IMGUI
+find_library(IMGUI_LIB
+    NAMES imgui
+    PATHS "${CMAKE_SOURCE_DIR}/Libraries/Libs/${CMAKE_SYSTEM_NAME}-${LIB_BUILD_TYPE}-${CMAKE_CXX_COMPILER_ID}"
+    NO_DEFAULT_PATH
+)
+if(NOT IMGUI_LIB)
+    message("ERROR: Required Library imgui Was Not Found! Did You Build 'Libraries' Before Building SodaEngine?")
+endif()
+## YAML-CPP
+find_library(YAML_CPP_LIB
+    NAMES yaml-cppd yaml-cpp
+    PATHS "${CMAKE_SOURCE_DIR}/Libraries/Libs/${CMAKE_SYSTEM_NAME}-${LIB_BUILD_TYPE}-${CMAKE_CXX_COMPILER_ID}"
+    NO_DEFAULT_PATH
+)
+if(NOT YAML_CPP_LIB)
+    message("ERROR: Required Library yaml-cpp Was Not Found! Did You Build 'Libraries' Before Building SodaEngine?")
+endif()
 
 # files of the Soda project
 file(GLOB_RECURSE SODA_SOURCES "src/*.cpp" "src/*.hpp" "src/*.c" "src/*.h")
-file(GLOB_RECURSE STBI_SOURCES "submodules/stb_image/*.cpp" "submodules/stb_image/*.h")
-file(GLOB_RECURSE GLM_SOURCES "submodules/glm/glm/*.hpp")
-
+file(GLOB_RECURSE STBI_SOURCES "${CMAKE_SOURCE_DIR}/Libraries/stb/*.cpp" "${CMAKE_SOURCE_DIR}/Libraries/stb/*.h")
+file(GLOB_RECURSE GLM_SOURCES "${CMAKE_SOURCE_DIR}/Headers/glm/glm/*.hpp")
 
 # creating the static lib
-add_library(SodaEngine STATIC ${SODA_SOURCES} ${STBI_SOURCES} ${GLM_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${SODA_SOURCES} ${STBI_SOURCES} ${GLM_SOURCES})
 
-
-# setting up libraries
-add_subdirectory(submodules/glfw)
-add_subdirectory(submodules/yamp_cpp)
-
-# imgui library
-add_library(imgui STATIC
-    submodules/imgui/imconfig.h
-    submodules/imgui/imgui.h
-    submodules/imgui/imgui.cpp
-    submodules/imgui/imgui_draw.cpp
-    submodules/imgui/imgui_internal.h
-    submodules/imgui/imgui_widgets.cpp
-    submodules/imgui/imstb_rectpack.h
-    submodules/imgui/imstb_textedit.h
-    submodules/imgui/imstb_truetype.h
-    submodules/imgui/imgui_demo.cpp
-    submodules/imgui/imgui_tables.cpp
-
-    submodules/imgui/backends/imgui_impl_opengl3.cpp
-    submodules/imgui/backends/imgui_impl_glfw.cpp
+# Linking Libraries
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    ${GLAD_LIB}
+    ${GLFW_LIB}
+    ${IMGUI_LIB}
+    ${YAML_CPP_LIB}
+    opengl32
 )
-# adding the include dirs
-target_include_directories(imgui PUBLIC submodules/imgui submodules/glfw/include)
-
-
-# glad library
-add_library(glad STATIC submodules/glad/src/glad.c)
-# setting the include dirs
-target_include_directories(glad PUBLIC submodules/glad/include)
-
-
-target_link_libraries(SodaEngine PRIVATE glad glfw imgui yaml-cpp opengl32)
-
-
-# Build specific stuff
-target_compile_definitions(SodaEngine PUBLIC $<$<CONFIG:Debug>:SD_DEBUG>)
-target_compile_definitions(SodaEngine PUBLIC $<$<CONFIG:RELEASE>:SD_RELEASE>)
-target_compile_definitions(SodaEngine PUBLIC $<$<CONFIG:Dist>:SD_DIST>)
-# some other defines
-target_compile_definitions(SodaEngine PUBLIC
-    _CRT_SECURE_NO_WARNINGS
-    
-    GLFW_INCLUDE_NONE
-    IMGUI_IMPL_OPENGL_LOADER_CUSTOM
-)
-
 
 # pre compiled header
 set(PCH_HEADER "src/SD_PCH.h")
 set(PCH_SOURCE "src/SD_PCH.cpp")
-
-target_precompile_headers(SodaEngine PRIVATE ${PCH_HEADER})
-
+target_precompile_headers(${PROJECT_NAME} PRIVATE ${PCH_HEADER})
 
 # specifying the include directories
-target_include_directories(SodaEngine PUBLIC
-    submodules/glfw/include
-    submodules/glad/include
-    submodules/imgui
-    submodules/spdlog/include
-    submodules/glm
-    submodules/stb_image
-    submodules/entt
-    submodules/yamp_cpp/include
+target_include_directories(${PROJECT_NAME} PUBLIC
+    ${CMAKE_SOURCE_DIR}/Libraries/glfw/include
+    ${CMAKE_SOURCE_DIR}/Libraries/glad/include
+    ${CMAKE_SOURCE_DIR}/Libraries/imgui
+    ${CMAKE_SOURCE_DIR}/Headers/spdlog/include
+    ${CMAKE_SOURCE_DIR}/Headers/glm
+    ${CMAKE_SOURCE_DIR}/Libraries/stb
+    ${CMAKE_SOURCE_DIR}/Headers/entt
+    ${CMAKE_SOURCE_DIR}/Libraries/yaml_cpp/include
 
-    src
+    ${CMAKE_SOURCE_DIR}/SodaEngine/src
+)
+
+# Settings compile type based on build type
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+  target_compile_options(${PROJECT_NAME} PRIVATE
+      $<$<CONFIG:Debug>: -g -O0 -Wall -Wextra -Wpedantic -Wno-unused-parameter>
+      $<$<CONFIG:DebRelease>: -g -O2 -Wall -Wextra -Wpedantic -Wno-unused-parameter>
+      $<$<CONFIG:Release>: -O3 -DNDEBUG -Wall -Wextra -Wpedantic -Wno-unused-parameter>
+      $<$<CONFIG:RelExport>: -O2 -DNDEBUG -Wall -Wextra -Wpedantic -Wno-unused-parameter>
+      $<$<CONFIG:Export>: -O3 -DNDEBUG -Wall -Wextra -Wpedantic -Wno-unused-parameter>
+  )
+elseif(MSVC)
+  target_compile_options(${PROJECT_NAME} PRIVATE
+      $<$<CONFIG:Debug>: /Zi /Od /W4 /RTC1>
+      $<$<CONFIG:DebRelease>: /O2 /W4>
+      $<$<CONFIG:Release>: /O2 /DNDEBUG /W4>
+      $<$<CONFIG:RelExport>: /O2 /DNDEBUG /W4>
+      $<$<CONFIG:Export>: /O2 /DNDEBUG /W4>
+  )
+  # Specially For Visual Studio
+  set_target_properties(${PROJECT_NAME} PROPERTIES
+      VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+  )
+  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+endif()
+
+# Settings compile definitions for build type
+target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<CONFIG:Debug>:SD_Debug>)
+target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<CONFIG:DebRelease>:SD_DebRelease>)
+target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<CONFIG:Release>:SD_Release>)
+target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<CONFIG:RelExport>:SD_RelExport>)
+target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<CONFIG:Export>:SD_Export>)
+
+# some other defines
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+    _CRT_SECURE_NO_WARNINGS
+
+    GLFW_INCLUDE_NONE
+    IMGUI_IMPL_OPENGL_LOADER_CUSTOM
+    GLM_ENABLE_EXPERIMENTAL
+    YAML_CPP_STATIC_DEFINE
+)
+
+# Copying libaries into the Bin folder
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/Libraries/Bin/"
+    "${CMAKE_SOURCE_DIR}/Bin/"
 )

@@ -59,7 +59,7 @@ static void DrawComponent(const std::string &name, Object obj, UI ui)
     ImGui::Separator();
     ImGui::Spacing();
     float lineHeight =
-        GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+        GImGui->Font->LegacySize + GImGui->Style.FramePadding.y * 2.0f;
     ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
 
     bool removeComponent = false;
@@ -194,17 +194,17 @@ void SceneListPanel::DrawObjectProperties(Object obj)
   DrawComponent<SpriteComponent>("Sprite", obj, [](auto &sprite) {
     ImGui::ColorEdit4("Color", glm::value_ptr(sprite.Color));
 
-    ImGui::Text("Texture");
-    if(ImGui::ImageButton(
-           sprite.Texture ? (void *)sprite.Texture->GetTextureID() : nullptr,
-           ImVec2(50.0f, 50.0f), ImVec2(0, 1), ImVec2(1, 0), 1))
-    {
-      // @TODO: we need a dialog to select a texture
-      Ref<Texture2D> m_tex =
-          Texture2D::Create("SodaCan/assets/textures/GingerCat.png");
-      sprite.Texture = m_tex;
-    }
-    ImGui::DragFloat("Texture Scale", &sprite.TextureScale);
+    // ImGui::Text("Texture");
+    // if(ImGui::ImageButton(
+    //        sprite.Texture ? (void *)sprite.Texture->GetTextureID() : nullptr,
+    //        ImVec2(50.0f, 50.0f), ImVec2(0, 1), ImVec2(1, 0), 1))
+    // {
+    //   // @TODO: we need a dialog to select a texture
+    //   Ref<Texture2D> m_tex =
+    //       Texture2D::Create("SodaCan/assets/textures/GingerCat.png");
+    //   sprite.Texture = m_tex;
+    // }
+    // ImGui::DragFloat("Texture Scale", &sprite.TextureScale);
   });
 }
 } // namespace Soda

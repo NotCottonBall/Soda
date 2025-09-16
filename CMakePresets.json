@@ -1,0 +1,152 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 31,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "Clang-Debug",
+      "displayName": "Clang_Debug",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Build/Clang_Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "Clang-DebRelease",
+      "displayName": "Clang_DebRelease",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Build/Clang_DebRelease",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "DebRelease",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "Clang-Release",
+      "displayName": "Clang_Release",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Build/Clang_Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "Clang-RelExport",
+      "displayName": "Clang_RelExport",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Build/Clang_RelExport",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelExport",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "Clang-Export",
+      "displayName": "Clang_Export",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Build/Clang_Export",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Export",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "MSVC-Debug",
+      "displayName": "MSVC_Debug",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/Build/MSVC_Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "MSVC-DebRelease",
+      "displayName": "MSVC_DebRelease",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Build/MSVC_DebRelease",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "DebRelease"
+      }
+    },
+    {
+      "name": "MSVC-Release",
+      "displayName": "MSVC_Release",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/Build/MSVC_Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "MSVC-RelExport",
+      "displayName": "MSVC_RelExport",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Build/MSVC_RelExport",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelExport"
+      }
+    },
+    {
+      "name": "MSVC-Export",
+      "displayName": "MSVC_Export",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/Build/MSVC_Export",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Export"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "Clang-Debug",
+      "configurePreset": "Clang-Debug"
+    },
+    {
+      "name": "Clang-DebRelease",
+      "configurePreset": "Clang-DebRelease"
+    },
+    {
+      "name": "Clang-Release",
+      "configurePreset": "Clang-Release"
+    },
+    {
+      "name": "Clang-RelExport",
+      "configurePreset": "Clang-RelExport"
+    },
+    {
+      "name": "Clang-Export",
+      "configurePreset": "Clang-Export"
+    },
+    {
+      "name": "MSVC-Debug",
+      "configurePreset": "MSVC-Debug"
+    },
+    {
+      "name": "MSVC-DebRelease",
+      "configurePreset": "MSVC-DebRelease"
+    },
+    {
+      "name": "MSVC-Release",
+      "configurePreset": "MSVC-Release"
+    },
+    {
+      "name": "MSVC-RelExport",
+      "configurePreset": "MSVC-RelExport"
+    },
+    {
+      "name": "MSVC-Export",
+      "configurePreset": "MSVC-Export"
+    }
+  ]
+}

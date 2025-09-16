@@ -24,7 +24,7 @@ void SodaGui::DrawVec3Gui(const std::string &lable, glm::vec3 &vector,
   ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
 
   float buttonHeight =
-      GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+      GImGui->Font->LegacySize + GImGui->Style.FramePadding.y * 2.0f;
   ImVec2 buttonSize(buttonHeight + 3, buttonHeight);
 
   // X
