@@ -9,9 +9,12 @@ namespace Soda
 // we declare our two options
 std::shared_ptr<spdlog::logger> Log::s_EngineLogger;
 std::shared_ptr<spdlog::logger> Log::s_UserLogger;
+bool Log::s_ShouldVerboseLog = false;
 
-void Log::Init()
+void Log::Init(bool verboseLogging)
 {
+  s_ShouldVerboseLog = verboseLogging;
+
   // setting the format of spdlog to print
   spdlog::set_pattern("%^[%T] %n: %v%$");
 
@@ -23,4 +26,6 @@ void Log::Init()
   s_UserLogger = spdlog::stdout_color_mt("LOG");
   s_UserLogger->set_level(spdlog::level::trace);
 }
+
+bool Log::ShouldVerboseLog() { return s_ShouldVerboseLog; }
 } // namespace Soda

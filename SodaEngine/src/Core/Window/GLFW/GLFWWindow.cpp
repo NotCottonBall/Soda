@@ -177,7 +177,6 @@ void GLFWWindow::OnUpdate()
 {
   glfwPollEvents();
   glfwSwapBuffers(m_Window);
-  SD_ENGINE_LOG("glfwSwapBuffers Called");
 }
 
 void GLFWWindow::SetVSync(bool status)

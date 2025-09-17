@@ -10,13 +10,12 @@
 
 namespace Soda
 {
-class Playground : public App
+class Soda : public App
 {
 public:
-  Playground() : App("SodaCan") { PushLayer(new SodaCan()); }
-
-  ~Playground() {}
+  Soda() : App("SodaCan") { PushLayer(new SodaCan()); }
+  ~Soda() {}
 };
 
-App *CreateApp() { return new Playground(); }
+App *CreateApp() { return new Soda(); }
 } // namespace Soda

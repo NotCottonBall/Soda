@@ -7,6 +7,7 @@
 #include "Editor/SceneSerializer.h"
 #include "Panels/Panels.h"
 #include "SodaInput.h"
+#include "Tools/Debug/Logger.h"
 
 namespace Soda
 {

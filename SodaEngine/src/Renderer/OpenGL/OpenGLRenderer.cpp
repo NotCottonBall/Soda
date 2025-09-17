@@ -21,9 +21,7 @@ void OpenGLRenderer::Init(unsigned int width, unsigned int height)
 void OpenGLRenderer::ClearScreen(const glm::vec4 &color)
 {
   glClearColor(color.r, color.g, color.b, color.a);
-  SD_ENGINE_LOG("glClearColor Called");
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  SD_ENGINE_LOG("glClear Called");
 }
 
 void OpenGLRenderer::SetViewport(unsigned int x, unsigned int y,
@@ -37,6 +35,5 @@ void OpenGLRenderer::DrawThis(const Ref<VertexArray> &VA, uint32_t indicesCount)
   if(indicesCount == 0)
     return;
   glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, nullptr);
-  SD_ENGINE_LOG("glDrawElements Called with Indices: {}", indicesCount);
 }
 } // namespace Soda
