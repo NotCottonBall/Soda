@@ -14,7 +14,7 @@ void OpenGLRenderer::Init(unsigned int width, unsigned int height)
 
   glEnable(GL_BLEND);
   // this should be enabled in 3D only.
-  glEnable(GL_DEPTH_TEST);
+  // glEnable(GL_DEPTH_TEST);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 

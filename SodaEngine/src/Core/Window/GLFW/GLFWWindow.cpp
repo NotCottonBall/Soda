@@ -36,14 +36,13 @@ void GLFWWindow::InitWindow(const WindowInfo &windowInfo)
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE);
 
   // assigning the given data to our Window Data
   m_WindowData.Name = windowInfo.Name;
   m_WindowData.Width = windowInfo.Width;
   m_WindowData.Height = windowInfo.Height;
 
-  if (!s_IsGLFWInitialized)
+  if(!s_IsGLFWInitialized)
   {
     int sucess = glfwInit();
     SD_ENGINE_ASSERT(sucess, "Failed to initialize GLFW!");
@@ -53,7 +52,7 @@ void GLFWWindow::InitWindow(const WindowInfo &windowInfo)
   }
 
 #ifdef SD_DEBUG
-  if (RenderAPI::GetAPI() == RenderAPI::API::OpenGL)
+  if(RenderAPI::GetAPI() == RenderAPI::API::OpenGL)
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
 
@@ -103,7 +102,7 @@ void GLFWWindow::InitWindow(const WindowInfo &windowInfo)
                                   int action, int mods) {
     WindowData &windowData = *(WindowData *)glfwGetWindowUserPointer(window);
 
-    switch (action)
+    switch(action)
     {
     case GLFW_PRESS: {
       KeyPressEvent _KeyPressEvent(key, 0);
@@ -154,7 +153,7 @@ void GLFWWindow::InitWindow(const WindowInfo &windowInfo)
                                           int action, int mods) {
     WindowData &windowData = *(WindowData *)glfwGetWindowUserPointer(window);
 
-    switch (action)
+    switch(action)
     {
     case GLFW_PRESS: {
       MouseClickedEvent _MouseClickEvent(button);
@@ -181,7 +180,7 @@ void GLFWWindow::OnUpdate()
 
 void GLFWWindow::SetVSync(bool status)
 {
-  if (status)
+  if(status)
     // this function waits the given amount of frames to swap buffersa
     // also knows as VSync
     glfwSwapInterval(1);
@@ -195,7 +194,7 @@ bool GLFWWindow::GetVSyncStatus() const { return m_WindowData.VSync; }
 
 void GLFWWindow::ShowCursor(bool status)
 {
-  if (status)
+  if(status)
     glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
   else
     glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

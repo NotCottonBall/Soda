@@ -16,6 +16,10 @@ SodaCan::SodaCan() : Layer("SodaCan"), m_EditorCamera(16.0f / 9.0f) {}
 void SodaCan::OnAttach()
 {
   FramebufferInfo m_FramebufferInfo;
+  FramebufferAttachmentSpecifications attachments = {
+      FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RGBA8,
+      FramebufferTextureFormat::Depth24Stensil8};
+  m_FramebufferInfo.Attachments = attachments;
   m_FramebufferInfo.width = 16;
   m_FramebufferInfo.height = 9;
   m_EditorFramebuffer = Framebuffer::Create(m_FramebufferInfo);
@@ -206,7 +210,7 @@ void SodaCan::OnImGuiUpdate()
       App::Get().GetImGuiLayer()->ShouldConsumeEvents(m_IsScenePanelHovered);
       ImVec2 editorSceneSize = ImGui::GetContentRegionAvail();
       m_EditorViewportSize = {editorSceneSize.x, editorSceneSize.y};
-      ImGui::Image((void *)m_EditorFramebuffer->GetFrameTextureID(),
+      ImGui::Image((void *)m_EditorFramebuffer->GetColorAttachmentID(0),
                    ImVec2(m_EditorViewportSize.x, m_EditorViewportSize.y),
                    ImVec2(0, 1), ImVec2(1, 0));
       Object selectedObj = m_Panels.GetSceneListPanel().GetSelectedObject();
@@ -244,7 +248,7 @@ void SodaCan::OnImGuiUpdate()
 
       ImVec2 gameSceneSize = ImGui::GetContentRegionAvail();
       m_GameViewportSize = {gameSceneSize.x, gameSceneSize.y};
-      ImGui::Image((void *)m_GameFramebuffer->GetFrameTextureID(),
+      ImGui::Image((void *)m_GameFramebuffer->GetColorAttachmentID(0),
                    ImVec2(m_GameViewportSize.x, m_GameViewportSize.y),
                    ImVec2(0, 1), ImVec2(1, 0));
     }

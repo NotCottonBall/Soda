@@ -144,12 +144,10 @@ void ImGuiLayer::SetEditorThemeDark()
   colors[ImGuiCol_WindowBg] = backGroundColor;
   colors[ImGuiCol_MenuBarBg] = backGroundColor;
   colors[ImGuiCol_PopupBg] = backGroundColor;
-
   // HEADERS //
   colors[ImGuiCol_Header] = primaryColor;
   colors[ImGuiCol_HeaderHovered] = primaryHoveredColor;
   colors[ImGuiCol_HeaderActive] = primarySelectColor;
-
   // BUTTONS //
   colors[ImGuiCol_Button] = primaryColor;
   colors[ImGuiCol_ButtonHovered] = primaryHoveredColor;
@@ -165,6 +163,7 @@ void ImGuiLayer::SetEditorThemeDark()
   colors[ImGuiCol_TabActive] = backGroundColor;
   colors[ImGuiCol_TabUnfocused] = tabPrimaryColor;
   colors[ImGuiCol_TabUnfocusedActive] = tabHoveredColor;
+  colors[ImGuiCol_TabSelectedOverline] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
   // TAB BARS //
   colors[ImGuiCol_TitleBg] = tabPrimaryColor;
   colors[ImGuiCol_TitleBgActive] = tabPrimaryColor;
