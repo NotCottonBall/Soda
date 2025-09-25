@@ -14,6 +14,7 @@ class Scene
 {
 public:
   Scene() = default;
+  Scene(uint32_t width, uint32_t height);
   ~Scene() = default;
 
   // Object specific code
@@ -31,7 +32,12 @@ public:
   Object GetPrimaryCamera();
 
 private:
+  template <typename T> void OnComponentAdded(Object obj, T &component);
+
+private:
   entt::registry m_Registry;
+
+  float m_Width = 0, m_Height = 0;
 
   friend class Object;
   friend class Panels;

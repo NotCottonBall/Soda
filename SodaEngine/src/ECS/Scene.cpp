@@ -13,6 +13,10 @@
 
 namespace Soda
 {
+Scene::Scene(uint32_t width, uint32_t height) : m_Width(width), m_Height(height)
+{
+}
+
 Object Scene::CreateObject(const std::string &name)
 {
   Object obj = {m_Registry.create(), this};
@@ -122,6 +126,8 @@ void Scene::OnGameUpdate(Timestep dt)
 }
 void Scene::OnGameResize(uint32_t width, uint32_t height)
 {
+  m_Width = width;
+  m_Height = height;
   auto cameras = m_Registry.view<CameraComponent>();
   for(auto camera : cameras)
   {
@@ -129,5 +135,47 @@ void Scene::OnGameResize(uint32_t width, uint32_t height)
     if(!cameraComponent.FixedAspectRatio)
       cameraComponent.Camera.SetViewport(width, height);
   }
+}
+
+template <typename T> void Scene::OnComponentAdded(Object obj, T &component)
+{
+  SD_ENGINE_ASSERT(false, "Component Needs To Be Specified While Calling The "
+                          "Attachment Setup Function.");
+}
+
+template <>
+void Scene::OnComponentAdded<NameComponent>(Object obj,
+                                            NameComponent &component)
+{
+}
+
+template <>
+void Scene::OnComponentAdded<TagComponent>(Object obj, TagComponent &component)
+{
+}
+
+template <>
+void Scene::OnComponentAdded<TransformComponent>(Object obj,
+                                                 TransformComponent &component)
+{
+}
+
+template <>
+void Scene::OnComponentAdded<SpriteComponent>(Object obj,
+                                              SpriteComponent &component)
+{
+}
+
+template <>
+void Scene::OnComponentAdded<CameraComponent>(Object obj,
+                                              CameraComponent &component)
+{
+  component.Camera.SetViewport(m_Width, m_Height);
+}
+
+template <>
+void Scene::OnComponentAdded<ScriptComponent>(Object obj,
+                                              ScriptComponent &component)
+{
 }
 } // namespace Soda

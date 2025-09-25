@@ -2,6 +2,7 @@
 
 #include "Core/Core.h"
 #include "Scene.h"
+
 #include <cstdint>
 #include <utility>
 
@@ -22,8 +23,10 @@ public:
   template <typename T, typename... Args> T &AddComponent(Args &&...args)
   {
     SD_ENGINE_ASSERT(!HasComponent<T>(), "The Component Already Exists")
-    return m_Scene->m_Registry.emplace<T>(m_Object,
-                                          std::forward<Args>(args)...);
+    T &component =
+        m_Scene->m_Registry.emplace<T>(m_Object, std::forward<Args>(args)...);
+    m_Scene->OnComponentAdded<T>(*this, component);
+    return component;
   }
 
   template <typename T> void DeleteComponent()

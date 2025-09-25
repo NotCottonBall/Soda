@@ -18,6 +18,7 @@ static GLenum GetTextureTarget(bool multisample)
 static void CreateFramebufferTexture(const size_t index, const uint32_t samples,
                                      const uint32_t id,
                                      const GLenum internalFormat,
+                                     const GLenum externalFormat,
                                      const uint32_t width,
                                      const uint32_t height)
 {
@@ -29,8 +30,8 @@ static void CreateFramebufferTexture(const size_t index, const uint32_t samples,
   }
   else
   {
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0,
+                 externalFormat, GL_UNSIGNED_BYTE, nullptr);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -128,7 +129,13 @@ void OpenGLFramebuffer::Refresh()
       case FramebufferTextureFormat::RGBA8: {
         CreateFramebufferTexture(
             i, m_FramebufferInfo.samples, m_ColorAttachmentIDs[i], GL_RGBA8,
-            m_FramebufferInfo.width, m_FramebufferInfo.height);
+            GL_RGBA, m_FramebufferInfo.width, m_FramebufferInfo.height);
+        break;
+      }
+      case FramebufferTextureFormat::RED_INT: {
+        CreateFramebufferTexture(
+            i, m_FramebufferInfo.samples, m_ColorAttachmentIDs[i], GL_R32I,
+            GL_RED_INTEGER, m_FramebufferInfo.width, m_FramebufferInfo.height);
         break;
       }
       }
@@ -174,6 +181,20 @@ void OpenGLFramebuffer::Refresh()
                        GL_FRAMEBUFFER_COMPLETE,
                    "The framebuffer was not created properly");
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+int OpenGLFramebuffer::Read(uint32_t attachment, const glm::vec2 &pos,
+                            const glm::vec2 &viewport)
+{
+  Bind();
+  int xPos = (int)(pos.x * (m_FramebufferInfo.width / viewport.x));
+  int yPos =
+      ((int)(viewport.y - pos.y) * (m_FramebufferInfo.height / viewport.y));
+
+  glReadBuffer(GL_COLOR_ATTACHMENT0 + attachment);
+  uint32_t pixel = 0;
+  glReadPixels(xPos, yPos, 1, 1, GL_RED_INTEGER, GL_INT, &pixel);
+  return pixel;
 }
 
 void OpenGLFramebuffer::Bind() const

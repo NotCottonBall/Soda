@@ -17,7 +17,7 @@ void SodaCan::OnAttach()
 {
   FramebufferInfo m_FramebufferInfo;
   FramebufferAttachmentSpecifications attachments = {
-      FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RGBA8,
+      FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INT,
       FramebufferTextureFormat::Depth24Stensil8};
   m_FramebufferInfo.Attachments = attachments;
   m_FramebufferInfo.width = 16;
@@ -25,7 +25,7 @@ void SodaCan::OnAttach()
   m_EditorFramebuffer = Framebuffer::Create(m_FramebufferInfo);
   m_GameFramebuffer = Framebuffer::Create(m_FramebufferInfo);
 
-  m_Scene = CreateRef<Scene>();
+  m_Scene = CreateRef<Scene>(m_GameViewportSize.x, m_GameViewportSize.y);
 
   m_Panels.SetScene(m_Scene);
   ImGuizmo::SetOrthographic(true);
@@ -205,14 +205,34 @@ void SodaCan::OnImGuiUpdate()
     // imgui windows.
     ImGui::Begin("Scene");
     {
+      ImVec2 cursorPos = ImGui::GetMousePos();
+      ImVec2 windowPos = ImGui::GetWindowPos();
+      ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
+      ImVec2 contentMax = ImGui::GetWindowContentRegionMax();
+
+      glm::vec2 viewportRegion = {windowPos.x + contentMin.x,
+                                  windowPos.y + contentMin.y};
+      glm::vec2 absCursorPos = {cursorPos.x - viewportRegion.x,
+                                cursorPos.y - viewportRegion.y};
+      glm::vec2 viewportBounds = {contentMax.x - contentMin.x,
+                                  contentMax.y - contentMin.y};
+
       m_IsScenePanelFocused = ImGui::IsWindowFocused();
       m_IsScenePanelHovered = ImGui::IsWindowHovered();
       App::Get().GetImGuiLayer()->ShouldConsumeEvents(m_IsScenePanelHovered);
       ImVec2 editorSceneSize = ImGui::GetContentRegionAvail();
       m_EditorViewportSize = {editorSceneSize.x, editorSceneSize.y};
+
       ImGui::Image((void *)m_EditorFramebuffer->GetColorAttachmentID(0),
                    ImVec2(m_EditorViewportSize.x, m_EditorViewportSize.y),
                    ImVec2(0, 1), ImVec2(1, 0));
+      if(absCursorPos.x > 0 && absCursorPos.y > 0 &&
+         absCursorPos.x < viewportBounds.x && absCursorPos.y < viewportBounds.y)
+      {
+        int pixel = m_EditorFramebuffer->Read(1, absCursorPos, viewportBounds);
+        SD_ENGINE_LOG("{}", pixel);
+      }
+
       Object selectedObj = m_Panels.GetSceneListPanel().GetSelectedObject();
       if(selectedObj)
       {

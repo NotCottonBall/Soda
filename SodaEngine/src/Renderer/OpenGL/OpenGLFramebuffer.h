@@ -3,6 +3,8 @@
 #include "Core/Core.h"
 #include "Renderer/Framebuffer.h"
 
+#include <glm/vec2.hpp>
+
 namespace Soda
 {
 class OpenGLFramebuffer : public Framebuffer
@@ -14,6 +16,8 @@ public:
   virtual void Bind() const override;
   virtual void Unbind() const override;
 
+  virtual int Read(uint32_t attachment, const glm::vec2 &pos,
+                   const glm::vec2 &viewport) override;
   virtual void Refresh(uint32_t width, uint32_t height) override;
 
   virtual uint32_t GetColorAttachmentID(uint32_t index = 0) const override

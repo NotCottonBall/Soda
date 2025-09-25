@@ -28,6 +28,7 @@ void main()
 #version 460 core
 
 layout(location = 0) out vec4 Color;
+layout(location = 1) out int Color2;
 
 in vec2 v_texCoord;
 in vec4 v_color;
@@ -75,4 +76,7 @@ void main()
     case 31: texColor *= texture(u_Textures[31], v_texCoord * v_texScale); break;
   }
   Color = texColor;
+  // 69 is just a placeholder, what you need is the Object id
+  // represented as int (-1 would mean nothing is selected)
+  Color2 = 69;
 }
