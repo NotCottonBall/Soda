@@ -49,7 +49,9 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<CONFIG:RelExport>:SD_RelEx
 target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<CONFIG:Export>:SD_Export>)
 
 # Post Build
+# FIXME: This command only runs if you edit something in the source code that would compile.
+# Example: if you edit shaders and just run, the new shader code doesn't get copied over.
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_SOURCE_DIR}/SodaCan/Assets"
-    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIG_UPPER}}/SodaCan/Assets"
+    "${CMAKE_SOURCE_DIR}/SodaCan/assets"
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIG_UPPER}}/SodaCan/assets"
 )

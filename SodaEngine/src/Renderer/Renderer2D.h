@@ -1,10 +1,10 @@
 #pragma once
 
+#include "Core/Core.h"
+#include "ECS/Components.h"
 #include "Editor/EditorCamera.h"
 #include "Renderer/Camera.h"
 #include "Renderer/RendererCamera.h"
-
-#include "Core/Core.h"
 #include "Renderer/Texture.h"
 #include "Tools/SpriteSheet.h"
 
@@ -53,10 +53,11 @@ public:
   static void DrawBatch();
 
   // quads with transforms specified
-  static void DrawQuad(const glm::mat4 &transform, const glm::vec4 &color);
+  static void DrawQuad(const glm::mat4 &transform, const glm::vec4 &color,
+                       int objID = -1);
   static void DrawQuad(const glm::mat4 &transform,
                        const Ref<Texture2D> &texture, const glm::vec4 &color,
-                       float texScale = 1.0f);
+                       float texScale = 1.0f, int objID = -1);
   static void DrawQuad(const glm::mat4 &transform,
                        const Ref<SpriteSheetTexture> &spriteSheetTexture,
                        const glm::vec4 &color, float texScale = 1.0f);
@@ -84,6 +85,10 @@ public:
                               const glm::vec2 &scale,
                               const Ref<SpriteSheetTexture> &spriteSheetTexture,
                               const glm::vec4 &color, float texScale = 1.0f);
+
+  // drawing with ECS components
+  static void DrawSprite(TransformComponent &transform, SpriteComponent &sprite,
+                         int objID = -1);
 };
 } // namespace Soda
 

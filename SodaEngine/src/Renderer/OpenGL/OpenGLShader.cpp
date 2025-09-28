@@ -1,7 +1,6 @@
 #include "Core/Core.h"
 #include "SD_PCH.h"
 
-
 #include "OpenGLShader.h"
 
 #include "glad/glad.h"
@@ -205,7 +204,7 @@ void OpenGLShader::SetUniformMat4(const std::string &name,
 void OpenGLShader::UploadUniformShort(const std::string &name, short value)
 {
   int location = glGetUniformLocation(m_ShaderID, name.c_str());
-  SD_ENGINE_ASSERT(location != -1, "Uniform {0} doesn't exist!", name);
+  SD_ENGINE_ASSERT(location != -1, "Uniform {} Doesn't Exist!", name);
 
   glUniform1i(location, value);
 }
@@ -213,22 +212,31 @@ void OpenGLShader::UploadUniformShort(const std::string &name, short value)
 void OpenGLShader::UploadUniformInt(const std::string &name, int value)
 {
   int location = glGetUniformLocation(m_ShaderID, name.c_str());
-  SD_ENGINE_ASSERT(location != -1, "Uniform {0} doesn't exist!", name);
+  SD_ENGINE_ASSERT(location != -1, "Uniform {} Doesn't Exist!", name);
 
   glUniform1i(location, value);
 }
+
+void OpenGLShader::SetUniformUInt(const std::string &name, uint32_t value)
+{
+  int location = glGetUniformLocation(m_ShaderID, name.c_str());
+  SD_ENGINE_ASSERT(location != -1, "Uniform {} Doesn't Exist!", name);
+
+  glUniform1ui(location, value);
+}
+
 void OpenGLShader::UploadUniformIntArray(const std::string &name, int *values,
                                          uint32_t count)
 {
   int location = glGetUniformLocation(m_ShaderID, name.c_str());
-  SD_ENGINE_ASSERT(location != -1, "Uniform {0} doesn't exist!", name);
+  SD_ENGINE_ASSERT(location != -1, "Uniform {} Doesn't Exist!", name);
 
   glUniform1iv(location, count, values);
 }
 void OpenGLShader::UploadUniformFloat(const std::string &name, float value)
 {
   int location = glGetUniformLocation(m_ShaderID, name.c_str());
-  SD_ENGINE_ASSERT(location != -1, "Uniform {0} doesn't exist!", name);
+  SD_ENGINE_ASSERT(location != -1, "Uniform {} Doesn't Exist!", name);
 
   glUniform1f(location, value);
 }
@@ -237,7 +245,7 @@ void OpenGLShader::UploadUniformVec2(const std::string &name,
                                      const glm::vec2 &vector)
 {
   int location = glGetUniformLocation(m_ShaderID, name.c_str());
-  SD_ENGINE_ASSERT(location != -1, "Uniform {0} doesn't exist!", name);
+  SD_ENGINE_ASSERT(location != -1, "Uniform {} Doesn't Exist!", name);
 
   glUniform2f(location, vector.x, vector.y);
 }
@@ -245,7 +253,7 @@ void OpenGLShader::UploadUniformVec4(const std::string &name,
                                      const glm::vec4 &vector)
 {
   int location = glGetUniformLocation(m_ShaderID, name.c_str());
-  SD_ENGINE_ASSERT(location != -1, "Uniform {0} doesn't exist!", name);
+  SD_ENGINE_ASSERT(location != -1, "Uniform {} Doesn't Exist!", name);
 
   glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
 }
@@ -253,7 +261,7 @@ void OpenGLShader::UploadUniformVec3(const std::string &name,
                                      const glm::vec3 &vector)
 {
   int location = glGetUniformLocation(m_ShaderID, name.c_str());
-  SD_ENGINE_ASSERT(location != -1, "Uniform {0} doesn't exist!", name);
+  SD_ENGINE_ASSERT(location != -1, "Uniform {} Doesn't Exist!", name);
 
   glUniform3f(location, vector.x, vector.y, vector.z);
 }
@@ -262,7 +270,7 @@ void OpenGLShader::UploadUniformMat4(const std::string &name,
                                      const glm::mat4 &matrix)
 {
   int location = glGetUniformLocation(m_ShaderID, name.c_str());
-  SD_ENGINE_ASSERT(location != -1, "Uniform {0} doesn't exist!", name);
+  SD_ENGINE_ASSERT(location != -1, "Uniform {} Doesn't Exist!", name);
 
   glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }

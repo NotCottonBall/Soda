@@ -71,9 +71,31 @@ void SodaCan::OnUpdate(Timestep dt)
   // Editor Render Loop
   m_EditorFramebuffer->Bind();
   RenderCommand::ClearScreen({0.1f, 0.1f, 0.1f, 1.0f});
+  int fbClearColor = -1;
+  m_EditorFramebuffer->ClearColorAttachment(1, &fbClearColor);
   Renderer2D::ResetRendererStats();
   m_Scene->OnEditorUpdate(dt, m_EditorCamera);
   m_EditorFramebuffer->Unbind();
+
+  auto [mx, my] = ImGui::GetMousePos();
+  mx -= m_SceneViewportBounds[0].x;
+  my -= m_SceneViewportBounds[0].y;
+  glm::vec2 viewportSize = m_SceneViewportBounds[1] - m_SceneViewportBounds[0];
+
+  // For OpenGL
+  my = viewportSize.y - my;
+
+  int mouseX = (int)mx;
+  int mouseY = (int)my;
+
+  if(mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x &&
+     mouseY < (int)viewportSize.y)
+  {
+    m_EditorFramebuffer->Bind();
+    int pixel = m_EditorFramebuffer->Read(1, mouseX, mouseY);
+    SD_ENGINE_LOG("{}", pixel);
+    m_EditorFramebuffer->Unbind();
+  }
 }
 
 void SodaCan::OnEvent(Event &event) { m_EditorCamera.OnEvent(event); }
@@ -205,17 +227,7 @@ void SodaCan::OnImGuiUpdate()
     // imgui windows.
     ImGui::Begin("Scene");
     {
-      ImVec2 cursorPos = ImGui::GetMousePos();
-      ImVec2 windowPos = ImGui::GetWindowPos();
-      ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
-      ImVec2 contentMax = ImGui::GetWindowContentRegionMax();
-
-      glm::vec2 viewportRegion = {windowPos.x + contentMin.x,
-                                  windowPos.y + contentMin.y};
-      glm::vec2 absCursorPos = {cursorPos.x - viewportRegion.x,
-                                cursorPos.y - viewportRegion.y};
-      glm::vec2 viewportBounds = {contentMax.x - contentMin.x,
-                                  contentMax.y - contentMin.y};
+      ImVec2 cursorPos = ImGui::GetCursorPos();
 
       m_IsScenePanelFocused = ImGui::IsWindowFocused();
       m_IsScenePanelHovered = ImGui::IsWindowHovered();
@@ -226,12 +238,15 @@ void SodaCan::OnImGuiUpdate()
       ImGui::Image((void *)m_EditorFramebuffer->GetColorAttachmentID(0),
                    ImVec2(m_EditorViewportSize.x, m_EditorViewportSize.y),
                    ImVec2(0, 1), ImVec2(1, 0));
-      if(absCursorPos.x > 0 && absCursorPos.y > 0 &&
-         absCursorPos.x < viewportBounds.x && absCursorPos.y < viewportBounds.y)
-      {
-        int pixel = m_EditorFramebuffer->Read(1, absCursorPos, viewportBounds);
-        SD_ENGINE_LOG("{}", pixel);
-      }
+
+      ImVec2 minBounds = ImGui::GetWindowPos();
+      minBounds.x += cursorPos.x;
+      minBounds.y += cursorPos.y;
+
+      ImVec2 maxBound = {m_EditorViewportSize.x + minBounds.x,
+                         m_EditorViewportSize.y + minBounds.y};
+      m_SceneViewportBounds[0] = {minBounds.x, minBounds.y};
+      m_SceneViewportBounds[1] = {maxBound.x, maxBound.y};
 
       Object selectedObj = m_Panels.GetSceneListPanel().GetSelectedObject();
       if(selectedObj)

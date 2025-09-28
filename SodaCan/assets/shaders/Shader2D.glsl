@@ -6,11 +6,13 @@ layout(location = 1) in vec4 a_color;
 layout(location = 2) in vec2 a_texCoord;
 layout(location = 3) in float a_texIndex;
 layout(location = 4) in float a_texScale;
+layout(location = 5) in int a_objectID;
 
 out vec4 v_color;
 out vec2 v_texCoord;
 out float v_texIndex;
 out float v_texScale;
+flat out int v_objectID;
 
 uniform mat4 u_PVMat;
 
@@ -22,6 +24,7 @@ void main()
   v_color = a_color;
   v_texIndex = a_texIndex;
   v_texScale = a_texScale;
+  v_objectID = a_objectID;
 }
 
 @fragment
@@ -34,6 +37,7 @@ in vec2 v_texCoord;
 in vec4 v_color;
 in float v_texIndex;
 in float v_texScale;
+flat in int v_objectID;
 
 uniform sampler2D u_Textures[32];
 
@@ -78,5 +82,5 @@ void main()
   Color = texColor;
   // 69 is just a placeholder, what you need is the Object id
   // represented as int (-1 would mean nothing is selected)
-  Color2 = 69;
+  Color2 = v_objectID;
 }

@@ -30,6 +30,7 @@ public:
   // specific functions
   virtual void SetUniformShort(const std::string &name, short value) override;
   virtual void SetUniformInt(const std::string &name, int value) override;
+  virtual void SetUniformUInt(const std::string &name, uint32_t value) override;
   virtual void SetUniformIntArray(const std::string &name, int *values,
                                   uint32_t count) override;
   virtual void SetUniformFloat(const std::string &name, float value) override;

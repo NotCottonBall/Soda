@@ -61,9 +61,10 @@ public:
   virtual void Bind() const = 0;
   virtual void Unbind() const = 0;
 
-  virtual int Read(uint32_t attachment, const glm::vec2 &pos,
-                   const glm::vec2 &viewport) = 0;
+  virtual int Read(uint32_t attachment, int x, int y) = 0;
   virtual void Refresh(uint32_t width, uint32_t height) = 0;
+
+  virtual void ClearColorAttachment(uint32_t attachment, const void *data) = 0;
 
   virtual uint32_t GetColorAttachmentID(uint32_t index) const = 0;
   virtual const FramebufferInfo &GetFramebufferInfo() const = 0;

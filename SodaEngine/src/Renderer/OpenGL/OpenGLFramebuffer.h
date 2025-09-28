@@ -16,9 +16,11 @@ public:
   virtual void Bind() const override;
   virtual void Unbind() const override;
 
-  virtual int Read(uint32_t attachment, const glm::vec2 &pos,
-                   const glm::vec2 &viewport) override;
+  virtual int Read(uint32_t attachment, int x, int y) override;
   virtual void Refresh(uint32_t width, uint32_t height) override;
+
+  virtual void ClearColorAttachment(uint32_t attachment,
+                                    const void *data) override;
 
   virtual uint32_t GetColorAttachmentID(uint32_t index = 0) const override
   {

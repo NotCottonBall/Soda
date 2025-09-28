@@ -51,12 +51,7 @@ void Scene::OnEditorUpdate(Timestep dt, EditorCamera &editorCam)
     {
       const auto &[Transform, Sprite] =
           group.get<TransformComponent, SpriteComponent>(entity);
-
-      if(Sprite.Texture)
-        Renderer2D::DrawQuad(Transform.GetTransform(), Sprite.Texture,
-                             Sprite.Color, Sprite.TextureScale);
-      else
-        Renderer2D::DrawQuad(Transform.GetTransform(), Sprite.Color);
+      Renderer2D::DrawSprite(Transform, Sprite, (int)entity);
     }
   }
   Renderer2D::StopScene();
@@ -113,12 +108,7 @@ void Scene::OnGameUpdate(Timestep dt)
       {
         const auto &[Transform, Sprite] =
             group.get<TransformComponent, SpriteComponent>(entity);
-
-        if(Sprite.Texture)
-          Renderer2D::DrawQuad(Transform.GetTransform(), Sprite.Texture,
-                               Sprite.Color, Sprite.TextureScale);
-        else
-          Renderer2D::DrawQuad(Transform.GetTransform(), Sprite.Color);
+        Renderer2D::DrawSprite(Transform, Sprite, (int)entity);
       }
     }
     Renderer2D::StopScene();

@@ -30,6 +30,8 @@ private:
   glm::vec2 m_EditorViewportSize = glm::vec2(0.0f);
   Panels m_Panels;
 
+  glm::vec2 m_SceneViewportBounds[2];
+
 private:
   // game viewport
   bool m_IsGamePanelFocused = false;

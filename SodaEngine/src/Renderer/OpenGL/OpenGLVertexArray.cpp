@@ -58,12 +58,35 @@ void GLVertexArray::AddVertexBuffer(const Ref<VertexBuffer> &vertexBuffer)
   const BufferLoadout &loadout = vertexBuffer->GetLoadout();
   for(const BufferAttrib &attrib : loadout)
   {
-    glEnableVertexAttribArray(index);
-    glVertexAttribPointer(index, attrib.GetAttribCount(),
-                          ChangeDataTypeToGLType(attrib.m_type),
-                          attrib.m_normalize ? GL_TRUE : GL_FALSE,
-                          loadout.GetStride(), (const void *)attrib.m_offset);
-    index++;
+    switch(attrib.m_type)
+    {
+    case ShaderDataType::Float:
+    case ShaderDataType::Vec2:
+    case ShaderDataType::Vec3:
+    case ShaderDataType::Vec4:
+    case ShaderDataType::Mat2:
+    case ShaderDataType::Mat3:
+    case ShaderDataType::Mat4: {
+      glEnableVertexAttribArray(index);
+      glVertexAttribPointer(index, attrib.GetAttribCount(),
+                            ChangeDataTypeToGLType(attrib.m_type),
+                            attrib.m_normalize ? GL_TRUE : GL_FALSE,
+                            loadout.GetStride(), (const void *)attrib.m_offset);
+      index++;
+      break;
+    }
+    case ShaderDataType::Int:
+    case ShaderDataType::IVec2:
+    case ShaderDataType::IVec3:
+    case ShaderDataType::IVec4: {
+      glEnableVertexAttribArray(index);
+      glVertexAttribIPointer(
+          index, attrib.GetAttribCount(), ChangeDataTypeToGLType(attrib.m_type),
+          loadout.GetStride(), (const void *)attrib.m_offset);
+      index++;
+      break;
+    }
+    }
   }
 
   m_vertexBuffers.push_back(vertexBuffer);

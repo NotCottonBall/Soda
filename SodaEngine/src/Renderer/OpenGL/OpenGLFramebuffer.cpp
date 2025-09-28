@@ -183,18 +183,32 @@ void OpenGLFramebuffer::Refresh()
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-int OpenGLFramebuffer::Read(uint32_t attachment, const glm::vec2 &pos,
-                            const glm::vec2 &viewport)
+int OpenGLFramebuffer::Read(uint32_t attachment, int x, int y)
 {
-  Bind();
-  int xPos = (int)(pos.x * (m_FramebufferInfo.width / viewport.x));
-  int yPos =
-      ((int)(viewport.y - pos.y) * (m_FramebufferInfo.height / viewport.y));
+  SD_ENGINE_ASSERT(attachment <= m_ColorAttachmentIDs.size(),
+                   "Trying To Access Color Attachment That Doesn't Exist Or Is "
+                   "Out Of Bound");
 
   glReadBuffer(GL_COLOR_ATTACHMENT0 + attachment);
   uint32_t pixel = 0;
-  glReadPixels(xPos, yPos, 1, 1, GL_RED_INTEGER, GL_INT, &pixel);
+  glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixel);
   return pixel;
+}
+
+void OpenGLFramebuffer::ClearColorAttachment(uint32_t attachment,
+                                             const void *data)
+{
+  SD_ENGINE_ASSERT(attachment <= m_ColorAttachmentIDs.size(),
+                   "Trying To Access Color Attachment Outside The Max Limit");
+
+  auto &spec = m_ColorAttachmentsTextures[attachment];
+  switch(spec.Format)
+  {
+  case FramebufferTextureFormat::RED_INT: {
+    glClearTexImage(m_ColorAttachmentIDs[attachment], 0, GL_RED_INTEGER, GL_INT,
+                    data);
+  }
+  }
 }
 
 void OpenGLFramebuffer::Bind() const

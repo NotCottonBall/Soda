@@ -22,6 +22,9 @@ struct QuadVertex
   glm::vec2 texCoords;
   float texIndex;
   float textureScale;
+
+  // Editor Only
+  int ObjectID = -1;
 };
 
 /// @TODO: the variables in this struct are not private so why the m_ prefix?
@@ -62,7 +65,8 @@ void Renderer2D::Init()
                                {"a_color", ShaderDataType::Vec4},
                                {"a_texCoords", ShaderDataType::Vec2},
                                {"a_texIndex", ShaderDataType::Float},
-                               {"a_texScale", ShaderDataType::Float}});
+                               {"a_texScale", ShaderDataType::Float},
+                               {"a_objID", ShaderDataType::Int}});
   m_QuadInfo.m_VA->AddVertexBuffer(m_QuadInfo.m_VB);
 
   m_QuadInfo.m_QuadVertexStart = new QuadVertex[m_QuadInfo.m_maxVertices];
@@ -173,7 +177,8 @@ void Renderer2D::DrawBatch()
 }
 
 // draw the quads with matrices
-void Renderer2D::DrawQuad(const glm::mat4 &transform, const glm::vec4 &color)
+void Renderer2D::DrawQuad(const glm::mat4 &transform, const glm::vec4 &color,
+                          int objID)
 {
   if(m_QuadInfo.m_IndicesCount >= m_QuadInfo.m_maxIndices)
   {
@@ -199,6 +204,7 @@ void Renderer2D::DrawQuad(const glm::mat4 &transform, const glm::vec4 &color)
     m_QuadInfo.m_QuadVertexPtr->texCoords = texCoords[i];
     m_QuadInfo.m_QuadVertexPtr->texIndex = textureIndex;
     m_QuadInfo.m_QuadVertexPtr->textureScale = 1.0f;
+    m_QuadInfo.m_QuadVertexPtr->ObjectID = objID;
     m_QuadInfo.m_QuadVertexPtr++;
   }
 
@@ -208,7 +214,7 @@ void Renderer2D::DrawQuad(const glm::mat4 &transform, const glm::vec4 &color)
 
 void Renderer2D::DrawQuad(const glm::mat4 &transform,
                           const Ref<Texture2D> &texture, const glm::vec4 &color,
-                          float texScale)
+                          float texScale, int objID)
 {
   if(m_QuadInfo.m_IndicesCount >= m_QuadInfo.m_maxIndices)
   {
@@ -248,6 +254,7 @@ void Renderer2D::DrawQuad(const glm::mat4 &transform,
     m_QuadInfo.m_QuadVertexPtr->texCoords = texCoords[i];
     m_QuadInfo.m_QuadVertexPtr->texIndex = textureIndex;
     m_QuadInfo.m_QuadVertexPtr->textureScale = texScale;
+    m_QuadInfo.m_QuadVertexPtr->ObjectID = objID;
     m_QuadInfo.m_QuadVertexPtr++;
   }
 
@@ -369,6 +376,16 @@ void Renderer2D::DrawRotatedQuad(
       glm::scale(glm::mat4(1.0f), {scale.x, scale.y, 1.0f});
 
   DrawQuad(transform, spriteSheetTexture, color, texScale);
+}
+
+void Renderer2D::DrawSprite(TransformComponent &transform,
+                            SpriteComponent &sprite, int objID)
+{
+  if(sprite.Texture)
+    DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color,
+             sprite.TextureScale, objID);
+  else
+    DrawQuad(transform.GetTransform(), sprite.Color, objID);
 }
 
 void Renderer2D::ResetRendererStats()
