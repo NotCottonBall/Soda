@@ -11,11 +11,10 @@ public:
 
   void DrawListObject(Object obj, const std::string &name);
 
-  // @TEMP: move every panel to a different class
   void DrawObjectProperties(Object obj);
 
   Object GetSelectedObject() const { return m_SelectedObj; }
-  void SetSelectedObject(const Object &obj) { m_SelectedObj = obj; }
+  void SetSelectedObject(Object obj);
 
 private:
   Ref<Scene> m_CurrentScene;

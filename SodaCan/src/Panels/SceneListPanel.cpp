@@ -9,6 +9,8 @@
 
 namespace Soda
 {
+void SceneListPanel::SetSelectedObject(Object obj) { m_SelectedObj = obj; }
+
 void SceneListPanel::DrawListObject(Object obj, const std::string &name)
 {
   ImGuiTreeNodeFlags flags =
@@ -19,7 +21,7 @@ void SceneListPanel::DrawListObject(Object obj, const std::string &name)
       ImGui::TreeNodeEx((void *)(uint64_t)(uint32_t)obj, flags, name.c_str());
   if(ImGui::IsItemClicked())
   {
-    m_SelectedObj = obj;
+    SetSelectedObject(obj);
   }
 
   bool m_DeleteQueued = false;

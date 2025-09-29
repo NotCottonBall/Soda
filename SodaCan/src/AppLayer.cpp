@@ -28,7 +28,7 @@ void SodaCan::OnAttach()
   m_Scene = CreateRef<Scene>(m_GameViewportSize.x, m_GameViewportSize.y);
 
   m_Panels.SetScene(m_Scene);
-  ImGuizmo::SetOrthographic(true);
+  ImGuizmo::SetOrthographic(false);
 
   // SceneSerializer sceneSerializer(m_Scene);
   // sceneSerializer.Deserialize("SodaCan/assets/scenes/exampleScene.stscn");
@@ -76,29 +76,51 @@ void SodaCan::OnUpdate(Timestep dt)
   Renderer2D::ResetRendererStats();
   m_Scene->OnEditorUpdate(dt, m_EditorCamera);
   m_EditorFramebuffer->Unbind();
-
-  auto [mx, my] = ImGui::GetMousePos();
-  mx -= m_SceneViewportBounds[0].x;
-  my -= m_SceneViewportBounds[0].y;
-  glm::vec2 viewportSize = m_SceneViewportBounds[1] - m_SceneViewportBounds[0];
-
-  // For OpenGL
-  my = viewportSize.y - my;
-
-  int mouseX = (int)mx;
-  int mouseY = (int)my;
-
-  if(mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x &&
-     mouseY < (int)viewportSize.y)
-  {
-    m_EditorFramebuffer->Bind();
-    int pixel = m_EditorFramebuffer->Read(1, mouseX, mouseY);
-    SD_ENGINE_LOG("{}", pixel);
-    m_EditorFramebuffer->Unbind();
-  }
 }
 
-void SodaCan::OnEvent(Event &event) { m_EditorCamera.OnEvent(event); }
+void SodaCan::OnEvent(Event &event)
+{
+  m_EditorCamera.OnEvent(event);
+
+  EventDispatcher dispatcher(event);
+  dispatcher.Dispatch<MouseClickedEvent>(BIND_FN(SodaCan::OnMouseClicked));
+  dispatcher.Dispatch<KeyPressEvent>(BIND_FN(SodaCan::OnKeyPressed));
+}
+
+bool SodaCan::OnMouseClicked(MouseClickedEvent &mouseClick)
+{
+  if(mouseClick.GetButtonClicked() == SD_MOUSE_BUTTON_0)
+  {
+    bool isGuizmoActive = false;
+    if(m_Panels.GetSceneListPanel().GetSelectedObject())
+      isGuizmoActive = ImGuizmo::IsOver() || ImGuizmo::IsUsing();
+
+    auto [mx, my] = ImGui::GetMousePos();
+    mx -= m_SceneViewportBounds[0].x;
+    my -= m_SceneViewportBounds[0].y;
+    glm::vec2 viewportSize =
+        m_SceneViewportBounds[1] - m_SceneViewportBounds[0];
+
+    // For OpenGL
+    my = viewportSize.y - my;
+
+    int mouseX = (int)mx;
+    int mouseY = (int)my;
+
+    if(mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x &&
+       mouseY < (int)viewportSize.y && !isGuizmoActive)
+    {
+      m_EditorFramebuffer->Bind();
+      int pixel = m_EditorFramebuffer->Read(1, mouseX, mouseY);
+      m_EditorFramebuffer->Unbind();
+      m_Panels.GetSceneListPanel().SetSelectedObject(
+          pixel == -1 ? Object() : Object((entt::entity)pixel, m_Scene.get()));
+    }
+  }
+  return false;
+}
+
+bool SodaCan::OnKeyPressed(KeyPressEvent &keyPress) { return false; }
 
 void SodaCan::OnResize(uint32_t width, uint32_t height) {}
 
@@ -248,13 +270,15 @@ void SodaCan::OnImGuiUpdate()
       m_SceneViewportBounds[0] = {minBounds.x, minBounds.y};
       m_SceneViewportBounds[1] = {maxBound.x, maxBound.y};
 
+      // GUIZMO STUFF
+      ImGuizmo::SetDrawlist();
+      ImGuizmo::SetRect(m_SceneViewportBounds[0].x, m_SceneViewportBounds[0].y,
+                        m_SceneViewportBounds[1].x - m_SceneViewportBounds[0].x,
+                        m_SceneViewportBounds[1].y -
+                            m_SceneViewportBounds[0].y);
       Object selectedObj = m_Panels.GetSceneListPanel().GetSelectedObject();
       if(selectedObj)
       {
-        ImGuizmo::SetDrawlist();
-        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y,
-                          (float)ImGui::GetWindowWidth(),
-                          (float)ImGui::GetWindowHeight());
         auto &transform = selectedObj.GetComponent<TransformComponent>();
         glm::mat4 transformComponent = transform.GetTransform();
         glm::vec3 position, rotation, scale;

@@ -80,7 +80,5 @@ void main()
     case 31: texColor *= texture(u_Textures[31], v_texCoord * v_texScale); break;
   }
   Color = texColor;
-  // 69 is just a placeholder, what you need is the Object id
-  // represented as int (-1 would mean nothing is selected)
   Color2 = v_objectID;
 }

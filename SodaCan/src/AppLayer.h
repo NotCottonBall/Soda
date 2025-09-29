@@ -21,6 +21,10 @@ public:
   void OnResize(uint32_t width, uint32_t height) override;
 
 private:
+  bool OnMouseClicked(MouseClickedEvent &mouseClick);
+  bool OnKeyPressed(KeyPressEvent &keyPress);
+
+private:
   EditorCamera m_EditorCamera;
   Ref<Framebuffer> m_GameFramebuffer;
   Ref<Framebuffer> m_EditorFramebuffer;
@@ -28,11 +32,9 @@ private:
 
   glm::vec2 m_GameViewportSize = glm::vec2(0.0f);
   glm::vec2 m_EditorViewportSize = glm::vec2(0.0f);
+  glm::vec2 m_SceneViewportBounds[2];
   Panels m_Panels;
 
-  glm::vec2 m_SceneViewportBounds[2];
-
-private:
   // game viewport
   bool m_IsGamePanelFocused = false;
   bool m_IsGamePanelHovered = false;
