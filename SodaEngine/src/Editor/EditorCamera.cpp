@@ -92,6 +92,7 @@ bool EditorCamera::OnMouseMove(MouseMoveEvent &mmEvent)
 {
   if(Input::IsMouseClicked(SD_MOUSE_BUTTON_1))
   {
+    m_Spectating = true;
     if(m_firstMouse)
     {
       m_lastX = mmEvent.GetMouseX();
@@ -123,6 +124,7 @@ bool EditorCamera::OnMouseMove(MouseMoveEvent &mmEvent)
   }
   else
   {
+    m_Spectating = false;
     m_firstMouse = true;
   }
 

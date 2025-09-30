@@ -76,7 +76,8 @@ static void SerializeEntities(YAML::Emitter &out, Object obj)
 {
   out << YAML::BeginMap;
   // @TODO: id of the obj
-  out << YAML::Key << "ObjectID" << YAML::Value << "69";
+  out << YAML::Key << "ObjectID" << YAML::Value
+      << std::to_string((uint32_t)obj.GetObjectID());
   {
     if(obj.HasComponent<NameComponent>())
     {
@@ -204,7 +205,7 @@ void SceneSerializer::Deserialize(const std::string &filepath)
     std::string tag = obj["Tag"].as<std::string>();
     Object createdObj = m_scene->CreateObject(name);
     createdObj.GetComponent<TagComponent>().Tag = tag;
-    SD_ENGINE_LOG("Deserialized An Object With ID: {0}", uuid);
+    SD_ENGINE_VERBOSE("Deserialized An Object With ID: {0}", uuid);
 
     if(obj["TransformComponent"])
     {

@@ -48,6 +48,9 @@ public:
   const glm::mat4 &GetViewMat() const { return m_viewMat; }
   const glm::mat4 &GetProjectionMat() const { return m_Projection; }
   const glm::mat4 &GetProjectionViewMat() const { return m_viewProjectionMat; }
+
+  // Others
+  bool IsSpectating() const { return m_Spectating; }
   // GET SET ERS //
 
 private:
@@ -78,5 +81,6 @@ private:
   float m_yaw, m_pitch;
   float m_lastX, m_lastY;
   bool m_firstMouse;
+  bool m_Spectating = false;
 };
 } // namespace Soda

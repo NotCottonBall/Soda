@@ -9,6 +9,50 @@
 #include "SodaInput.h"
 #include "Tools/Debug/Logger.h"
 
+namespace Utils
+{
+// clang-format off
+static ImGuizmo::OPERATION GizmoToImGuizmoMode(Soda::GizmoTransformMode mode)
+{
+  switch(mode)
+  {
+  case Soda::GizmoTransformMode::MouseOnly:
+    // Gotta Figure Out How To Handle This
+    break;
+  case Soda::GizmoTransformMode::Translation: return ImGuizmo::OPERATION::TRANSLATE;
+  case Soda::GizmoTransformMode::Rotation:    return ImGuizmo::OPERATION::ROTATE;
+  case Soda::GizmoTransformMode::Scale:       return ImGuizmo::OPERATION::SCALE;
+  case Soda::GizmoTransformMode::Universal:   return ImGuizmo::OPERATION::UNIVERSAL;
+  case Soda::GizmoTransformMode::None: {
+    SD_ENGINE_ERROR(
+        "Failed To Select A Gizmo Transform Mode So Defaulting To MouseOnly");
+    // Default To MouseOnly
+  }
+  default: {
+    // MouseOnly here aswell
+  }
+  }
+}
+
+static ImGuizmo::MODE GizmoToImGuizmoMode(Soda::GizmoOperationMode mode)
+{
+  switch (mode)
+  {
+  case Soda::GizmoOperationMode::Local:   return ImGuizmo::MODE::LOCAL;
+  case Soda::GizmoOperationMode::Global:  return ImGuizmo::MODE::WORLD;
+  case Soda::GizmoOperationMode::None: {
+    SD_ENGINE_ERROR(
+      "Failed To Select A Gizmo Operation Mode So Defaulting To Local");
+    return ImGuizmo::LOCAL;
+  }
+  default: {
+    return ImGuizmo::LOCAL;
+  }
+  }
+}
+// clang-format on
+} // namespace Utils
+
 namespace Soda
 {
 SodaCan::SodaCan() : Layer("SodaCan"), m_EditorCamera(16.0f / 9.0f) {}
@@ -120,8 +164,6 @@ bool SodaCan::OnMouseClicked(MouseClickedEvent &mouseClick)
   return false;
 }
 
-bool SodaCan::OnKeyPressed(KeyPressEvent &keyPress) { return false; }
-
 void SodaCan::OnResize(uint32_t width, uint32_t height) {}
 
 void SodaCan::OnImGuiUpdate()
@@ -175,48 +217,19 @@ void SodaCan::OnImGuiUpdate()
       {
         if(ImGui::MenuItem("New", "Ctrl + N"))
         {
-          m_Scene = CreateRef<Scene>();
-          m_Panels.SetScene(m_Scene);
-          m_Scene->OnEditorResize(m_EditorViewportSize.x,
-                                  m_EditorViewportSize.y, m_EditorCamera);
-          m_Scene->OnGameResize(m_GameViewportSize.x, m_GameViewportSize.y);
+          CreateNewScene();
+        }
+        if(ImGui::MenuItem("Save", "Ctrl + S"))
+        {
+          SaveScene();
         }
         if(ImGui::MenuItem("Save As...", "Ctrl + Shift + S"))
         {
-          SceneSerializer sceneSerializer(m_Scene);
-          const char *filters[] = {"*.stscn", "*.sbscn"};
-          const char *filepath =
-              tinyfd_saveFileDialog("Save File As...", "", 2, filters, nullptr);
-          // @FIXME: we are getting an assert here
-          if(!filepath)
-          {
-            SD_ENGINE_ERROR("Failed To Save");
-            return;
-          }
-          if(std::filesystem::path(filepath).extension().string() == ".stscn")
-            sceneSerializer.Serialize(filepath);
-          else if(std::filesystem::path(filepath).extension().string() ==
-                  ".sbscn")
-            sceneSerializer.SerializeBinary(filepath);
+          SaveSceneAs();
         }
         if(ImGui::MenuItem("Open...", "Ctrl + O"))
         {
-          const char *filters[] = {"*.stscn", "*.sbscn"};
-          const char *filepath =
-              tinyfd_openFileDialog("Open File...", "", 2, filters, nullptr, 0);
-          if(!filepath)
-            SD_ENGINE_ERROR("Failed To Open");
-          m_Scene = CreateRef<Scene>();
-          m_Panels.SetScene(m_Scene);
-          SceneSerializer sceneSerializer(m_Scene);
-          if(std::filesystem::path(filepath).extension().string() == ".stscn")
-            sceneSerializer.Deserialize(filepath);
-          else if(std::filesystem::path(filepath).extension().string() ==
-                  ".sbscn")
-            sceneSerializer.DeserializeBinary(filepath);
-          m_Scene->OnEditorResize(m_EditorViewportSize.x,
-                                  m_EditorViewportSize.y, m_EditorCamera);
-          m_Scene->OnGameResize(m_GameViewportSize.x, m_GameViewportSize.y);
+          OpenScene();
         }
         ImGui::Separator();
         if(ImGui::MenuItem("Close", "Alt + F4"))
@@ -284,7 +297,7 @@ void SodaCan::OnImGuiUpdate()
         glm::vec3 position, rotation, scale;
         ImGuizmo::Manipulate(glm::value_ptr(m_EditorCamera.GetViewMat()),
                              glm::value_ptr(m_EditorCamera.GetProjectionMat()),
-                             ImGuizmo::OPERATION::TRANSLATE,
+                             Utils::GizmoToImGuizmoMode(m_GizmoTransformMode),
                              ImGuizmo::MODE::LOCAL,
                              glm::value_ptr(transformComponent));
         if(ImGuizmo::IsUsing())
@@ -315,6 +328,127 @@ void SodaCan::OnImGuiUpdate()
     ImGui::PopStyleVar();
   }
   ImGui::End();
+}
+
+bool SodaCan::OnKeyPressed(KeyPressEvent &keyPress)
+{
+  bool ctrl = keyPress.GetKeyCode() == SD_KEY_LEFT_CONTROL ||
+              keyPress.GetKeyCode() == SD_KEY_RIGHT_CONTROL;
+  bool shift = keyPress.GetKeyCode() == SD_KEY_LEFT_SHIFT ||
+               keyPress.GetKeyCode() == SD_KEY_RIGHT_SHIFT;
+  bool alt = keyPress.GetKeyCode() == SD_KEY_LEFT_ALT ||
+             keyPress.GetKeyCode() == SD_KEY_RIGHT_ALT;
+
+  switch(keyPress.GetKeyCode())
+  {
+  case SD_KEY_N: {
+    if(!ctrl)
+      break;
+    CreateNewScene();
+    break;
+  }
+  case SD_KEY_O: {
+    if(!ctrl)
+      break;
+
+    OpenScene();
+    break;
+  }
+  case SD_KEY_S: {
+    if(shift && ctrl)
+      SaveSceneAs();
+    else if(ctrl)
+      SaveScene();
+    break;
+  }
+  }
+
+  // TODO: All the guizmo and ImGui stuff should be modularized later on.
+  // Including these shortcuts
+  if(!(m_EditorCamera.IsSpectating() || ctrl || shift || alt))
+  {
+    // clang-format off
+    switch(keyPress.GetKeyCode())
+    {
+    case SD_KEY_Q: m_GizmoTransformMode = GizmoTransformMode::MouseOnly; break;
+    case SD_KEY_W: m_GizmoTransformMode = GizmoTransformMode::Translation; break;
+    case SD_KEY_E: m_GizmoTransformMode = GizmoTransformMode::Rotation; break;
+    case SD_KEY_R: m_GizmoTransformMode = GizmoTransformMode::Scale; break;
+    case SD_KEY_T: m_GizmoTransformMode = GizmoTransformMode::Universal; break;
+    case SD_KEY_O: m_GizmoOperationMode = GizmoOperationMode::Global; break;
+    case SD_KEY_P: m_GizmoOperationMode = GizmoOperationMode::Local; break;
+    }
+    // clang-format on
+  }
+  return false;
+}
+
+void SodaCan::CreateNewScene()
+{
+  // @TODO: Check For Saves Before Creating A New Scene.
+
+  m_Scene = CreateRef<Scene>();
+  m_Panels.SetScene(m_Scene);
+  SD_ENGINE_LOG("Created A New Scene");
+  m_Scene->OnEditorResize(m_EditorViewportSize.x, m_EditorViewportSize.y,
+                          m_EditorCamera);
+  m_Scene->OnGameResize(m_GameViewportSize.x, m_GameViewportSize.y);
+}
+void SodaCan::OpenScene()
+{
+  // @TODO: Check for current scene saves before opening a new one.
+
+  const char *filters[] = {"*.stscn", "*.sbscn"};
+  const char *filepath =
+      tinyfd_openFileDialog("Open File...", "", 2, filters, nullptr, 0);
+  if(!filepath)
+    SD_ENGINE_ERROR("Failed To Open");
+  m_Scene = CreateRef<Scene>();
+  m_Panels.SetScene(m_Scene);
+  SceneSerializer sceneSerializer(m_Scene);
+  if(std::filesystem::path(filepath).extension().string() == ".stscn")
+  {
+    sceneSerializer.Deserialize(filepath);
+    SD_ENGINE_LOG("Opened Scene As 'stscn' (Text File) From Path: {}",
+                  filepath);
+  }
+  else if(std::filesystem::path(filepath).extension().string() == ".sbscn")
+  {
+    SD_ENGINE_ERROR("'.sbscn' (Binary Files) Are Not Supported Yet. You Should "
+                    "Save And Open As 'stscn' (Text File) Instead");
+    sceneSerializer.DeserializeBinary(filepath);
+  }
+  m_Scene->OnEditorResize(m_EditorViewportSize.x, m_EditorViewportSize.y,
+                          m_EditorCamera);
+  m_Scene->OnGameResize(m_GameViewportSize.x, m_GameViewportSize.y);
+}
+void SodaCan::SaveScene()
+{
+  // I will think about what to do here later.
+}
+void SodaCan::SaveSceneAs()
+{
+  SceneSerializer sceneSerializer(m_Scene);
+  const char *filters[] = {"*.stscn", "*.sbscn"};
+  const char *filepath =
+      tinyfd_saveFileDialog("Save File As...", "", 2, filters, nullptr);
+  // @FIXME: we are getting an assert here
+  if(!filepath)
+  {
+    SD_ENGINE_ERROR("Failed To Save");
+    return;
+  }
+  if(std::filesystem::path(filepath).extension().string() == ".stscn")
+  {
+    sceneSerializer.Serialize(filepath);
+    SD_ENGINE_LOG("Saved Scene As '.stscn' (Text File) At Path: {}.", filepath);
+  }
+  else if(std::filesystem::path(filepath).extension().string() == ".sbscn")
+  {
+    SD_ENGINE_ERROR("'.sbscn' (Binary Files) Are Not Supported Yet. You Should "
+                    "Save And Open As 'stscn' (Text File) Instead");
+    sceneSerializer.SerializeBinary(filepath);
+  }
 }
 
 void SodaCan::OnDetach() { Renderer2D::Shutdown(); }

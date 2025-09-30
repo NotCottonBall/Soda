@@ -5,6 +5,23 @@
 
 namespace Soda
 {
+// @TODO: This should be modularized into guizmo code
+enum class GizmoTransformMode
+{
+  None = 0,
+  MouseOnly, // Wont have any gizmos on the screen. keeping it clean
+  Translation,
+  Rotation,
+  Scale,
+  Universal // Will have all the operation modes shown on the screen
+};
+enum class GizmoOperationMode
+{
+  None = 0,
+  Local,
+  Global
+};
+
 class SodaCan : public Layer
 {
 public:
@@ -24,6 +41,12 @@ private:
   bool OnMouseClicked(MouseClickedEvent &mouseClick);
   bool OnKeyPressed(KeyPressEvent &keyPress);
 
+  // TODO: These Fucntions Should Be Modularized
+  void CreateNewScene();
+  void OpenScene();
+  void SaveScene();
+  void SaveSceneAs();
+
 private:
   EditorCamera m_EditorCamera;
   Ref<Framebuffer> m_GameFramebuffer;
@@ -34,6 +57,9 @@ private:
   glm::vec2 m_EditorViewportSize = glm::vec2(0.0f);
   glm::vec2 m_SceneViewportBounds[2];
   Panels m_Panels;
+
+  GizmoTransformMode m_GizmoTransformMode = GizmoTransformMode::Translation;
+  GizmoOperationMode m_GizmoOperationMode = GizmoOperationMode::Local;
 
   // game viewport
   bool m_IsGamePanelFocused = false;
