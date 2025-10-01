@@ -127,6 +127,24 @@ void Scene::OnGameResize(uint32_t width, uint32_t height)
   }
 }
 
+Object Scene::GetObjectWithName(const std::string &name)
+{
+  auto group = m_Registry.group<NameComponent>();
+  Object foundObj = Object({});
+
+  for(auto obj : group)
+  {
+    const auto &nc = group.get<NameComponent>(obj);
+    if(nc.Name == name)
+      foundObj = Object(obj, this);
+  }
+
+  if(!foundObj)
+    SD_ENGINE_ERROR("No Object Named {} Exists", name);
+
+  return foundObj;
+}
+
 template <typename T> void Scene::OnComponentAdded(Object obj, T &component)
 {
   SD_ENGINE_ASSERT(false, "Component Needs To Be Specified While Calling The "

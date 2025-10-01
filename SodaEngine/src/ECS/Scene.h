@@ -23,6 +23,8 @@ public:
                                      // call it Object and not Entity
   void DestroyObject(Object obj);
 
+  Object GetObjectWithName(const std::string &name);
+
   // entity functions
   void OnEditorUpdate(Timestep dt, EditorCamera &editorCam);
   void OnEditorResize(uint32_t width, uint32_t height, EditorCamera &editorcam);

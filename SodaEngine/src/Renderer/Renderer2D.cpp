@@ -145,9 +145,6 @@ void Renderer2D::StartScene(const OrthoCamera &camera)
 void Renderer2D::StartScene(const RendererCamera &camera,
                             const glm::mat4 &transform)
 {
-  glm::mat4 m_ViewProjectionMat =
-      camera.GetProjection() * glm::inverse(transform);
-
   m_QuadInfo.m_Shader->Bind();
   m_QuadInfo.m_Shader->SetUniformMat4("u_PVMat", camera.GetProjection() *
                                                      glm::inverse(transform));

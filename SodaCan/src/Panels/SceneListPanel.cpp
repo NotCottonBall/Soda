@@ -1,8 +1,8 @@
 #include "SceneListPanel.h"
 
 #include "glm/gtc/type_ptr.hpp"
+#include "glm/gtx/quaternion.hpp"
 #include "glm/trigonometric.hpp"
-#
 #include "imgui.h"
 
 #include "../GUI/SodaGui.h"
@@ -130,13 +130,13 @@ void SceneListPanel::DrawObjectProperties(Object obj)
 
   // our components //
   DrawComponent<TransformComponent>("Transform", obj, [](auto &transform) {
-    glm::vec3 rotation = glm::degrees(transform.Rotation);
+    glm::vec3 rotation = transform.Rotation;
 
     SodaGui::DrawVec3Gui("Position", transform.Position, 0.0f);
     SodaGui::DrawVec3Gui("Rotation", rotation, 0.0f);
     SodaGui::DrawVec3Gui("Scale", transform.Scale, 1.0f);
 
-    transform.Rotation = glm::radians(rotation);
+    transform.Rotation = rotation;
   });
 
   DrawComponent<CameraComponent>("Camera", obj, [](auto &camera) {

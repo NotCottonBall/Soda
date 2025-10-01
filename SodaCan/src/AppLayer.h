@@ -59,7 +59,7 @@ private:
   Panels m_Panels;
 
   GizmoTransformMode m_GizmoTransformMode = GizmoTransformMode::Translation;
-  GizmoOperationMode m_GizmoOperationMode = GizmoOperationMode::Local;
+  GizmoOperationMode m_GizmoOperationMode = GizmoOperationMode::Global;
 
   // game viewport
   bool m_IsGamePanelFocused = false;
