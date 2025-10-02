@@ -10,6 +10,7 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/quaternion_trigonometric.hpp"
 #include "glm/fwd.hpp"
+#include "glm/gtc/quaternion.hpp"
 #include "glm/gtx/quaternion.hpp"
 #include "glm/trigonometric.hpp"
 
@@ -37,7 +38,8 @@ struct TagComponent
 struct TransformComponent
 {
   glm::vec3 Position = {0.0f, 0.0f, 0.0f};
-  glm::vec3 Rotation = {0.0f, 0.0f, 0.0f};
+  glm::vec3 EulerRotation = {0.0f, 0.0f, 0.0f};    // UI-facing rotation
+  glm::quat Rotation = glm::quat(glm::vec3(0.0f)); // math-facing rotation
   glm::vec3 Scale = {1.0f, 1.0f, 1.0f};
 
   TransformComponent() = default;
@@ -45,16 +47,35 @@ struct TransformComponent
 
   glm::mat4 GetTransform() const
   {
-    glm::mat4 rotation = glm::toMat4(glm::quat(glm::radians(Rotation)));
-
-    return glm::mat4(glm::translate(glm::mat4(1.0f), Position) * rotation *
-                     glm::scale(glm::mat4(1.0f), Scale));
+    glm::mat4 rotation = glm::toMat4(Rotation);
+    return glm::translate(glm::mat4(1.0f), Position) * rotation *
+           glm::scale(glm::mat4(1.0f), Scale);
   }
+
+  void ApplyRotationDelta(const glm::vec3 &deltaEuler)
+  {
+    // Build incremental quaternions for each axis
+    glm::quat qx =
+        glm::angleAxis(glm::radians(deltaEuler.x), glm::vec3(1, 0, 0));
+    glm::quat qy =
+        glm::angleAxis(glm::radians(deltaEuler.y), glm::vec3(0, 1, 0));
+    glm::quat qz =
+        glm::angleAxis(glm::radians(deltaEuler.z), glm::vec3(0, 0, 1));
+
+    // Multiply onto the existing rotation (local space)
+    Rotation = Rotation * qx * qy * qz;
+  }
+
+  inline glm::vec3 GetRotationEuler() const { return EulerRotation; }
+
+  // Call this whenever EulerRotation is changed
+  void UpdateRotation() { Rotation = glm::quat(glm::radians(EulerRotation)); }
 
   void Reset()
   {
     Position = {0.0f, 0.0f, 0.0f};
-    Rotation = {0.0f, 0.0f, 0.0f};
+    EulerRotation = {0.0f, 0.0f, 0.0f};
+    Rotation = glm::quat(glm::vec3(0.0f));
     Scale = {1.0f, 1.0f, 1.0f};
   }
 };

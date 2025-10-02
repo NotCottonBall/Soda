@@ -130,13 +130,18 @@ void SceneListPanel::DrawObjectProperties(Object obj)
 
   // our components //
   DrawComponent<TransformComponent>("Transform", obj, [](auto &transform) {
-    glm::vec3 rotation = transform.Rotation;
+    TransformComponent &tc = transform;
 
-    SodaGui::DrawVec3Gui("Position", transform.Position, 0.0f);
-    SodaGui::DrawVec3Gui("Rotation", rotation, 0.0f);
-    SodaGui::DrawVec3Gui("Scale", transform.Scale, 1.0f);
+    SodaGui::DrawVec3Gui("Position", tc.Position, 0.0f);
 
-    transform.Rotation = rotation;
+    glm::vec3 oldEuler = tc.EulerRotation; // keep old value
+    SodaGui::DrawVec3Gui("Rotation", tc.EulerRotation, 0.0f);
+    glm::vec3 delta = tc.EulerRotation - oldEuler;
+
+    tc.ApplyRotationDelta(delta);
+    tc.EulerRotation = glm::degrees(glm::eulerAngles(tc.Rotation));
+
+    SodaGui::DrawVec3Gui("Scale", tc.Scale, 1.0f);
   });
 
   DrawComponent<CameraComponent>("Camera", obj, [](auto &camera) {
