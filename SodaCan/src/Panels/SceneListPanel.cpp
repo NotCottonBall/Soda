@@ -134,12 +134,16 @@ void SceneListPanel::DrawObjectProperties(Object obj)
 
     SodaGui::DrawVec3Gui("Position", tc.Position, 0.0f);
 
-    glm::vec3 oldEuler = tc.EulerRotation; // keep old value
-    SodaGui::DrawVec3Gui("Rotation", tc.EulerRotation, 0.0f);
-    glm::vec3 delta = tc.EulerRotation - oldEuler;
-
-    tc.ApplyRotationDelta(delta);
-    tc.EulerRotation = glm::degrees(glm::eulerAngles(tc.Rotation));
+    glm::vec3 euler = tc.EulerAngles;
+    SodaGui::DrawVec3Gui("Rotation", euler, 0.0f);
+    if(euler != tc.EulerAngles)
+    {
+      tc.EulerAngles = euler;
+      glm::quat qx = glm::angleAxis(glm::radians(euler.x), glm::vec3(1, 0, 0));
+      glm::quat qy = glm::angleAxis(glm::radians(euler.y), glm::vec3(0, 1, 0));
+      glm::quat qz = glm::angleAxis(glm::radians(euler.z), glm::vec3(0, 0, 1));
+      tc.Rotation = qy * qx * qz;
+    }
 
     SodaGui::DrawVec3Gui("Scale", tc.Scale, 1.0f);
   });

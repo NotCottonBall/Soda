@@ -331,36 +331,34 @@ void SodaCan::OnImGuiUpdate()
 
 bool SodaCan::OnKeyPressed(KeyPressEvent &keyPress)
 {
-  // if(keyPress.GetKeyCode() == SD_KEY_X)
-  // {
-  //   Object obj = m_Scene->GetObjectWithName("TestObj");
-  //
-  //   if(!obj)
-  //     return false;
-  //
-  //   auto &t = obj.GetComponent<TransformComponent>();
-  //   t.Rotation = glm::vec3(t.Rotation.x + 5.0f, t.Rotation.y, t.Rotation.z);
-  // }
-  // if(keyPress.GetKeyCode() == SD_KEY_Y)
-  // {
-  //   Object obj = m_Scene->GetObjectWithName("TestObj");
-  //
-  //   if(!obj)
-  //     return false;
-  //
-  //   auto &t = obj.GetComponent<TransformComponent>();
-  //   t.Rotation = glm::vec3(t.Rotation.x, t.Rotation.y + 5.0f, t.Rotation.z);
-  // }
-  // if(keyPress.GetKeyCode() == SD_KEY_Z)
-  // {
-  //   Object obj = m_Scene->GetObjectWithName("TestObj");
-  //
-  //   if(!obj)
-  //     return false;
-  //
-  //   auto &t = obj.GetComponent<TransformComponent>();
-  //   t.Rotation = glm::vec3(t.Rotation.x, t.Rotation.y, t.Rotation.z + 5.0f);
-  // }
+  if(keyPress.GetKeyCode() == SD_KEY_X)
+  {
+    Object obj = m_Scene->GetObjectWithName("2D Object");
+    if(!obj)
+      return false;
+    auto &t = obj.GetComponent<TransformComponent>();
+    t.RotatePitch(t.Rotation.x + 5.0f);
+  }
+  if(keyPress.GetKeyCode() == SD_KEY_Y)
+  {
+    Object obj = m_Scene->GetObjectWithName("2D Object");
+    if(!obj)
+      return false;
+    auto &t = obj.GetComponent<TransformComponent>();
+    t.RotateYaw(t.Rotation.y + 5.0f);
+    // t.RotateGlobal(t.GetEuler() + glm::vec3(0.0f, 5.0f, 0.0f));
+  }
+  if(keyPress.GetKeyCode() == SD_KEY_Z)
+  {
+    Object obj = m_Scene->GetObjectWithName("2D Object");
+
+    if(!obj)
+      return false;
+
+    auto &t = obj.GetComponent<TransformComponent>();
+    t.RotateRoll(t.Rotation.z + 5.0f);
+    // t.RotateGlobal(t.GetEuler() + glm::vec3(0.0f, 0.0f, 5.0f));
+  }
 
   bool ctrl = keyPress.GetKeyCode() == SD_KEY_LEFT_CONTROL ||
               keyPress.GetKeyCode() == SD_KEY_RIGHT_CONTROL;

@@ -11,6 +11,7 @@
 #include "glm/ext/quaternion_trigonometric.hpp"
 #include "glm/fwd.hpp"
 #include "glm/gtc/quaternion.hpp"
+#include "glm/gtx/euler_angles.hpp"
 #include "glm/gtx/quaternion.hpp"
 #include "glm/trigonometric.hpp"
 
@@ -38,8 +39,10 @@ struct TagComponent
 struct TransformComponent
 {
   glm::vec3 Position = {0.0f, 0.0f, 0.0f};
-  glm::vec3 EulerRotation = {0.0f, 0.0f, 0.0f};    // UI-facing rotation
-  glm::quat Rotation = glm::quat(glm::vec3(0.0f)); // math-facing rotation
+#ifndef SD_ExportBuild
+  glm::vec3 EulerAngles = {0.0f, 0.0f, 0.0f};
+#endif
+  glm::quat Rotation = glm::quat(glm::vec3(0.0f));
   glm::vec3 Scale = {1.0f, 1.0f, 1.0f};
 
   TransformComponent() = default;
@@ -52,29 +55,35 @@ struct TransformComponent
            glm::scale(glm::mat4(1.0f), Scale);
   }
 
-  void ApplyRotationDelta(const glm::vec3 &deltaEuler)
+  // Basis Of The Matrix
+  glm::mat3 GetBasis() const { return glm::mat3_cast(Rotation); }
+  glm::vec3 GetUp() const { return GetBasis()[1]; }
+  glm::vec3 GetForward() const { return -GetBasis()[2]; }
+  glm::vec3 GetRight() const { return GetBasis()[0]; }
+
+  // Rotation Functions
+  void RotateGlobal(const glm::vec3 &rotation)
   {
-    // Build incremental quaternions for each axis
-    glm::quat qx =
-        glm::angleAxis(glm::radians(deltaEuler.x), glm::vec3(1, 0, 0));
-    glm::quat qy =
-        glm::angleAxis(glm::radians(deltaEuler.y), glm::vec3(0, 1, 0));
-    glm::quat qz =
-        glm::angleAxis(glm::radians(deltaEuler.z), glm::vec3(0, 0, 1));
-
-    // Multiply onto the existing rotation (local space)
-    Rotation = Rotation * qx * qy * qz;
+    Rotation = glm::quat(glm::radians(rotation));
   }
-
-  inline glm::vec3 GetRotationEuler() const { return EulerRotation; }
-
-  // Call this whenever EulerRotation is changed
-  void UpdateRotation() { Rotation = glm::quat(glm::radians(EulerRotation)); }
+  void RotateLocal(const glm::vec3 &axis, float angle)
+  {
+    glm::quat rot = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
+    Rotation = rot * Rotation;
+#ifndef SD_EditorBuild
+    float yaw, pitch, roll;
+    glm::extractEulerAngleYXZ(glm::toMat4(Rotation), yaw, pitch, roll);
+    EulerAngles = glm::degrees(glm::vec3(pitch, yaw, roll));
+#endif
+  }
+  void RotateYaw(float angle) { RotateLocal(GetUp(), angle); }
+  void RotatePitch(float angle) { RotateLocal(GetRight(), angle); }
+  void RotateRoll(float angle) { RotateLocal(GetForward(), angle); }
 
   void Reset()
   {
     Position = {0.0f, 0.0f, 0.0f};
-    EulerRotation = {0.0f, 0.0f, 0.0f};
+    EulerAngles = {0.0f, 0.0f, 0.0f};
     Rotation = glm::quat(glm::vec3(0.0f));
     Scale = {1.0f, 1.0f, 1.0f};
   }
