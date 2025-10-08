@@ -292,22 +292,26 @@ void SodaCan::OnImGuiUpdate()
       Object selectedObj = m_Panels.GetSceneListPanel().GetSelectedObject();
       if(selectedObj)
       {
-        auto &transform = selectedObj.GetComponent<TransformComponent>();
-        glm::mat4 transformComponent = transform.GetTransform();
-        glm::vec3 position, rotation, scale;
+        auto &tc = selectedObj.GetComponent<TransformComponent>();
+        glm::mat4 transform = tc.GetTransform();
+        glm::vec3 position, rot, scale;
         ImGuizmo::Manipulate(glm::value_ptr(m_EditorCamera.GetViewMat()),
                              glm::value_ptr(m_EditorCamera.GetProjectionMat()),
                              Utils::GizmoToImGuizmoMode(m_GizmoTransformMode),
                              Utils::GizmoToImGuizmoMode(m_GizmoOperationMode),
-                             glm::value_ptr(transformComponent));
+                             glm::value_ptr(transform));
         if(ImGuizmo::IsUsing())
         {
           ImGuizmo::DecomposeMatrixToComponents(
-              glm::value_ptr(transformComponent), glm::value_ptr(position),
-              glm::value_ptr(rotation), glm::value_ptr(scale));
-          transform.Position = position;
-          transform.Rotation = rotation;
-          transform.Scale = scale;
+              glm::value_ptr(transform), glm::value_ptr(position),
+              glm::value_ptr(rot), glm::value_ptr(scale));
+          tc.Position = position;
+          if(rot != tc.EulerAngles)
+          {
+            tc.EulerAngles = rot;
+            tc.Rotation = glm::quat(glm::radians(rot));
+          }
+          tc.Scale = scale;
         }
       }
     }
@@ -346,7 +350,6 @@ bool SodaCan::OnKeyPressed(KeyPressEvent &keyPress)
       return false;
     auto &t = obj.GetComponent<TransformComponent>();
     t.RotateYaw(t.Rotation.y + 5.0f);
-    // t.RotateGlobal(t.GetEuler() + glm::vec3(0.0f, 5.0f, 0.0f));
   }
   if(keyPress.GetKeyCode() == SD_KEY_Z)
   {
@@ -357,7 +360,6 @@ bool SodaCan::OnKeyPressed(KeyPressEvent &keyPress)
 
     auto &t = obj.GetComponent<TransformComponent>();
     t.RotateRoll(t.Rotation.z + 5.0f);
-    // t.RotateGlobal(t.GetEuler() + glm::vec3(0.0f, 0.0f, 5.0f));
   }
 
   bool ctrl = keyPress.GetKeyCode() == SD_KEY_LEFT_CONTROL ||

@@ -39,9 +39,7 @@ struct TagComponent
 struct TransformComponent
 {
   glm::vec3 Position = {0.0f, 0.0f, 0.0f};
-#ifndef SD_ExportBuild
   glm::vec3 EulerAngles = {0.0f, 0.0f, 0.0f};
-#endif
   glm::quat Rotation = glm::quat(glm::vec3(0.0f));
   glm::vec3 Scale = {1.0f, 1.0f, 1.0f};
 
@@ -62,19 +60,13 @@ struct TransformComponent
   glm::vec3 GetRight() const { return GetBasis()[0]; }
 
   // Rotation Functions
-  void RotateGlobal(const glm::vec3 &rotation)
-  {
-    Rotation = glm::quat(glm::radians(rotation));
-  }
   void RotateLocal(const glm::vec3 &axis, float angle)
   {
     glm::quat rot = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
     Rotation = rot * Rotation;
-#ifndef SD_EditorBuild
     float yaw, pitch, roll;
     glm::extractEulerAngleYXZ(glm::toMat4(Rotation), yaw, pitch, roll);
     EulerAngles = glm::degrees(glm::vec3(pitch, yaw, roll));
-#endif
   }
   void RotateYaw(float angle) { RotateLocal(GetUp(), angle); }
   void RotatePitch(float angle) { RotateLocal(GetRight(), angle); }
@@ -84,7 +76,7 @@ struct TransformComponent
   {
     Position = {0.0f, 0.0f, 0.0f};
     EulerAngles = {0.0f, 0.0f, 0.0f};
-    Rotation = glm::quat(glm::vec3(0.0f));
+    Rotation = glm::quat(1.0f, glm::vec3(0.0f));
     Scale = {1.0f, 1.0f, 1.0f};
   }
 };
