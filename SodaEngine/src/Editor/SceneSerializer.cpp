@@ -95,7 +95,7 @@ static void SerializeEntities(YAML::Emitter &out, Object obj)
       out << YAML::Key << "TransformComponent";
       out << YAML::BeginMap;
       out << YAML::Key << "Position" << YAML::Value << tran.Position;
-      out << YAML::Key << "Rotation" << YAML::Value << tran.Rotation;
+      // out << YAML::Key << "Rotation" << YAML::Value << tran.Rotation;
       out << YAML::Key << "Scale" << YAML::Value << tran.Scale;
       out << YAML::EndMap;
     }
@@ -212,7 +212,7 @@ void SceneSerializer::Deserialize(const std::string &filepath)
       auto tComponent = obj["TransformComponent"];
       auto &tc = createdObj.GetComponent<TransformComponent>();
       tc.Position = tComponent["Position"].as<glm::vec3>();
-      tc.Rotation = tComponent["Rotation"].as<glm::vec3>();
+      // tc.Rotation = tComponent["Rotation"].as<glm::vec3>();
       tc.Scale = tComponent["Scale"].as<glm::vec3>();
     }
     if(obj["CameraComponent"])

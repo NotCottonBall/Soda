@@ -10,6 +10,8 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/quaternion_trigonometric.hpp"
 #include "glm/fwd.hpp"
+#include "glm/gtc/quaternion.hpp"
+#include "glm/gtx/euler_angles.hpp"
 #include "glm/gtx/quaternion.hpp"
 #include "glm/trigonometric.hpp"
 
@@ -37,7 +39,8 @@ struct TagComponent
 struct TransformComponent
 {
   glm::vec3 Position = {0.0f, 0.0f, 0.0f};
-  glm::vec3 Rotation = {0.0f, 0.0f, 0.0f};
+  glm::vec3 EulerAngles = {0.0f, 0.0f, 0.0f};
+  glm::quat Rotation = glm::quat(glm::vec3(0.0f));
   glm::vec3 Scale = {1.0f, 1.0f, 1.0f};
 
   TransformComponent() = default;
@@ -45,16 +48,35 @@ struct TransformComponent
 
   glm::mat4 GetTransform() const
   {
-    glm::mat4 rotation = glm::toMat4(glm::quat(glm::radians(Rotation)));
-
-    return glm::mat4(glm::translate(glm::mat4(1.0f), Position) * rotation *
-                     glm::scale(glm::mat4(1.0f), Scale));
+    glm::mat4 rotation = glm::toMat4(Rotation);
+    return glm::translate(glm::mat4(1.0f), Position) * rotation *
+           glm::scale(glm::mat4(1.0f), Scale);
   }
+
+  // Basis Of The Matrix
+  glm::mat3 GetBasis() const { return glm::mat3_cast(Rotation); }
+  glm::vec3 GetUp() const { return GetBasis()[1]; }
+  glm::vec3 GetForward() const { return -GetBasis()[2]; }
+  glm::vec3 GetRight() const { return GetBasis()[0]; }
+
+  // Rotation Functions
+  void RotateLocal(const glm::vec3 &axis, float angle)
+  {
+    glm::quat rot = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
+    Rotation = rot * Rotation;
+    float yaw, pitch, roll;
+    glm::extractEulerAngleYXZ(glm::toMat4(Rotation), yaw, pitch, roll);
+    EulerAngles = glm::degrees(glm::vec3(pitch, yaw, roll));
+  }
+  void RotateYaw(float angle) { RotateLocal(GetUp(), angle); }
+  void RotatePitch(float angle) { RotateLocal(GetRight(), angle); }
+  void RotateRoll(float angle) { RotateLocal(GetForward(), angle); }
 
   void Reset()
   {
     Position = {0.0f, 0.0f, 0.0f};
-    Rotation = {0.0f, 0.0f, 0.0f};
+    EulerAngles = {0.0f, 0.0f, 0.0f};
+    Rotation = glm::quat(1.0f, glm::vec3(0.0f));
     Scale = {1.0f, 1.0f, 1.0f};
   }
 };

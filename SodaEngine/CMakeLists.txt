@@ -16,7 +16,7 @@ find_library(GLFW_LIB
     NO_DEFAULT_PATH
 )
 if(NOT GLFW_LIB)
-    message("ERROR: Required Library glfw Was Not Found! Did You Build 'Libraries' Before Building SodaEngine?")
+  message("ERROR: Required Library glfw Was Not Found! Did You Build 'Libraries' Before Building SodaEngine?")
 endif()
 ## GLAD
 find_library(GLAD_LIB
@@ -25,7 +25,7 @@ find_library(GLAD_LIB
     NO_DEFAULT_PATH
 )
 if(NOT GLAD_LIB)
-    message("ERROR: Required Library glad Was Not Found! Did You Build 'Libraries' Before Building SodaEngine?")
+  message("ERROR: Required Library glad Was Not Found! Did You Build 'Libraries' Before Building SodaEngine?")
 endif()
 ## IMGUI
 find_library(IMGUI_LIB
@@ -34,7 +34,7 @@ find_library(IMGUI_LIB
     NO_DEFAULT_PATH
 )
 if(NOT IMGUI_LIB)
-    message("ERROR: Required Library imgui Was Not Found! Did You Build 'Libraries' Before Building SodaEngine?")
+  message("ERROR: Required Library imgui Was Not Found! Did You Build 'Libraries' Before Building SodaEngine?")
 endif()
 ## YAML-CPP
 find_library(YAML_CPP_LIB
@@ -43,7 +43,7 @@ find_library(YAML_CPP_LIB
     NO_DEFAULT_PATH
 )
 if(NOT YAML_CPP_LIB)
-    message("ERROR: Required Library yaml-cpp Was Not Found! Did You Build 'Libraries' Before Building SodaEngine?")
+  message("ERROR: Required Library yaml-cpp Was Not Found! Did You Build 'Libraries' Before Building SodaEngine?")
 endif()
 
 # files of the Soda project
@@ -112,6 +112,10 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<CONFIG:DebRelease>:SD_DebR
 target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<CONFIG:Release>:SD_Release>)
 target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<CONFIG:RelExport>:SD_RelExport>)
 target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<CONFIG:Export>:SD_Export>)
+
+if(CMAKE_BUILD_TYPE MATCHES "RelExport|Export")
+  target_compile_definitions(${PROJECT_NAME} PUBLIC SD_ExportBuild)
+endif()
 
 # some other defines
 target_compile_definitions(${PROJECT_NAME} PUBLIC
