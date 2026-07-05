@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 4.3)
-project(SodaEngine
+
+project(SodaCan
   VERSION 0.0.1
   LANGUAGES CXX
 )
@@ -14,10 +15,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #############
 # Variables #
 #############
-set(PROJECT_PREFIX SD)
-set(PROJECT_LOG_NAME Soda)
+set(PROJECT_PREFIX SDC)
+set(PROJECT_LOG_NAME SodaCan)
 
 set(SODA_THIRD_PARTY_DIR ${PROJECT_SOURCE_DIR}/../ThirdParty)
+set(SODA_ENGINE_DIR ${PROJECT_SOURCE_DIR}/../SodaEngine)
 
 set(SODA_BINARY_DIR ${PROJECT_SOURCE_DIR}/Binary)
 set(SODA_INSTALL_DIR ${PROJECT_SOURCE_DIR}/Install)
@@ -25,7 +27,6 @@ set(SODA_INSTALL_DIR ${PROJECT_SOURCE_DIR}/Install)
 set(SODA_OUTPUT_FOLDER_SIGNATURE
   ${CMAKE_SYSTEM_NAME}-${CMAKE_BUILD_TYPE}-${CMAKE_CXX_COMPILER_ID}
 )
-
 
 ##################################################################
 # Setting Up A Folder Structure                                  #
@@ -57,18 +58,18 @@ else()
   )
 endif()
 
-
 # Including Stuff
 include(./CMake/Files.cmake)
 
-# Generating The Library
-add_library(${PROJECT_NAME} STATIC)
+# Generating The Executable
+add_executable(${PROJECT_NAME})
 
-# Sources For The Library SodaEngine.
+# Sources For The Executable
 # All The Sources Will Be Updated In "${CMAKE_SOURCE_DIR}/Files.cmake"
 target_sources(${PROJECT_NAME} PRIVATE
-  ${SODA_ENGINE_SOURCES}
+  ${SODA_CAN_SOURCES}
 )
+
 
 ##############################
 # Setting Build/Config Types #
@@ -86,8 +87,15 @@ endif()
 # FINDING AND ADDING LIBRARIES #
 ################################
 # Finding Libraries (Imported)
-find_library(SDL_LIB
-  NAMES SDL3
+find_library(SODA_ENGINE_LIB
+  NAMES SodaEngine
+  PATHS ${SODA_ENGINE_DIR}/Binary/Libs/${SODA_OUTPUT_FOLDER_SIGNATURE}
+  NO_DEFAULT_PATH
+  REQUIRED
+)
+
+find_library(IMGUI_LIB
+  NAMES imgui
   PATHS ${SODA_THIRD_PARTY_DIR}/Binary/Libs/${SODA_OUTPUT_FOLDER_SIGNATURE}
   NO_DEFAULT_PATH
   REQUIRED
@@ -95,15 +103,8 @@ find_library(SDL_LIB
 
 # Adding Libraries (Imported)
 target_link_libraries(${PROJECT_NAME} PRIVATE
-  ${SDL_LIB}
-)
-
-# Finding Libraries (System)
-find_package(Vulkan REQUIRED)
-
-# Adding Libraries (System)
-target_link_libraries(${PROJECT_NAME} PRIVATE
-  Vulkan::Vulkan
+  ${SODA_ENGINE_LIB}
+  ${IMGUI_LIB}
 )
 
 
@@ -111,11 +112,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 # ADDING INCLUDE PATHS #
 ########################
 target_include_directories(${PROJECT_NAME} PRIVATE
-  ${SODA_THIRD_PARTY_DIR}/SDL/include
-)
-
-target_include_directories(${PROJECT_NAME} PUBLIC
-  ${SODA_THIRD_PARTY_DIR}/glm
+  ${SODA_ENGINE_DIR}/Include
+  ${SODA_THIRD_PARTY_DIR}/imgui
 )
 
 
@@ -144,16 +142,13 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endif()
 
 
-# Some Other Definitions and Settings
-target_compile_definitions(${PROJECT_NAME} PUBLIC
-  GLM_ENABLE_EXPERIMENTAL
-)
-
-
 # Managing Visual Studio Bullshit
 # This is so that visual studio can generate
 if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
   set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+  )
+  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME}
   )
 endif()
