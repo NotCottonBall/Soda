@@ -1,0 +1,68 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 4,
+    "minor": 3,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "Clang-Debug",
+      "displayName": "Clang-Debug",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Build/Clang-Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "Clang-Release",
+      "displayName": "Clang-Release",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Build/Clang-Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "MSVC-Debug",
+      "displayName": "MSVC-Debug",
+      "binaryDir": "${sourceDir}/Build/MSVC-Debug",
+      "generator": "Visual Studio 17 2022",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "MSVC-Release",
+      "displayName": "MSVC-Release",
+      "binaryDir": "${sourceDir}/Build/MSVC-Release",
+      "generator": "Visual Studio 17 2022",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "Clang-Debug",
+      "configurePreset": "Clang-Debug"
+    },
+    {
+      "name": "Clang-Release",
+      "configurePreset": "Clang-Release"
+    },
+    {
+      "name": "MSVC-Debug",
+      "configurePreset": "MSVC-Debug"
+    },
+    {
+      "name": "MSVC-Release",
+      "configurePreset": "MSVC-Release"
+    }
+  ]
+}
