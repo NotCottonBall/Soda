@@ -1,13 +1,12 @@
 #include <print>
 
 #include "Game/Game.h"
-#include "SodaEngine/Application.h"
 
 int main(int argc, char *argv[])
 {
-  Game game;
+  Game game{};
 
-  if(!game.Initialize())
+  if(!game.Initialize("Soda Test"))
   {
     std::println("Failed To Initialize Application");
     return -1;
