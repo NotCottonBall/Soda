@@ -28,6 +28,7 @@ cmake_install.cmake
 CMakeCache.txt
 CMakeDoxyfile.in
 CMakeDoxygenDefaults.cmake
+compile_commands.json
 
 ## Others
 IGNORE_*

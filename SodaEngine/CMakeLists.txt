@@ -112,10 +112,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 ########################
 target_include_directories(${PROJECT_NAME} PRIVATE
   ${SODA_THIRD_PARTY_DIR}/SDL/include
+  ${PROJECT_SOURCE_DIR}/Source
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   ${SODA_THIRD_PARTY_DIR}/glm
+  ${PROJECT_SOURCE_DIR}/Include
 )
 
 

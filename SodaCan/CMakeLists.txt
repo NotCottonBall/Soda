@@ -87,13 +87,6 @@ endif()
 # FINDING AND ADDING LIBRARIES #
 ################################
 # Finding Libraries (Imported)
-find_library(SODA_ENGINE_LIB
-  NAMES SodaEngine
-  PATHS ${SODA_ENGINE_DIR}/Binary/Libs/${SODA_OUTPUT_FOLDER_SIGNATURE}
-  NO_DEFAULT_PATH
-  REQUIRED
-)
-
 find_library(IMGUI_LIB
   NAMES imgui
   PATHS ${SODA_THIRD_PARTY_DIR}/Binary/Libs/${SODA_OUTPUT_FOLDER_SIGNATURE}
@@ -103,17 +96,33 @@ find_library(IMGUI_LIB
 
 # Adding Libraries (Imported)
 target_link_libraries(${PROJECT_NAME} PRIVATE
-  ${SODA_ENGINE_LIB}
   ${IMGUI_LIB}
 )
+
+# Separate Case For SodaEngine
+# This was done because I want to be able to
+# Make CMake from the root file or separatly as a single project
+if(TARGET SodaEngine)
+  target_link_libraries(${PROJECT_NAME} PRIVATE SodaEngine)
+else()
+  find_library(SODA_ENGINE_LIB
+    NAMES SodaEngine
+    PATHS ${SODA_ENGINE_DIR}/Binary/Libs/${SODA_OUTPUT_FOLDER_SIGNATURE}
+    NO_DEFAULT_PATH
+    REQUIRED
+  )
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${SODA_ENGINE_LIB})
+endif()
 
 
 ########################
 # ADDING INCLUDE PATHS #
 ########################
 target_include_directories(${PROJECT_NAME} PRIVATE
-  ${SODA_ENGINE_DIR}/Include
   ${SODA_THIRD_PARTY_DIR}/imgui
+
+  ${PROJECT_SOURCE_DIR}/Sources
+  ${SODA_ENGINE_DIR}/Include
 )
 
 
