@@ -2,7 +2,6 @@
 #include <print>
 
 #include "SDL3/SDL_events.h"
-#include "SDL3/SDL_video.h"
 #include <SDL3/SDL_init.h>
 
 #include <SodaEngine/Application.h>
@@ -14,7 +13,7 @@ bool Application::Initialize(std::string appName)
   m_Running = true;
 
   std::println("Initializing Application...");
-  m_Window = std::make_shared<Window>(1240, 720, appName);
+  m_Window = std::make_unique<Window>(1240, 720, appName);
 
   return m_Running;
 }

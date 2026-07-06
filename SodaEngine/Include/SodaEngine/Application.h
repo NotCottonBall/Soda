@@ -10,7 +10,7 @@ class Application
 {
 private:
   bool m_Running = false;
-  std::shared_ptr<Window> m_Window;
+  std::unique_ptr<Window> m_Window;
 
 public:
   Application() = default;
