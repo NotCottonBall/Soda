@@ -1,7 +1,7 @@
 #include <print>
 
-#include "Application.h"
 #include "Game/Game.h"
+#include "SodaEngine/Application.h"
 
 int main(int argc, char *argv[])
 {

@@ -5,11 +5,10 @@ namespace SodaEngine
 class Application
 {
 public:
-  Application();
+  Application() = default;
 
   bool Initialize();
   void Run();
-
   void Quit();
 };
 } // namespace SodaEngine

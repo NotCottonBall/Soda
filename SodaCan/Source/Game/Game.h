@@ -1,7 +1,7 @@
-#include <Application.h>
+#include <SodaEngine/Application.h>
 
 class Game : public SodaEngine::Application
 {
 public:
-  Game();
+  Game() = default;
 };
