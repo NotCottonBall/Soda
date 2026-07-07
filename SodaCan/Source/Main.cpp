@@ -1,6 +1,5 @@
-#include <print>
-
 #include "Game/Game.h"
+#include "SodaEngine/Logger.h"
 
 int main(int argc, char *argv[])
 {
@@ -8,7 +7,7 @@ int main(int argc, char *argv[])
 
   if(!game.Initialize("Soda Test"))
   {
-    std::println("Failed To Initialize Application");
+    SD_LOG_CRITICAL("Failed To Initialize Application");
     return -1;
   }
 

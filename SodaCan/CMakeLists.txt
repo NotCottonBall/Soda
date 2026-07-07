@@ -130,10 +130,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # SETTINGS COMPILE DEFINITIONS FOR BUILD/CONFIG TYPES #
 #######################################################
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-  $<$<CONFIG:Debug>:${PROJECT_PREFIX}_Debug>
+  $<$<CONFIG:Debug>:${PROJECT_PREFIX}_DEBUG>
 )
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-  $<$<CONFIG:Release>:${PROJECT_PREFIX}_Release>
+  $<$<CONFIG:Release>:${PROJECT_PREFIX}_RELEASE>
 )
 
 if(WIN32)
