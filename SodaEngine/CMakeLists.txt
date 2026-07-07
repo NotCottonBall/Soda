@@ -123,6 +123,13 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 
+##############
+# ADDING PCH #
+##############
+set(PCH_HEADER "${PROJECT_SOURCE_DIR}/Source/SodaEnginePCH.h")
+target_precompile_headers(${PROJECT_NAME} PRIVATE ${PCH_HEADER})
+
+
 #######################################################
 # SETTINGS COMPILE DEFINITIONS FOR BUILD/CONFIG TYPES #
 #######################################################

@@ -1,2 +1,9 @@
 CompileFlags:
   CompilationDatabase: Build/Clang-Debug
+---
+# No Intellisense For PCH
+# As There Are A Lof Includes That Won't Be Used In That File
+If:
+  PathMatch: .*/Source/.*PCH\.h
+Diagnostics:
+  UnusedIncludes: None
