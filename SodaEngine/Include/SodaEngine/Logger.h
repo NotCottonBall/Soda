@@ -3,6 +3,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include <SodaEngine/SDAssert.h>
+
 namespace SodaEngine
 {
 class SDLogger

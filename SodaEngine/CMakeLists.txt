@@ -70,6 +70,7 @@ target_sources(${PROJECT_NAME} PRIVATE
   ${SODA_ENGINE_SOURCES}
 )
 
+
 ##############################
 # Setting Build/Config Types #
 ###############################
@@ -99,11 +100,14 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 # Finding Libraries (System)
-find_package(Vulkan REQUIRED)
+find_package(Vulkan REQUIRED COMPONENTS volk shaderc_combined)
 
 # Adding Libraries (System)
 target_link_libraries(${PROJECT_NAME} PRIVATE
+  # Vulkan Related Packages
   Vulkan::Vulkan
+  Vulkan::volk
+  Vulkan::shaderc_combined
 )
 
 
