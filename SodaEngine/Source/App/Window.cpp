@@ -6,7 +6,7 @@
 #include <SDL3/SDL.h>
 
 #include "Logging/EngineLogger.h"
-#include "SodaEngine/SDAssert.h"
+#include "SodaEngine/Assert.h"
 #include <SodaEngine/Window.h>
 
 namespace SodaEngine

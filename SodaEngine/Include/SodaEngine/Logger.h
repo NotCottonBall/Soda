@@ -3,7 +3,7 @@
 
 #include <spdlog/spdlog.h>
 
-#include <SodaEngine/SDAssert.h>
+#include <SodaEngine/Assert.h>
 
 namespace SodaEngine
 {
