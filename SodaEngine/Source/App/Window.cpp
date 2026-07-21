@@ -6,7 +6,7 @@
 #include <SDL3/SDL.h>
 
 #include "Logging/EngineLogger.h"
-#include "SodaEngine/Assert.h"
+#include "Logging/SDEAssert.h"
 #include <SodaEngine/Window.h>
 
 namespace SodaEngine
@@ -16,7 +16,7 @@ Window::Window(int width, int height, std::string name)
 {
   m_Window = nullptr;
 
-  SD_ASSERT(Initialize(), "Failed To Create A Window!");
+  SDE_ASSERT_CRITICAL(Initialize(), "Failed To Create A Window!");
 }
 
 Window::~Window() { SDL_DestroyWindow(m_Window); }

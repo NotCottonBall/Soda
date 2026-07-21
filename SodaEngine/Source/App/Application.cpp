@@ -3,12 +3,16 @@
 #include "SDL3/SDL_events.h"
 #include <SDL3/SDL_init.h>
 
+#include "API/VulkanInstance.h"
 #include "Logging/EngineLogger.h"
-#include "SodaEngine/Logger.h"
 #include <SodaEngine/Application.h>
+#include <SodaEngine/Logger.h>
 
 namespace SodaEngine
 {
+Application::Application() = default;
+Application::~Application() = default;
+
 bool Application::Initialize(std::string appName)
 {
   m_Running = true;
@@ -21,6 +25,9 @@ bool Application::Initialize(std::string appName)
 
   // Init Window
   m_Window = std::make_unique<Window>(1240, 720, appName);
+
+  // Initialize Vulkan
+  m_VkInstace = std::make_unique<VulkanInstance>();
 
   return m_Running;
 }

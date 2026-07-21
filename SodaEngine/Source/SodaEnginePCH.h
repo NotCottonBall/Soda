@@ -10,9 +10,11 @@
 #include <unordered_set>
 
 #include <array>
+#include <cstring>
 #include <string>
 #include <vector>
 
 // Others
+#include <algorithm>
 #include <filesystem>
-#include <memory.h>
+#include <memory>

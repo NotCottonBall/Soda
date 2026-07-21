@@ -4,6 +4,14 @@ project(SodaEngine
   LANGUAGES CXX
 )
 
+############################
+# Configuring Version File #
+############################
+configure_file(
+  ${PROJECT_SOURCE_DIR}/Version.h.in
+  ${CMAKE_BINARY_DIR}/Generated/SodaEngine/Version.h
+)
+
 ############
 # Settings #
 ############
@@ -73,7 +81,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 
 ##############################
 # Setting Build/Config Types #
-###############################
+##############################
 if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build Type")
   message(STATUS
@@ -116,7 +124,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 ########################
 target_include_directories(${PROJECT_NAME} PRIVATE
   ${SODA_THIRD_PARTY_DIR}/SDL/include
+
   ${PROJECT_SOURCE_DIR}/Source
+  ${CMAKE_BINARY_DIR}/Generated
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
